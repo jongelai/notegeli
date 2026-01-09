@@ -11,23 +11,6 @@ body {
     color: white;
     font-family: Arial, sans-serif;
 }
-.logo-footer {
-    text-align: center;
-    margin-top: 40px;
-    padding-bottom: 20px;
-    background: rgba(255,255,200,0.3);
-}
-
-.logo-img {
-    max-width: 220px;
-    opacity: 0.75; /* para que no grite mucho */
-    transition: opacity 0.3s ease;
-}
-
-.logo-img:hover {
-    opacity: 1;
-}
-
 .header {
     display: flex;
     justify-content: space-between;
@@ -36,7 +19,6 @@ body {
 }
 .card {
     background: #1c1c1c;
-    color: #eee;
     border: none;
     margin-bottom: 10px;
 }
@@ -94,9 +76,6 @@ button, .btn {
         </div>
     {% endfor %}
 {% endfor %}
-<footer class="logo-footer">
-    <img src="{{ url_for('static', filename='logogeli.png') }}" class="logo-img" alt="Logo">
-</footer>
 
 </body>
 </html>
