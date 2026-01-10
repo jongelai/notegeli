@@ -146,6 +146,9 @@ textarea {
         padding: 10px 0 !important;
         border-radius: 20px !important;
     }
+    .btn-danger span {
+        display: none;
+    }
 }
 
 /* ---- Grupos de meses ---- */
