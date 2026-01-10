@@ -1,5 +1,5 @@
 from flask import Flask, request, render_template, send_file, redirect, url_for, session
-from datetime import datetime
+from datetime import datetime, date, timedelta
 from collections import defaultdict
 import os
 
@@ -20,6 +20,7 @@ MESES = {
     "10": "Octubre", "11": "Noviembre", "12": "Diciembre"
 }
 
+
 def requiere_login():
     return session.get("logueado") == True
 
@@ -33,9 +34,43 @@ def agrupar_por_mes(archivos):
         clave = f"{año} {mes_nombre}"
         grupos[clave].append(archivo)
 
-    # Ordenar de más nuevo a más viejo
     grupos_ordenados = dict(sorted(grupos.items(), reverse=True))
     return grupos_ordenados
+
+
+# --- Formateador inteligente (estilo Notion / Apple Notes / Chat) ---
+def formatear_nombre(archivo):
+    base = archivo.replace(".txt", "")
+    fecha_str, hora_str = base.split("_")
+
+    año, mes, dia = map(int, fecha_str.split("-"))
+    hora, minuto, segundo = map(int, hora_str.split("-"))
+
+    dt = datetime(año, mes, dia, hora, minuto, segundo)
+    hoy = date.today()
+    fecha = dt.date()
+
+    # Hoy
+    if fecha == hoy:
+        return dt.strftime("%H:%M")
+
+    # Ayer
+    if fecha == hoy - timedelta(days=1):
+        return "Ayer • " + dt.strftime("%H:%M")
+
+    # Misma semana
+    if fecha.isocalendar()[1] == hoy.isocalendar()[1] and fecha.year == hoy.year:
+        dias = ["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"]
+        return f"{dias[fecha.weekday()]} • {dt.strftime('%H:%M')}"
+
+    # Mismo año
+    if fecha.year == hoy.year:
+        meses = ["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"]
+        return f"{dia:02d} {meses[mes-1]} • {dt.strftime('%H:%M')}"
+
+    # Otro año
+    meses = ["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"]
+    return f"{dia:02d} {meses[mes-1]} {año}"
 
 
 # ------------ LOGIN -------------
@@ -82,7 +117,7 @@ def index():
         archivos = sorted(os.listdir(CARPETA), reverse=True)
 
     grupos = agrupar_por_mes(archivos)
-    return render_template("index.html", grupos=grupos)
+    return render_template("index.html", grupos=grupos, formatear=formatear_nombre)
 
 
 # ------------ EDITAR -------------

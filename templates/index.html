@@ -151,7 +151,7 @@ footer img {
     {% for a in archivos %}
     <div class="card">
         <div class="d-flex align-items-center">
-            <span class="filename">{{ a }}</span>
+            <span class="filename">{{ formatear(a) }}</span>
             <div class="actions">
                 <a href="/editar/{{a}}" class="btn btn-sm btn-warning">
                     <i class="bi bi-pencil"></i>
@@ -169,8 +169,7 @@ footer img {
 {% endfor %}
 
 <footer>
-    <img src="{{ url_for('static', filename='logogeli.png') }}">
-    Juan GePython — el creador
+        Juan GePython 
 </footer>
 
 </body>
