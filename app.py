@@ -4,15 +4,15 @@ from collections import defaultdict
 import os
 
 app = Flask(__name__)
-app.secret_key = "notegeli_super_secreto"  # Necesario para sesiones
+app.secret_key = "notegeli_super_secreto"
 
 CARPETA = "archivos"
 
-# Usuario y contraseña del login
+# Login básico
 USUARIO = "juan"
 PASSWORD = "1234"
 
-# Diccionario de meses en español
+# Meses españoles
 MESES = {
     "01": "Enero", "02": "Febrero", "03": "Marzo",
     "04": "Abril", "05": "Mayo", "06": "Junio",
@@ -20,25 +20,23 @@ MESES = {
     "10": "Octubre", "11": "Noviembre", "12": "Diciembre"
 }
 
-
 def requiere_login():
     return session.get("logueado") == True
 
 
+# --- Agrupar por mes (para el listado) ---
 def agrupar_por_mes(archivos):
     grupos = defaultdict(list)
     for archivo in archivos:
-        fecha = archivo.split("_")[0]  # --> 2026-01-08
+        fecha = archivo.split("_")[0]
         año, mes, dia = fecha.split("-")
         mes_nombre = MESES.get(mes, mes)
         clave = f"{año} {mes_nombre}"
         grupos[clave].append(archivo)
-
-    grupos_ordenados = dict(sorted(grupos.items(), reverse=True))
-    return grupos_ordenados
+    return dict(sorted(grupos.items(), reverse=True))
 
 
-# --- Formateador inteligente (estilo Notion / Apple Notes / Chat) ---
+# --- Formateo pro estilo Notion/Notes ---
 def formatear_nombre(archivo):
     base = archivo.replace(".txt", "")
     fecha_str, hora_str = base.split("_")
@@ -64,16 +62,14 @@ def formatear_nombre(archivo):
         return f"{dias[fecha.weekday()]} • {dt.strftime('%H:%M')}"
 
     # Mismo año
-    if fecha.year == hoy.year:
-        meses = ["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"]
-        return f"{dia:02d} {meses[mes-1]} • {dt.strftime('%H:%M')}"
+    meses = ["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"]
+    return f"{dia:02d} {meses[mes-1]} • {dt.strftime('%H:%M')}"
 
     # Otro año
-    meses = ["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"]
     return f"{dia:02d} {meses[mes-1]} {año}"
 
 
-# ------------ LOGIN -------------
+# --- LOGIN ---
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
@@ -95,12 +91,13 @@ def logout():
     return redirect(url_for("login"))
 
 
-# ------------ INDEX (HOME) -------------
+# --- INDEX ---
 @app.route("/", methods=["GET", "POST"])
 def index():
     if not requiere_login():
         return redirect(url_for("login"))
 
+    # Crear nueva nota
     if request.method == "POST":
         texto = request.form.get("texto", "")
         if texto:
@@ -111,22 +108,41 @@ def index():
             with open(ruta, "w", encoding="utf-8") as f:
                 f.write(texto)
 
+    # Listado
     if not os.path.exists(CARPETA):
         archivos = []
     else:
         archivos = sorted(os.listdir(CARPETA), reverse=True)
 
+    # Preview estilo Obsidian
+    previews = {}
+    for archivo in archivos:
+        ruta = os.path.join(CARPETA, archivo)
+        with open(ruta, "r", encoding="utf-8") as f:
+            contenido = f.read().strip()
+
+            if contenido == "":
+                previews[archivo] = "(vacío)"
+            else:
+                primera = contenido.splitlines()[0]
+                preview = primera[:80]
+                if len(primera) > 80:
+                    preview += "…"
+                previews[archivo] = preview
+
     grupos = agrupar_por_mes(archivos)
-    return render_template("index.html", grupos=grupos, formatear=formatear_nombre)
+
+    return render_template("index.html", grupos=grupos, previews=previews, formatear=formatear_nombre)
 
 
-# ------------ EDITAR -------------
+# --- EDITAR ---
 @app.route("/editar/<archivo>", methods=["GET", "POST"])
 def editar(archivo):
     if not requiere_login():
         return redirect(url_for("login"))
 
     ruta = os.path.join(CARPETA, archivo)
+
     if request.method == "POST":
         nuevo_texto = request.form.get("texto", "")
         with open(ruta, "w", encoding="utf-8") as f:
@@ -139,7 +155,7 @@ def editar(archivo):
     return render_template("editar.html", archivo=archivo, contenido=contenido)
 
 
-# ------------ BORRAR -------------
+# --- BORRAR ---
 @app.route("/borrar/<archivo>")
 def borrar(archivo):
     if not requiere_login():
@@ -152,16 +168,15 @@ def borrar(archivo):
     return redirect(url_for("index"))
 
 
-# ------------ DESCARGAR -------------
+# --- DESCARGAR ---
 @app.route("/descargar/<archivo>")
 def descargar(archivo):
     if not requiere_login():
         return redirect(url_for("login"))
 
-    ruta = os.path.join(CARPETA, archivo)
-    return send_file(ruta, as_attachment=True)
+    return send_file(os.path.join(CARPETA, archivo), as_attachment=True)
 
 
-# ------------ RUN LOCAL -------------
+# --- LOCAL ---
 if __name__ == "__main__":
     app.run(debug=True)

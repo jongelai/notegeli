@@ -56,8 +56,21 @@ textarea {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    font-weight: bold;
+    font-size: 15px;
 }
 
+/* --- Preview (Obsidian/Notion style) --- */
+.preview {
+    opacity: 0.8;
+    font-size: 14px;
+    margin-top: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* acciones de los botones */
 .actions {
     display: flex;
     gap: 6px;
@@ -85,7 +98,7 @@ footer img {
     margin-right: 4px;
 }
 
-/* --- Versión móvil (B - cómodo) --- */
+/* --- Versión móvil (cómodo) --- */
 @media (max-width: 600px) {
 
     body {
@@ -110,6 +123,10 @@ footer img {
         border-radius: 8px;
     }
 
+    .preview {
+        font-size: 15px;
+    }
+
     .grupo-titulo {
         font-size: 15px;
         margin-top: 20px;
@@ -120,9 +137,7 @@ footer img {
         font-size: 11px;
         margin-top: 28px;
     }
-
 }
-
 </style>
 </head>
 
@@ -151,7 +166,10 @@ footer img {
     {% for a in archivos %}
     <div class="card">
         <div class="d-flex align-items-center">
-            <span class="filename">{{ formatear(a) }}</span>
+            <div class="flex-grow-1">
+                <span class="filename">{{ formatear(a) }}</span>
+                <div class="preview">{{ previews[a] }}</div>
+            </div>
             <div class="actions">
                 <a href="/editar/{{a}}" class="btn btn-sm btn-warning">
                     <i class="bi bi-pencil"></i>
@@ -169,7 +187,8 @@ footer img {
 {% endfor %}
 
 <footer>
-        Juan GePython 
+    <img src="{{ url_for('static', filename='logogeli.png') }}">
+    Juan GePython — el creador
 </footer>
 
 </body>
