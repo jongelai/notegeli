@@ -16,8 +16,8 @@ body {
 
 .header {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    gap: 10px;
     margin-bottom: 14px;
 }
 
@@ -28,31 +28,29 @@ body {
 
 .header img {
     height: 35px;
-    margin-right: 8px;
+    margin-right: 6px;
 }
 
-/* ---- Textareas ---- */
+/* ---- Textarea (WhatsApp/iOS) ---- */
 
 textarea {
-    background: #1c1c1e;           /* fondo oscuro estilo chat */
+    background: #1c1c1e;
     color: white;
-    border: none;                  /* sin borde duro */
-    border-radius: 22px;           /* burbuja suave */
-    padding: 16px 18px;            /* tacto y espacio */
-    font-size: 21px;               /* legible */
+    border: none;
+    border-radius: 22px;
+    padding: 14px 16px;
+    font-size: 19px;
     line-height: 1.45;
-    outline: none;                 /* sin borde azul feo */
-    resize: none;                  /* no agrandar manual */
-    box-shadow: 0 0 0 1px #2d2d2d; /* borde fantasma estilo iOS */
+    outline: none;
+    resize: none;
+    box-shadow: 0 0 0 1px #2d2d2d;
 }
 
-
-/* ---- Botones estilo iOS ---- */
+/* ---- Botones estilo app ---- */
 
 .btn {
-    border-radius: 20px !important;
+    border-radius: 14px !important;
     font-weight: 500;
-    padding: 10px 18px;
     border: none;
     cursor: pointer;
 }
@@ -64,19 +62,19 @@ textarea {
     color: #fff !important;
 }
 
-/* Editar (amarillo suave) */
+/* Editar */
 .btn-warning {
     background: #E5B700 !important;
     color: #000 !important;
 }
 
-/* Descargar (azul claro tipo iOS) */
+/* Descargar */
 .btn-info {
     background: #4DA3FF !important;
     color: #000 !important;
 }
 
-/* Borrar (rojo iOS) */
+/* Borrar */
 .btn-danger {
     background: #FF453A !important;
     color: #fff !important;
@@ -88,9 +86,25 @@ textarea {
     color: #fff !important;
 }
 
-/* hover (modo iOS minimal) */
 .btn:hover {
-    opacity: 0.95;
+    opacity: 0.93;
+}
+
+/* ---- Botones Nueva Nota ---- */
+
+.botones-nueva-nota {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    margin-top: 10px;
+    margin-bottom: 22px;
+}
+
+.btn-add,
+.btn-salir {
+    font-size: 15px;
+    padding: 8px 14px;
+    border-radius: 14px !important;
 }
 
 /* ---- Cards ---- */
@@ -98,73 +112,72 @@ textarea {
 .card {
     background: #FAFAFA;
     border-radius: 14px;
-    margin-bottom: 12px;
     padding: 12px 14px 8px 14px;
     display: flex;
     flex-direction: column;
     box-shadow: 0 1px 3px rgba(0,0,0,0.35);
 }
 
-/* Fecha estilo Humano */
+/* Fecha */
 .filename {
     font-size: 17px;
     color: #555;
+    font-weight: 400;
     margin-bottom: 4px;
-    font-weight: 400; /* sin negrita */
 }
 
-/* Preview estilo Obsidian */
+/* Preview */
 .preview {
     font-size: 18px;
-    line-height: 1.35;
+    font-weight: 600;
     color: #222;
-    font-weight: 600; /* negrita aquí */
+    line-height: 1.35;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-/* ---- Botones PC (fila derecha) ---- */
+/* ---- Acciones debajo ---- */
 
 .actions {
     display: flex;
-    justify-content: flex-end;   /* << CLAVE */
+    justify-content: flex-end;
     gap: 6px;
-    margin-top: 6px;
-    margin-bottom: 22px;
+    margin-top: 6px;       /* pegado a tarjeta */
+    margin-bottom: 24px;   /* espacio con siguiente tarjeta */
 }
 
-/* ---- BOTONES MÓVIL (INTELIGENTE) ---- */
+.actions .btn-sm {
+    padding: 8px 12px;
+    font-size: 15px;
+}
+
+/* ---- Responsive móvil ---- */
 
 @media (max-width: 700px) {
 
-    .actions {
-        gap: 8px;
-        margin-top: 6px;
-        margin-bottom: 22px;
+    textarea {
+        font-size: 18px;
     }
 
-    /* Tacto cómodo */
-    .actions .btn-sm {
-        flex: 1;
-        text-align: center;
-        padding: 10px !important;
-        border-radius: 20px !important;
-        font-size: 15px !important;
+    .preview {
+        font-size: 19px;
     }
-    textarea {
-        font-size: 20px;
-        line-height: 1.45;
+
+    .filename {
+        font-size: 17px;
+    }
+
+    /* Botones acciones más táctiles */
+    .actions .btn-sm {
+        padding: 10px 14px !important;
+        font-size: 16px !important;
+        border-radius: 18px !important;
     }
 
     /* Borrar solo icono */
     .btn-danger span {
         display: none;
-    }
-
-    /* Separación visual */
-    .card {
-        padding-bottom: 16px;
     }
 }
 
@@ -181,7 +194,7 @@ textarea {
 /* ---- Footer ---- */
 
 footer {
-    margin-top: 35px;
+    margin-top: 40px;
     text-align: center;
     font-size: 12px;
     opacity: 0.7;
@@ -193,31 +206,26 @@ footer img {
     margin-right: 4px;
 }
 
-/* ---- LOGIN APP ---- */
+/* ---- Login ---- */
 
 .login-wrapper {
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 24px;
-    margin-top: 20vh;
-}
-
-.login-logo {
-    height: 80px;
-    margin-bottom: 10px;
+    margin-top: 22vh;
 }
 
 .login-title {
     font-size: 24px;
     font-weight: 600;
-    margin-bottom: 4px;
+    margin-bottom: 6px;
 }
 
 .login-sub {
     font-size: 14px;
     opacity: 0.75;
-    margin-bottom: 20px;
+    margin-bottom: 18px;
 }
 
 .login-form input {
@@ -225,40 +233,21 @@ footer img {
     padding: 12px;
     border-radius: 14px;
     border: none;
-    margin-bottom: 12px;
     background: #1c1c1e;
     color: white;
+    margin-bottom: 12px;
     font-size: 16px;
 }
-
-.login-form button {
-    width: 100%;
-    margin-top: 4px;
+.logo {
+    height: 30px;
+    margin-right: 10px;
+    border-radius: 4px; /* opcional: da toque pro */
 }
 
-/* ---- EDITAR ---- */
-
-@media (max-width: 700px) {
-    .edit-btns {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-    }
-}
-.botones-nueva-nota .btn {
-    border-radius: 20px !important;
-}
-
-@media (max-width: 700px) {
-    .botones-nueva-nota {
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-    }
-
-    .botones-nueva-nota .btn {
-        width: 100%;
-        padding: 12px;
-        font-size: 17px;
-    }
+.title-pro {
+    font-size: 30px;
+    font-weight: 700;
+    color: white;
+    letter-spacing: -0.6px;
+    margin-bottom: 6px;
 }
