@@ -99,7 +99,7 @@ textarea {
     background: #FAFAFA;
     border-radius: 14px;
     margin-bottom: 12px;
-    padding: 12px 14px;
+    padding: 12px 14px 8px 14px;
     display: flex;
     flex-direction: column;
     box-shadow: 0 1px 3px rgba(0,0,0,0.35);
@@ -128,9 +128,10 @@ textarea {
 
 .actions {
     display: flex;
-    flex-direction: row;
+    justify-content: flex-end;   /* << CLAVE */
     gap: 6px;
-    margin-top: 8px;
+    margin-top: 6px;
+    margin-bottom: 22px;
 }
 
 /* ---- BOTONES MÓVIL (INTELIGENTE) ---- */
@@ -138,10 +139,9 @@ textarea {
 @media (max-width: 700px) {
 
     .actions {
-        flex-direction: row !important;
-        justify-content: space-between;
-        width: 100%;
-        margin-top: 10px;
+        gap: 8px;
+        margin-top: 6px;
+        margin-bottom: 22px;
     }
 
     /* Tacto cómodo */
@@ -243,5 +243,22 @@ footer img {
         display: flex;
         flex-direction: column;
         gap: 10px;
+    }
+}
+.botones-nueva-nota .btn {
+    border-radius: 20px !important;
+}
+
+@media (max-width: 700px) {
+    .botones-nueva-nota {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .botones-nueva-nota .btn {
+        width: 100%;
+        padding: 12px;
+        font-size: 17px;
     }
 }
