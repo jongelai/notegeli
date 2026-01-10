@@ -34,13 +34,18 @@ body {
 /* ---- Textareas ---- */
 
 textarea {
-    background: #1c1c1c;
-    color: #fff;
-    border: 1px solid #333;
-    border-radius: 14px;
-    padding: 12px;
-    font-size: 16px;
+    background: #1c1c1e;           /* fondo oscuro estilo chat */
+    color: white;
+    border: none;                  /* sin borde duro */
+    border-radius: 22px;           /* burbuja suave */
+    padding: 16px 18px;            /* tacto y espacio */
+    font-size: 21px;               /* legible */
+    line-height: 1.45;
+    outline: none;                 /* sin borde azul feo */
+    resize: none;                  /* no agrandar manual */
+    box-shadow: 0 0 0 1px #2d2d2d; /* borde fantasma estilo iOS */
 }
+
 
 /* ---- Botones estilo iOS ---- */
 
@@ -91,7 +96,7 @@ textarea {
 /* ---- Cards ---- */
 
 .card {
-    background: #1c1c1e;
+    background: #FAFAFA;
     border-radius: 14px;
     margin-bottom: 12px;
     padding: 12px 14px;
@@ -102,18 +107,18 @@ textarea {
 
 /* Fecha estilo Humano */
 .filename {
-    font-weight: 600;
-    font-size: 15px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    font-size: 17px;
+    color: #555;
+    margin-bottom: 4px;
+    font-weight: 400; /* sin negrita */
 }
 
 /* Preview estilo Obsidian */
 .preview {
-    opacity: 0.8;
-    font-size: 14px;
-    margin-top: 2px;
+    font-size: 18px;
+    line-height: 1.35;
+    color: #222;
+    font-weight: 600; /* negrita aquí */
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -146,6 +151,10 @@ textarea {
         padding: 10px !important;
         border-radius: 20px !important;
         font-size: 15px !important;
+    }
+    textarea {
+        font-size: 20px;
+        line-height: 1.45;
     }
 
     /* Borrar solo icono */
