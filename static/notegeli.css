@@ -8,13 +8,12 @@ body {
     padding: 0;
 }
 
-/* ---- Headers & Layout ---- */
-
 .container {
     padding: 16px;
 }
 
-/* Header con logo */
+/* ---- Header ---- */
+
 .header {
     display: flex;
     justify-content: space-between;
@@ -32,7 +31,7 @@ body {
     margin-right: 8px;
 }
 
-/* ---- Textarea ---- */
+/* ---- Textareas ---- */
 
 textarea {
     background: #1c1c1c;
@@ -42,7 +41,6 @@ textarea {
     padding: 12px;
     font-size: 16px;
 }
-
 
 /* ---- Botones estilo iOS ---- */
 
@@ -54,42 +52,41 @@ textarea {
     cursor: pointer;
 }
 
-/* Verde estilo iMessage */
+/* Verde iMessage */
 .btn-primary,
 .btn-success {
     background: #30D158 !important;
     color: #fff !important;
 }
 
-/* Amarillo editar */
+/* Editar (amarillo suave) */
 .btn-warning {
     background: #E5B700 !important;
     color: #000 !important;
 }
 
-/* Azul descargar */
+/* Descargar (azul claro tipo iOS) */
 .btn-info {
     background: #4DA3FF !important;
     color: #000 !important;
 }
 
-/* Rojo borrar */
+/* Borrar (rojo iOS) */
 .btn-danger {
     background: #FF453A !important;
     color: #fff !important;
 }
 
-/* Gris cancelar */
+/* Cancelar */
 .btn-secondary {
     background: #3A3A3C !important;
     color: #fff !important;
 }
 
-/* sin hover (modo iOS) */
+/* hover (modo iOS minimal) */
 .btn:hover {
     opacity: 0.95;
 }
-
 
 /* ---- Cards ---- */
 
@@ -99,11 +96,11 @@ textarea {
     margin-bottom: 12px;
     padding: 12px 14px;
     display: flex;
-    color: #fff;
+    flex-direction: column;
     box-shadow: 0 1px 3px rgba(0,0,0,0.35);
 }
 
-/* filename (fecha inteligente) */
+/* Fecha estilo Humano */
 .filename {
     font-weight: 600;
     font-size: 15px;
@@ -112,7 +109,7 @@ textarea {
     text-overflow: ellipsis;
 }
 
-/* preview estilo Obsidian */
+/* Preview estilo Obsidian */
 .preview {
     opacity: 0.8;
     font-size: 14px;
@@ -122,36 +119,47 @@ textarea {
     text-overflow: ellipsis;
 }
 
-/* ---- Botones inteligentes ---- */
+/* ---- Botones PC (fila derecha) ---- */
 
-/* Desktop → botones a la derecha */
 .actions {
     display: flex;
+    flex-direction: row;
     gap: 6px;
-    margin-left: 10px;
+    margin-top: 8px;
 }
 
-/* Mobile → botones debajo */
+/* ---- BOTONES MÓVIL (INTELIGENTE) ---- */
+
 @media (max-width: 700px) {
+
     .actions {
-        flex-direction: column;
-        margin-left: 0;
-        margin-top: 8px;
+        flex-direction: row !important;
+        justify-content: space-between;
         width: 100%;
+        margin-top: 10px;
     }
 
-    .btn-sm {
-        width: 100%;
+    /* Tacto cómodo */
+    .actions .btn-sm {
+        flex: 1;
         text-align: center;
-        padding: 10px 0 !important;
+        padding: 10px !important;
         border-radius: 20px !important;
+        font-size: 15px !important;
     }
+
+    /* Borrar solo icono */
     .btn-danger span {
         display: none;
     }
+
+    /* Separación visual */
+    .card {
+        padding-bottom: 16px;
+    }
 }
 
-/* ---- Grupos de meses ---- */
+/* ---- Grupos ---- */
 
 .grupo-titulo {
     margin-top: 22px;
@@ -176,8 +184,7 @@ footer img {
     margin-right: 4px;
 }
 
-
-/* ---- LOGIN FULLSCREEN ---- */
+/* ---- LOGIN APP ---- */
 
 .login-wrapper {
     display: flex;
@@ -218,4 +225,14 @@ footer img {
 .login-form button {
     width: 100%;
     margin-top: 4px;
+}
+
+/* ---- EDITAR ---- */
+
+@media (max-width: 700px) {
+    .edit-btns {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
 }
