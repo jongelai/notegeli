@@ -1,11 +1,13 @@
 {
+  "id": "/",
   "name": "Notegeli",
   "short_name": "Notegeli",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
+  "orientation": "portrait-primary",
   "background_color": "#111216",
   "theme_color": "#111216",
-  "orientation": "portrait-primary",
   "icons": [
     {
       "src": "/static/icons/192.png",
