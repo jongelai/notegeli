@@ -2,6 +2,7 @@ from flask import Flask, request, render_template, send_file, redirect, url_for,
 from datetime import datetime, date, timedelta
 from collections import defaultdict
 import os
+from flask import send_from_directory
 
 app = Flask(__name__)
 app.secret_key = "notegeli_super_secreto"
@@ -78,6 +79,9 @@ def agrupar_por_mes(archivos):
     grupos_ordenados = dict(sorted(grupos.items(), reverse=True))
     return grupos_ordenados
 
+@app.route('/service-worker.js')
+def service_worker():
+    return send_from_directory('.', 'service-worker.js')
 
 # ---- LOGIN ----
 @app.route("/login", methods=["GET", "POST"])
