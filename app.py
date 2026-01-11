@@ -156,11 +156,5 @@ def borrar(archivo):
     return redirect(url_for("index"))
 
 
-# ---- DESCARGAR ----
-@app.route("/descargar/<archivo>")
-def descargar(archivo):
-    return send_file(os.path.join(CARPETA, archivo), as_attachment=True)
-
-
 if __name__ == "__main__":
     app.run(debug=True)

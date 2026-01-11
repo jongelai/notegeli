@@ -49,10 +49,15 @@ textarea {
 /* ---- Botones estilo app ---- */
 
 .btn {
-    border-radius: 14px !important;
+    border-radius: 10px !important;
     font-weight: 500;
     border: none;
     cursor: pointer;
+}
+.btn-sm {
+    padding: 2px 6px !important;
+    font-size: 16px !important;
+    line-height: 1.5 !important;
 }
 
 /* Verde iMessage */
@@ -111,7 +116,7 @@ textarea {
 
 .card {
     background: #FAFAFA;
-    border-radius: 14px;
+    border-radius: 5px;
     padding: 12px 14px 8px 14px;
     display: flex;
     flex-direction: column;
@@ -156,17 +161,11 @@ textarea {
 
 @media (max-width: 700px) {
 
-    textarea {
-        font-size: 18px;
-    }
+    textarea {        font-size: 18px;    }
 
-    .preview {
-        font-size: 19px;
-    }
+    .preview {        font-size: 19px;    }
 
-    .filename {
-        font-size: 17px;
-    }
+    .filename {        font-size: 17px;    }
 
     /* Botones acciones más táctiles */
     .actions .btn-sm {
@@ -250,4 +249,14 @@ footer img {
     color: white;
     letter-spacing: -0.6px;
     margin-bottom: 6px;
+}
+.login-logo {
+    width: 150px;
+    height: auto;
+    margin-bottom: 15px;
+}
+textarea.form-control {
+    font-size: 20px !important;
+    line-height: 1 !important;
+    padding: 10px 14px !important;
 }
