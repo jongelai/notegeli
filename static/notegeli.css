@@ -9,10 +9,17 @@ body {
                  Roboto, Helvetica, Arial, sans-serif;
     margin: 0;
     padding: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden; /* ← importante */
 }
 
 .container {
     padding: 16px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 
 ::placeholder {
@@ -113,11 +120,13 @@ textarea.form-control {
 ------------------------------------------------------ */
 
 .notes-wrapper {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    width: 100%;
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 20px;
+    scroll-behavior: smooth;
 }
+
 
 .note {
     display: flex;
