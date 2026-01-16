@@ -1,16 +1,17 @@
-from flask import Flask, request, render_template, send_file, redirect, url_for, session
+from flask import Flask, request, render_template, redirect, url_for, session
 from datetime import datetime, date, timedelta
 from collections import defaultdict
 import os
 from flask import send_from_directory
 
 app = Flask(__name__)
-app.secret_key = "notegeli_super_secreto"
-
 CARPETA = "archivos"
 
-USUARIO = "juan"
-PASSWORD = "1234"
+app.secret_key = os.getenv("SECRET_KEY", "notegeli_super_secreto")
+USUARIO = os.getenv("USUARIO", "juan")
+PASSWORD = os.getenv("PASSWORD", "1234")
+
+
 
 MESES = {
     1: "Enero", 2: "Febrero", 3: "Marzo",
@@ -23,11 +24,10 @@ def requiere_login():
     return session.get("logueado") == True
 
 
-# ---- Formateo humano de fechas ----
+# ---- Fechas ----
 def formatear(nombre_archivo):
-    # Nombre ejemplo: 2026-01-09_20-15-04.txt
-    fecha_str = nombre_archivo.split("_")[0]  # → 2026-01-09
-    hora_str = nombre_archivo.split("_")[1].replace(".txt", "")  # → 20-15-04
+    fecha_str = nombre_archivo.split("_")[0]
+    hora_str = nombre_archivo.split("_")[1].replace(".txt", "")
 
     año, mes, dia = map(int, fecha_str.split("-"))
     hora, minuto, _ = map(int, hora_str.split("-"))
@@ -38,19 +38,14 @@ def formatear(nombre_archivo):
 
     if fecha.date() == hoy:
         return f"Hoy · {hora:02d}:{minuto:02d}"
-
     if fecha.date() == ayer:
         return f"Ayer · {hora:02d}:{minuto:02d}"
-
-    # mismo año → sin año
     if fecha.year == hoy.year:
         return f"{fecha.day} de {MESES[fecha.month]} · {hora:02d}:{minuto:02d}"
-
-    # distinto año → con año
     return f"{fecha.day} de {MESES[fecha.month]} {fecha.year} · {hora:02d}:{minuto:02d}"
 
 
-# ---- Preview de la nota (primera línea) ----
+# ---- Preview ----
 def obtener_previews(archivos):
     previews = {}
     for archivo in archivos:
@@ -66,22 +61,23 @@ def obtener_previews(archivos):
     return previews
 
 
-# ---- Agrupar por mes ----
+# ---- Agrupación meses ----
 def agrupar_por_mes(archivos):
     grupos = defaultdict(list)
     for archivo in archivos:
         fecha = archivo.split("_")[0]
-        año, mes, dia = fecha.split("-")
+        año, mes, _ = fecha.split("-")
         mes_nombre = MESES[int(mes)]
         clave = f"{mes_nombre} {año}"
         grupos[clave].append(archivo)
 
-    grupos_ordenados = dict(sorted(grupos.items(), reverse=True))
-    return grupos_ordenados
+    return dict(sorted(grupos.items(), reverse=True))
+
 
 @app.route('/service-worker.js')
 def service_worker():
-    return send_from_directory('.', 'service-worker.js')
+    return send_from_directory('static', 'service-worker.js', mimetype='application/javascript')
+
 
 # ---- LOGIN ----
 @app.route("/login", methods=["GET", "POST"])
@@ -113,7 +109,12 @@ def index():
 
     if request.method == "POST":
         texto = request.form.get("texto", "")
+
         if texto:
+            # NORMALIZACIÓN AL CREAR
+            texto = texto.replace("\r\n", "\n").replace("\r", "\n")
+            texto = texto.rstrip("\n")
+
             os.makedirs(CARPETA, exist_ok=True)
             fecha = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
             nombre = f"{fecha}.txt"
@@ -135,14 +136,26 @@ def editar(archivo):
 
     ruta = os.path.join(CARPETA, archivo)
 
+    if not os.path.exists(ruta):
+        return redirect(url_for("index"))
+
     if request.method == "POST":
-        nuevo_texto = request.form.get("texto", "")
+        texto = request.form.get("texto", "")
+
+        # NORMALIZAR PARA EVITAR DUPLICACIONES
+        texto = texto.replace("\r\n", "\n").replace("\r", "\n")
+        texto = texto.rstrip("\n")
+
         with open(ruta, "w", encoding="utf-8") as f:
-            f.write(nuevo_texto)
+            f.write(texto)
+
         return redirect(url_for("index"))
 
     with open(ruta, "r", encoding="utf-8") as f:
         contenido = f.read()
+
+    contenido = contenido.replace("\r\n", "\n").replace("\r", "\n")
+    contenido = contenido.rstrip("\n")
 
     return render_template("editar.html", archivo=archivo, contenido=contenido)
 
@@ -161,4 +174,6 @@ def borrar(archivo):
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    import os
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)

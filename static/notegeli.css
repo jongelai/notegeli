@@ -1,9 +1,12 @@
-/* ---- Global ---- */
+/* ------------------------------------------------------
+   GLOBAL
+------------------------------------------------------ */
 
 body {
     background: #121212;
     color: #fff;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+                 Roboto, Helvetica, Arial, sans-serif;
     margin: 0;
     padding: 0;
 }
@@ -12,7 +15,14 @@ body {
     padding: 16px;
 }
 
-/* ---- Header ---- */
+::placeholder {
+    color: #e0e0e0 !important;
+}
+
+
+/* ------------------------------------------------------
+   HEADER
+------------------------------------------------------ */
 
 .header {
     display: flex;
@@ -21,17 +31,17 @@ body {
     margin-bottom: 14px;
 }
 
-.header-title {
-    display: flex;
-    align-items: center;
+.title-pro {
+    font-size: 30px;
+    font-weight: 700;
+    color: white;
+    letter-spacing: -0.6px;
 }
 
-.header img {
-    height: 35px;
-    margin-right: 6px;
-}
 
-/* ---- Textarea (WhatsApp/iOS) ---- */
+/* ------------------------------------------------------
+   NUEVA NOTA
+------------------------------------------------------ */
 
 textarea {
     background: #1c1c1e;
@@ -46,7 +56,23 @@ textarea {
     box-shadow: 0 0 0 1px #2d2d2d;
 }
 
-/* ---- Botones estilo app ---- */
+textarea.form-control {
+    font-size: 20px !important;
+    line-height: 1.2 !important;
+    padding: 10px 14px !important;
+}
+
+.botones-nueva-nota {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+    margin-bottom: 22px;
+}
+
+
+/* ------------------------------------------------------
+   BOTONES
+------------------------------------------------------ */
 
 .btn {
     border-radius: 10px !important;
@@ -54,102 +80,92 @@ textarea {
     border: none;
     cursor: pointer;
 }
-.btn-sm {
-    padding: 2px 6px !important;
-    font-size: 16px !important;
-    line-height: 1.5 !important;
-}
-
-/* Verde iMessage */
-.btn-primary,
-.btn-success {
-    background: #30D158 !important;
-    color: #fff !important;
-}
-
-/* Editar */
-.btn-warning {
-    background: #E5B700 !important;
-    color: #000 !important;
-}
-
-/* Descargar */
-.btn-info {
-    background: #4DA3FF !important;
-    color: #000 !important;
-}
-
-/* Borrar */
-.btn-danger {
-    background: #FF453A !important;
-    color: #fff !important;
-}
-
-/* Cancelar */
-.btn-secondary {
-    background: #3A3A3C !important;
-    color: #fff !important;
-}
 
 .btn:hover {
     opacity: 0.93;
 }
 
-/* ---- Botones Nueva Nota ---- */
+.btn-primary,
+.btn-success {
+    background: #30D158 !important;
+    color: #fff !important;
+}
+.btn-warning {
+    background: #E5B700 !important;
+    color: #000 !important;
+}
+.btn-info {
+    background: #4DA3FF !important;
+    color: #000 !important;
+}
+.btn-danger {
+    background: #FF453A !important;
+    color: #fff !important;
+}
+.btn-secondary {
+    background: #3A3A3C !important;
+    color: #fff !important;
+}
 
-.botones-nueva-nota {
+
+/* ------------------------------------------------------
+   LISTA DE NOTAS
+------------------------------------------------------ */
+
+.notes-wrapper {
     display: flex;
-    flex-direction: row;
-    gap: 8px;
-    margin-top: 10px;
-    margin-bottom: 22px;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
 }
 
-.btn-add,
-.btn-salir {
-    font-size: 15px;
-    padding: 8px 14px;
-    border-radius: 14px !important;
+.note {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
 }
 
-/* ---- Cards ---- */
-
+/* Tarjeta */
 .card {
     background: #FAFAFA;
     border-radius: 5px;
-    padding: 12px 14px 8px 14px;
+    padding: 10px 14px;
     display: flex;
     flex-direction: column;
     box-shadow: 0 1px 3px rgba(0,0,0,0.35);
 }
 
-/* Fecha */
-.filename {
-    font-size: 17px;
-    color: #555;
+/* Fecha pequeña */
+.card .filename {
+    font-size: 11px;
+    opacity: 0.50;
     font-weight: 400;
-    margin-bottom: 4px;
+    margin-bottom: 3px;
+    letter-spacing: 0.2px;
 }
 
-/* Preview */
+/* Preview 2 líneas */
 .preview {
-    font-size: 18px;
-    font-weight: 600;
-    color: #222;
+    font-size: 17px;
+    font-weight: 500;
+    color: #111;
     line-height: 1.35;
-    white-space: nowrap;
-    overflow: hidden;
+
+    display: -webkit-box !important;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden !important;
     text-overflow: ellipsis;
+    white-space: normal !important;
 }
 
-/* ---- Acciones debajo ---- */
-
+/* Acciones debajo (modo viejo) */
 .actions {
     display: flex;
     justify-content: flex-end;
     gap: 6px;
-    margin-top: 6px;       /* pegado a tarjeta */
-    margin-bottom: 24px;   /* espacio con siguiente tarjeta */
+    margin-top: 6px;
+    margin-bottom: 8px;
 }
 
 .actions .btn-sm {
@@ -157,30 +173,10 @@ textarea {
     font-size: 15px;
 }
 
-/* ---- Responsive móvil ---- */
 
-@media (max-width: 700px) {
-
-    textarea {        font-size: 18px;    }
-
-    .preview {        font-size: 19px;    }
-
-    .filename {        font-size: 17px;    }
-
-    /* Botones acciones más táctiles */
-    .actions .btn-sm {
-        padding: 10px 14px !important;
-        font-size: 16px !important;
-        border-radius: 18px !important;
-    }
-
-    /* Borrar solo icono */
-    .btn-danger span {
-        display: none;
-    }
-}
-
-/* ---- Grupos ---- */
+/* ------------------------------------------------------
+   AGRUPACIÓN POR MESES
+------------------------------------------------------ */
 
 .grupo-titulo {
     margin-top: 22px;
@@ -190,22 +186,38 @@ textarea {
     opacity: 0.85;
 }
 
-/* ---- Footer ---- */
+.logo-editar {
+    height: 60px;
+    width: auto;
+    opacity: 0.9;
+    margin-bottom: 8px;
+    display: block;
+}
 
-footer {
+
+/* ------------------------------------------------------
+   FOOTER
+------------------------------------------------------ */
+
+.app-footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
     margin-top: 40px;
-    text-align: center;
+    opacity: 0.9;
     font-size: 12px;
-    opacity: 0.7;
 }
 
-footer img {
-    height: 18px;
-    vertical-align: middle;
-    margin-right: 4px;
+.app-footer img {
+    height: 26px;
+    width: auto;
 }
 
-/* ---- Login ---- */
+
+/* ------------------------------------------------------
+   LOGIN
+------------------------------------------------------ */
 
 .login-wrapper {
     display: flex;
@@ -237,26 +249,74 @@ footer img {
     margin-bottom: 12px;
     font-size: 16px;
 }
-.logo {
-    height: 30px;
-    margin-right: 10px;
-    border-radius: 4px; /* opcional: da toque pro */
+
+.login-logo {
+    width: 300px;
+    height: auto;
+    margin-bottom: 1px;
 }
 
-.title-pro {
-    font-size: 30px;
-    font-weight: 700;
-    color: white;
-    letter-spacing: -0.6px;
-    margin-bottom: 6px;
+
+/* ------------------------------------------------------
+   NUEVO: BOTONES A LA DERECHA MINIMALISTA
+------------------------------------------------------ */
+
+.note.horizontal {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
 }
-.login-logo {
-    width: 150px;
-    height: auto;
-    margin-bottom: 15px;
+
+.note.horizontal .card {
+    flex-grow: 1;
+    margin: 0;
+    padding: 10px 14px;
 }
-textarea.form-control {
-    font-size: 20px !important;
-    line-height: 1 !important;
-    padding: 10px 14px !important;
+
+.btn-icon {
+    padding: 6px 8px !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px !important;
+    font-size: 18px;
+    width: 36px;
+    height: 36px;
+    line-height: 1;
+}
+
+.note.horizontal .actions {
+    display: flex;
+    flex-direction: row;
+    gap: 6px;
+    margin: 0;
+}
+
+
+/* ------------------------------------------------------
+   RESPONSIVE
+------------------------------------------------------ */
+
+@media (max-width: 700px) {
+
+    textarea {
+        white-space: pre-wrap;
+        line-height: 1.25;
+        overflow-wrap: break-word;
+    }
+
+    .preview {
+        font-size: 18px;
+        line-height: 1.4;
+    }
+
+    .note.horizontal .btn-icon {
+        width: 42px;
+        height: 42px;
+        font-size: 20px;
+        border-radius: 12px !important;
+    }
+
+    .btn-danger span { display: none; }
 }
