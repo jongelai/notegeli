@@ -17,22 +17,17 @@
         <img class="logo-editar" src="{{ url_for('static', filename='logogeli.png') }}">
         <h2 class="m-0">Editar</h2>
     </div>
-    <a href="/" class="btn btn-secondary btn-sm">
-        <i class="bi bi-arrow-left"></i> Volver
-    </a>
+    
 </div>
 
 <form method="POST">
     <textarea name="texto" rows="10" class="form-control mb-3">{{ contenido|replace('\r\n','\n')|replace('\r','\n') }}</textarea>
 
-    <div class="d-flex gap-2">
-        <button type="submit" class="btn btn-primary flex-fill">
-            <i class="bi bi-check-lg"></i> Guardar
-        </button>
-        <a href="/" class="btn btn-secondary flex-fill">
-            <i class="bi bi-x-lg"></i> Cancelar
-        </a>
+    <div class="d-flex gap-2 mt-3">
+        <button type="submit" class="btn btn-primary">Guardar</button>
+        <a href="/" class="btn btn-secondary">Volver</a>
     </div>
+
 </form>
 
 </body>
