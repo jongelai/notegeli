@@ -16,9 +16,11 @@
 
 <body class="container py-2">
 
-<div class="header mb-3">
-    <img src="{{ url_for('static', filename='icons/192.png') }}" style="height:34px;width:auto;border-radius:8px;">
-    <div class="title-pro">Agenda 2026</div>
+<div class="header mb-3 d-flex align-items-center justify-content-center">
+    <img src="{{ url_for('static', filename='icons/192.png') }}" 
+         style="height:34px; width:auto; border-radius:8px;" 
+         class="me-2">
+    <div class="title-pro" style="margin: 0; line-height: 1;">Agenda 2026</div>
 </div>
 
 <form method="POST" class="mb-3">

@@ -28,7 +28,9 @@ html, body {
 ------------------------------------------------------ */
 .header {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;        /* Cambiado de column a row */
+    align-items: center;        /* Centrado vertical */
+    justify-content: center;    /* Centrado horizontal */
     gap: 10px;
     margin-bottom: 14px;
 }
@@ -154,12 +156,15 @@ textarea {
     height: 100vh;
 }
 .logo-editar {
-    width: 250px;
-    max-width: 70%;
+    width: 120px;
+    max-width: 80%;
     height: auto;
     display: block;
-    margin: 0 auto 16px auto;
+    margin: 6px auto 1px auto;
+    object-fit: contain;
 }
+
+
 
 .login-logo {
     width: 300px;
