@@ -1,17 +1,21 @@
 /* ------------------------------------------------------
-   GLOBAL PAGE LAYOUT
+   RESET + BASE GLOBAL
 ------------------------------------------------------ */
+* { box-sizing: border-box; }
+
 html, body {
     height: 100vh;
     margin: 0;
     padding: 0;
     background: #121212;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
-                 Roboto, Helvetica, Arial, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     color: white;
     overflow: hidden;
 }
 
+/* ------------------------------------------------------
+   CONTENEDOR PRINCIPAL
+------------------------------------------------------ */
 .container {
     display: flex;
     flex-direction: column;
@@ -24,12 +28,13 @@ html, body {
 ------------------------------------------------------ */
 .header {
     display: flex;
-    align-items: center;
+    flex-direction: column;
     gap: 10px;
     margin-bottom: 14px;
 }
 
 textarea {
+    width: 100%;
     background: #1c1c1e;
     color: white;
     border: none;
@@ -46,21 +51,6 @@ textarea {
     margin-top: 10px;
     margin-bottom: 14px;
 }
-.logo-editar {
-    width: 160px;
-    height: auto;
-    opacity: 0.9;
-    margin-bottom: 10px;
-    display: block;
-    align-self: center;
-}
-
-/* móvil */
-@media (max-width: 600px) {
-    .logo-editar {
-        width: 120px;
-    }
-}
 
 /* ------------------------------------------------------
    SCROLL SOLO PARA NOTAS
@@ -73,7 +63,7 @@ textarea {
 }
 
 /* ------------------------------------------------------
-   NOTAS + TARJETAS + BOTONES A LA DERECHA
+   TARJETAS / NOTAS
 ------------------------------------------------------ */
 .note {
     display: flex;
@@ -115,26 +105,14 @@ textarea {
     font-weight: 500;
     border: none;
     cursor: pointer;
+    padding: 8px 12px;
 }
 
-.btn:hover {
-    opacity: 0.93;
-}
+.btn:hover { opacity: 0.93; }
 
-.btn-success {
-    background: #30D158 !important;
-    color: #fff !important;
-}
-
-.btn-warning {
-    background: #E5B700 !important;
-    color: #000 !important;
-}
-
-.btn-danger {
-    background: #FF453A !important;
-    color: #fff !important;
-}
+.btn-success { background: #30D158 !important; color: white !important; }
+.btn-warning { background: #E5B700 !important; color: black !important; }
+.btn-danger  { background: #FF453A !important; color: white !important; }
 
 .btn-icon {
     width: 40px;
@@ -163,35 +141,31 @@ textarea {
     font-size: 16px;
     opacity: 0.85;
 }
-.login-label {
-    font-size: 15px;
-    margin-bottom: 4px;
-    display: block;
-    color: rgba(255,255,255,0.85);
-}
 
 /* ------------------------------------------------------
-   LOGIN
+   LOGIN PAGE
 ------------------------------------------------------ */
-.login-btn-wrap {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    margin-top: 10px;
-}
-
-.login-btn {
-    padding: 10px 26px;
-    font-size: 17px;
-    border-radius: 14px !important;
-}
-
 .login-wrapper {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     padding: 24px;
-    margin-top: 22vh;
+    height: 100vh;
+}
+.logo-editar {
+    width: 250px;
+    max-width: 70%;
+    height: auto;
+    display: block;
+    margin: 0 auto 16px auto;
+}
+
+.login-logo {
+    width: 300px;
+    max-width: 70%;
+    height: auto;
+    margin-bottom: 12px;
 }
 
 .login-title {
@@ -206,78 +180,58 @@ textarea {
     margin-bottom: 18px;
 }
 
+.login-form {
+    width: 100%;
+    max-width: 420px;
+}
+
+.login-form label {
+    color: #fff;
+    font-size: 15px;
+    margin-bottom: 4px;
+    display: block;
+}
+
 .login-form input {
     width: 100%;
-    padding: 12px;
+    padding: 14px 18px;
     border-radius: 14px;
     border: none;
     background: #1c1c1e;
     color: white;
     margin-bottom: 12px;
-    font-size: 16px;
+    font-size: 17px;
 }
+
 .login-form input::placeholder {
     color: #aaa !important;
 }
 
-.login-logo {
-    width: 300px;
-    max-width: 70%;
-    height: auto;
-    margin-bottom: 10px;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-}
-.login-form label {
-    color: #fff;
-}
-
-/* móvil */
-@media (max-width: 600px) {
-    .login-logo {
-        width: 150px;
-        max-width: 80%;
-    }
-}
-
-/* ------------------------------------------------------
-   FOOTER
------------------------------------------------------- */
-.app-footer {
+.login-btn-wrap {
+    width: 100%;
     display: flex;
-    align-items: center;
     justify-content: center;
-    gap: 8px;
-    margin-top: 40px;
-    opacity: 0.9;
-    font-size: 12px;
+    margin-top: 14px;
 }
 
-.app-footer img {
-    height: 26px;
-    width: auto;
+.login-btn {
+    padding: 14px 32px;
+    font-size: 18px;
+    border-radius: 14px !important;
+    background: #30D158;
+    border: none;
+    color: white;
+    cursor: pointer;
 }
 
 /* ------------------------------------------------------
-   RESPONSIVE
+   MODALES
 ------------------------------------------------------ */
-@media (max-width: 600px) {
-    .btn-icon {
-        width: 30px;
-        height: 60px;
-        font-size: 14px;
-    }
-
-    .actions {
-        flex-direction: column;
-    }
-}
 .modal-overlay {
     position: fixed;
     inset: 0;
     background: rgba(0,0,0,0.55);
-    display: flex;
+    display: none;
     justify-content: center;
     align-items: center;
     z-index: 999;
@@ -299,34 +253,57 @@ textarea {
 
 .modal-buttons {
     display: flex;
-    justify-content: space-around;
+    justify-content: flex-end;
     gap: 10px;
 }
-.modal-borrar {
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom:0;
-    display: none;
+
+/* ------------------------------------------------------
+   FOOTER
+------------------------------------------------------ */
+.app-footer {
+    display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(0,0,0,0.55);
-    z-index: 999;
-}
-
-.modal-content {
-    background: #1c1c1e;
-    border-radius: 12px;
-    padding: 20px;
-    width: 85%;
-    max-width: 340px;
-}
-
-.modal-buttons {
-    display: flex;
-    justify-content: flex-end;
     gap: 8px;
-    margin-top: 12px;
+    margin-top: 40px;
+    opacity: 0.9;
+    font-size: 12px;
 }
 
-.modal-text {
-    font-size: 17px;
+.app-footer img {
+    height: 26px;
+    width: auto;
+}
+
+/* ------------------------------------------------------
+   RESPONSIVE MOVIL
+------------------------------------------------------ */
+@media (max-width: 600px) {
+    .login-wrapper {
+        padding: 18px;
+        height: calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+        justify-content: center;
+        align-items: center;
+        margin-top: 0 !important;
+    }
+
+    .login-logo {
+        max-width: 90%;
+    }
+
+    .login-form input {
+        font-size: 18px;
+        padding: 14px 20px;
+    }
+
+    .login-btn {
+        font-size: 18px;
+        padding: 14px 32px;
+    }
+
+    .btn-icon {
+        width: 30px;
+        height: 58px;
+        font-size: 14px;
+    }
 }
