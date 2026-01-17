@@ -46,6 +46,16 @@ textarea {
     resize: none;
     box-shadow: 0 0 0 1px #2d2d2d;
 }
+textarea[name="texto"] {
+    font-size: 20px;
+    padding: 12px 15px;
+    line-height: 1.45;
+    border-radius: 10px;
+    border: 1px solid #cfc261;
+    background: #eee16e;
+    color: white;
+}
+
 
 .botones-nueva-nota {
     display: flex;
@@ -152,9 +162,14 @@ textarea {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 24px;
-    height: 100vh;
+    padding: 20px;
+    min-height: 100vh;
 }
+.login-wrapper form {
+    width: 300px; /* o el ancho que ya tenías */
+    max-width: 90%;
+}
+
 .logo-editar {
     width: 120px;
     max-width: 80%;
