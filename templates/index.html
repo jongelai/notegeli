@@ -16,22 +16,23 @@
     <!-- Header -->
     <div class="header-mini">
         <img src="{{ url_for('static', filename='icons/512.png') }}" class="logo-mini">
-        <h5 class="title-mini">AGENDA 2026 v1</h5>
+        <h5 class="title-mini">AGENDA Geli>
     </div>
 
     <!-- Aviso mañana -->
     {% if manana %}
-        {% for m in manana %}
-        <div class="aviso-manana">
-            <i class="bi bi-alarm"></i>
-            <span>Mañana — {{ m }}</span>
-        </div>
-        {% endfor %}
+    <div class="alert-manana">
+    {% for m in manana %}
+        <div class="item">⏰ Mañana — {{ m }}</div>
+    {% endfor %}
+    </div>
     {% endif %}
+
 
     <!-- Añadir nota -->
     <form method="POST" class="add-box">
-        <textarea name="texto" placeholder="Escribir nota..." class="textarea"></textarea>
+        <textarea name="texto" rows="4" placeholder="Escribir nota..." class="textarea"></textarea>
+
 
         <div class="add-row">
             <input type="date" name="fecha" class="date-input">
@@ -63,6 +64,15 @@
 <script>
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/service-worker.js');
+}
+</script>
+<script>
+const ta = document.querySelector('textarea[name="texto"]');
+if (ta) {
+  ta.addEventListener('input', () => {
+    ta.style.height = 'auto';
+    ta.style.height = Math.min(ta.scrollHeight, 8 * 22) + 'px';
+  });
 }
 </script>
 
