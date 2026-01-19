@@ -4,120 +4,65 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Notegeli 2026</title>
+
     <link rel="manifest" href="/manifest.json">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='notegeli.css') }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
-    <style>
-        body { background-color: #000; color: #fff; font-family: sans-serif; }
-        
-        /* Cabecera mini */
-        .header-mini { display: flex; align-items: center; justify-content: center; padding: 10px 0; }
-        
-        /* Carrusel Compacto */
-        .carrusel-calendario {
-            display: flex; overflow-x: auto; gap: 8px; padding-bottom: 5px; scrollbar-width: none;
-        }
-        .carrusel-calendario::-webkit-scrollbar { display: none; }
-        .card-cita {
-            flex: 0 0 95px; background: #1e222d; border: 1px solid #3d5afe; 
-            border-radius: 10px; padding: 6px; text-align: center; text-decoration: none;
-        }
-
-        /* Formulario Optimizado */
-        .textarea-compacta {
-            background-color: #111 !important; color: white !important;
-            border: 1px solid #222 !important; border-radius: 12px;
-            font-size: 0.95rem; resize: none; margin-bottom: 8px;
-        }
-        .input-row { display: flex; gap: 8px; }
-
-        /* Lista de Notas Ultra-Compacta */
-        .notes-wrapper-scroll {
-            max-height: 55vh; overflow-y: auto; margin-top: 15px;
-        }
-        .nota-fila {
-            display: flex; align-items: center; padding: 10px; margin-bottom: 6px;
-            background: #111; border-radius: 10px; border-left: 4px solid #333;
-        }
-        .nota-calendario { background: #1a1e29; border-left-color: #3d5afe; }
-        
-        .tiempo-tag { font-size: 0.7rem; font-weight: bold; min-width: 45px; margin-right: 10px; }
-        .texto-principal { font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex-grow: 1; }
-    </style>
 </head>
+
 <body class="container">
 
+    <!-- Header -->
     <div class="header-mini">
-        <img src="{{ url_for('static', filename='icons/512.png') }}" style="height:30px; border-radius:6px;" class="me-2">
-        <h5 class="m-0 fw-bold">AGENDA 2026</h5>
+        <img src="{{ url_for('static', filename='icons/512.png') }}" class="logo-mini">
+        <h5 class="title-mini">AGENDA 2026 v1</h5>
     </div>
 
-<div class="mb-3">
-        {% if avisos %}
-            {% for aviso in avisos %}
-            <div class="p-2 mb-2" style="background: linear-gradient(90deg, #121a14 0%, #000 100%); border-left: 4px solid #30D158; border-radius: 8px; box-shadow: 0 0 10px rgba(48, 209, 88, 0.2);">
-                <span class="text-success fw-bold" style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px;">
-                    <i class="bi bi- megaphone-fill"></i> HOY
-                </span>
-                <div class="text-white fw-bold" style="font-size: 0.95rem;">{{ aviso }}</div>
-            </div>
-            {% endfor %}
-        {% endif %}
-
-        {% if manana %}
-            {% for m in manana %}
-            <div class="p-2 mb-2" style="background: linear-gradient(90deg, #241b10 0%, #000 100%); border-left: 4px solid #ff9f0a; border-radius: 8px; border-right: 1px solid rgba(255, 159, 10, 0.2);">
-                <span style="color: #ff9f0a; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;">
-                    <i class="bi bi-clock-history"></i> MAÑANA
-                </span>
-                <div style="color: #ffb340; font-size: 0.9rem; font-weight: 600;">{{ m }}</div>
-            </div>
-            {% endfor %}
-        {% endif %}
-    </div>
-
-    {% if avisos %}
-    <div class="mb-3">
-        {% for aviso in avisos %}
-        <div class="p-2 small" style="background: #1c1c1e; border-left: 3px solid #30D158; border-radius: 4px; font-size: 0.8rem;">
-            <span class="text-success fw-bold">HOY:</span> {{ aviso }}
+    <!-- Aviso mañana -->
+    {% if manana %}
+        {% for m in manana %}
+        <div class="aviso-manana">
+            <i class="bi bi-alarm"></i>
+            <span>Mañana — {{ m }}</span>
         </div>
         {% endfor %}
-    </div>
     {% endif %}
 
-    <form method="POST" class="mb-2">
-        <textarea name="texto" class="form-control textarea-compacta" placeholder="Escribir nota..." rows="3"></textarea>
-        
-        <div class="input-row">
-            <input type="date" name="fecha" class="form-control form-control-sm bg-dark border-0 text-white" style="border-radius: 8px;">
-            <button type="submit" class="btn btn-primary btn-sm fw-bold px-4" style="border-radius: 8px;">AÑADIR</button>
+    <!-- Añadir nota -->
+    <form method="POST" class="add-box">
+        <textarea name="texto" placeholder="Escribir nota..." class="textarea"></textarea>
+
+        <div class="add-row">
+            <input type="date" name="fecha" class="date-input">
+            <button type="submit" class="btn-amber">AÑADIR</button>
         </div>
     </form>
 
+    <!-- Lista -->
     <div class="notes-wrapper-scroll">
         {% for n in notas %}
         <div class="nota-fila {{ 'nota-calendario' if n.tiempo.es_fecha else '' }}">
-            <a href="/editar/{{ n.archivo }}" class="text-decoration-none text-white d-flex align-items-center flex-grow-1 overflow-hidden">
-                <div class="tiempo-tag {{ 'text-primary' if n.tiempo.es_fecha else 'text-muted' }}">
+            <a href="/editar/{{ n.archivo }}" class="nota-link">
+                <div class="tiempo-tag {{ 'text-primary' if n.tiempo.es_fecha else '' }}">
                     {{ n.tiempo.valor[5:] if n.tiempo.es_fecha else n.tiempo.valor }}
                 </div>
                 <div class="texto-principal">
                     {% if n.tiempo.es_fecha %}
                         {{ n.preview }}
                     {% else %}
-                        <span class="fw-bold">{{ n.titulo }}</span> <span class="text-secondary small">- {{ n.preview[:30] }}</span>
+                        <strong>{{ n.titulo }}</strong> - {{ n.preview[:30] }}
                     {% endif %}
                 </div>
             </a>
-            <a href="/borrar/{{ n.archivo }}" class="btn btn-link text-danger p-1 ms-2"><i class="bi bi-trash3" style="font-size: 0.9rem;"></i></a>
+            <a href="/borrar/{{ n.archivo }}" class="btn-delete"><i class="bi bi-trash3"></i></a>
         </div>
         {% endfor %}
     </div>
+
 <script>
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/service-worker.js');
+    navigator.serviceWorker.register('/service-worker.js');
 }
 </script>
 

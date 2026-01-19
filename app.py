@@ -108,38 +108,30 @@ def index():
 def editar(archivo):
     if "user" not in session:
         return redirect(url_for("login"))
-    
+
     path_viejo = os.path.join(NOTAS_DIR, archivo)
-    
+
     if request.method == "POST":
         nuevo_texto = request.form.get("texto")
-        nueva_fecha = request.form.get("fecha")
-        
+
         if nuevo_texto:
-            if os.path.exists(path_viejo):
-                os.remove(path_viejo)
-            
-            ts = datetime.now().strftime("%H%M%S")
-            titulo_linea = nuevo_texto.splitlines()[0][:20] if nuevo_texto.strip() else "Nota"
-            titulo = "".join(e for e in titulo_linea if e.isalnum() or e == " ").strip()
-            
-            prefijo = nueva_fecha if (nueva_fecha and nueva_fecha != "") else "sinfecha"
-            nuevo_nombre = f"{prefijo}_{titulo}_{ts}.txt"
-            
-            with open(os.path.join(NOTAS_DIR, nuevo_nombre), "w", encoding="utf-8") as f:
+            with open(path_viejo, "w", encoding="utf-8") as f:
                 f.write(nuevo_texto)
+
         return redirect(url_for("index"))
 
+    # --- GET: cargar contenido actual ---
     if not os.path.exists(path_viejo):
         return redirect(url_for("index"))
-        
+
     with open(path_viejo, "r", encoding="utf-8") as f:
         contenido = f.read()
-    
+
     info = extraer_info_tiempo(archivo)
     fecha_val = info["valor"] if info["es_fecha"] else ""
-    
+
     return render_template("editar.html", contenido=contenido, fecha=fecha_val)
+
 
 @app.route("/borrar/<archivo>")
 def borrar(archivo):
