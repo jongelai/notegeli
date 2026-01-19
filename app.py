@@ -153,7 +153,7 @@ def login():
 def logout():
     session.clear()
     return redirect(url_for("login"))
-
+ 
 
 @app.route('/manifest.json')
 def manifest():

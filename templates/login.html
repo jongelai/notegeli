@@ -1,36 +1,24 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Login — Notegeli</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='notegeli.css') }}">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Entrar - Notegeli</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='login.css') }}">
 </head>
 <body>
 
-<div class="login-wrapper">
-    <img src="{{ url_for('static', filename='logogeli.png') }}" class="login-logo">
-
-    <div class="login-title">Agenda2026</div>
-    <div class="login-sub">Tu mini agenda personal _v1</div>
+<div class="login-box">
+    <img src="{{ url_for('static', filename='logogeli.png') }}" class="login-logo-big">
+    
+    <h3 class="login-title">Notegeli</h3>
 
     <form method="POST" class="login-form">
-        <div class="input-group">
-            <label for="usuario" class="login-label">Usuario:</label>
-            <input type="text" id="usuario" name="usuario" placeholder="Tu usuario" autofocus>
-        </div>
-
-        <div class="input-group">
-            <label for="password" class="login-label">Contraseña:</label>
-            <input type="password" id="password" name="password" placeholder="Tu contraseña" autocomplete="current-password">
-        </div>
-
-        <div class="login-btn-wrap">
-            <button type="submit" class="btn btn-primary login-btn">Entrar</button>
-        </div>
-
-        {% if error %}
-        <div class="login-error mt-2">{{ error }}</div>
-        {% endif %}
+        <input type="text" name="usuario" placeholder="Usuario" class="login-input">
+        <input type="password" name="password" placeholder="Contraseña" class="login-input">
+        <button type="submit" class="btn-amber login-btn">Entrar</button>
     </form>
 </div>
 
