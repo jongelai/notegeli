@@ -1,0 +1,402 @@
+/* ------------------------------------------------------
+   RESET + BASE GLOBAL
+------------------------------------------------------ */
+* { box-sizing: border-box; }
+
+html, body {
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    background: #121212;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: white;
+    overflow: hidden;
+}
+
+/* ------------------------------------------------------
+   CONTENEDOR PRINCIPAL
+------------------------------------------------------ */
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    padding: 16px;
+}
+.nota-urgente {
+    border-left: 4px solid #ff453a; /* Rojo tipo iOS para hoy */
+    background: linear-gradient(90deg, #2c1a1a 0%, #222 100%);
+}
+
+.cita-hora {
+    color: #30D158; /* El verde que te gusta para resaltar la hora */
+    font-weight: bold;
+    font-size: 14px;
+    margin-right: 10px;
+}
+/* ------------------------------------------------------
+   HEADER + NUEVA NOTA
+------------------------------------------------------ */
+.header {
+    display: flex;
+    flex-direction: row;        /* Cambiado de column a row */
+    align-items: center;        /* Centrado vertical */
+    justify-content: center;    /* Centrado horizontal */
+    gap: 10px;
+    margin-bottom: 14px;
+}
+
+textarea {
+    width: 100%;
+    background: #1c1c1e;
+    color: white;
+    border: none;
+    border-radius: 22px;
+    padding: 14px 16px;
+    font-size: 18px;
+    resize: none;
+    box-shadow: 0 0 0 1px #2d2d2d;
+}
+textarea[name="texto"] {
+    font-size: 20px;
+    padding: 12px 15px;
+    line-height: 1.45;
+    border-radius: 10px;
+    border: 1px solid #d0c88b;
+    background: #dfdbbd;
+    color: white;
+}
+
+
+.botones-nueva-nota {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    margin-top: 10px;
+    margin-bottom: 14px;
+}
+
+/* ------------------------------------------------------
+   SCROLL SOLO PARA NOTAS
+------------------------------------------------------ */
+.notes-wrapper {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 40px;
+}
+
+/* ------------------------------------------------------
+   TARJETAS / NOTAS
+------------------------------------------------------ */
+.note {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.card {
+    flex-grow: 1;
+    background: #fffde2;
+    color: black;
+    border-radius: 7px;
+    padding: 10px 14px;
+    box-shadow: 0px 1px 4px rgba(0,0,0,0.25);
+}
+
+.filename {
+    font-size: 12px;
+    opacity: 0.6;
+    margin-bottom: 5px;
+}
+
+.preview {
+    font-size: 17px;
+    line-height: 1.4;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+/* ------------------------------------------------------
+   BOTONES
+------------------------------------------------------ */
+.btn {
+    border-radius: 10px !important;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    padding: 8px 12px;
+}
+
+.btn:hover { opacity: 0.93; }
+
+.btn-success { background: #30D158 !important; color: white !important; }
+.btn-warning { background: #E5B700 !important; color: black !important; }
+.btn-danger  { background: #FF453A !important; color: white !important; }
+
+.btn-icon {
+    width: 40px;
+    height: 30px;
+    padding: 0;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px !important;
+}
+
+.actions {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+/* ------------------------------------------------------
+   AGRUPACIÓN POR MESES
+------------------------------------------------------ */
+.grupo-titulo {
+    margin-top: 22px;
+    margin-bottom: 8px;
+    font-weight: bold;
+    font-size: 16px;
+    opacity: 0.85;
+}
+
+/* ------------------------------------------------------
+    LOGIN PAGE - Estructura Principal
+------------------------------------------------------ */
+.login-wrapper {
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start; /* Todo arriba para que no lo tape el teclado */
+    min-height: 100vh;
+    text-align: center;
+    padding-top: 20px !important;
+    box-sizing: border-box;
+    background-color: #000; /* O tu color de fondo */
+}
+
+/* Logos y Textos superiores */
+.login-logo {
+    width: 250px; /* Reducido un poco para ganar espacio arriba */
+    max-width: 70%;
+    height: auto;
+    margin-top: 0 !important;    /* Elimina cualquier espacio superior */
+    margin-bottom: 5px !important; /* Pega el título al logo */
+    display: inline-block;
+}
+
+.login-title {
+    text-align: center;
+    margin-top: 0;
+    color: #fff;
+    font-size: 26px;
+    font-weight: 600;
+    margin-bottom: 0px;
+}
+
+.login-sub {
+    color: #fff;
+    font-size: 14px;
+    opacity: 0.75;
+    margin-bottom: 20px;
+}
+
+/* ------------------------------------------------------
+    FORMULARIO - Alineación Horizontal
+------------------------------------------------------ */
+.logo-editar{width: 50%;}
+.login-form {
+    width: 90%;
+    max-width: 450px;
+    margin: 0 auto;
+}
+
+.input-group {
+    display: flex;
+    align-items: center;  /* Alinea label e input verticalmente al centro entre ellos */
+    margin-bottom: 15px;
+    width: 50%;
+}
+
+.login-label {
+    flex: 0 0 90px;       /* Ancho fijo para las etiquetas */
+    text-align: right;
+    margin-right: 15px;
+    color: #fff;
+    font-size: 15px;
+    margin-bottom: 0 !important; /* Forzamos que no haya margen inferior */
+}
+
+.login-form input {
+    flex: 1;              /* Ocupa el resto del ancho disponible */
+    min-height: 45px;
+    padding: 12px !important;
+    border-radius: 8px;
+    border: 1px solid #444;
+    background: #222;
+    color: white;
+    font-size: 16px !important; /* 16px evita el zoom automático en iOS */
+    box-sizing: border-box;
+}
+/* Textarea que se ajusta: empieza pequeño */
+.textarea-compacta {
+    min-height: 80px; /* Mucho más bajo de inicio */
+    max-height: 200px;
+    resize: none;
+    font-size: 0.9rem;
+}
+
+/* Tarjetas de notas más delgadas */
+.nota-mini {
+    padding: 8px 12px !important; /* Menos relleno */
+    margin-bottom: 6px !important; /* Menos separación */
+}
+
+/* Títulos y textos más pequeños para que quepan en una línea */
+.texto-nota {
+    font-size: 0.9rem !important;
+    line-height: 1.2;
+}
+
+/* Ajuste del carrusel de fechas para que no sea tan alto */
+.card-cita {
+    flex: 0 0 90px;
+    padding: 6px !important;
+}
+.input-agenda {
+    flex: 1;
+    min-height: 45px;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #444;
+    background: #222;
+    color: white;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+.login-form input::placeholder {
+    color: #aaa !important;
+}
+
+/* ------------------------------------------------------
+    BOTÓN Y EXTRAS
+------------------------------------------------------ */
+.login-btn-wrap {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.login-btn {
+    width: 80%;          /* En móvil es mejor que el botón sea ancho */
+    max-width: 150px;
+    padding: 14px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 14px !important;
+    background: #30D158;
+    border: none;
+    color: white;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.login-btn:active {
+    opacity: 0.8;
+}
+
+.login-error {
+    color: #ff453a;
+    margin-top: 15px;
+    text-align: center;
+    font-size: 14px;
+}
+
+/* ------------------------------------------------------
+   MODALES
+------------------------------------------------------ */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+
+.modal-box {
+    background: #1f1f1f;
+    padding: 18px;
+    border-radius: 14px;
+    width: 80%;
+    max-width: 310px;
+    text-align: center;
+}
+
+.modal-text {
+    font-size: 16px;
+    margin-bottom: 16px;
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+/* ------------------------------------------------------
+   FOOTER
+------------------------------------------------------ */
+.app-footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 40px;
+    opacity: 0.9;
+    font-size: 12px;
+}
+
+.app-footer img {
+    height: 26px;
+    width: auto;
+}
+
+/* ------------------------------------------------------
+   RESPONSIVE MOVIL
+------------------------------------------------------ */
+@media (max-width: 600px) {
+    .login-wrapper {
+        padding: 0px;
+        height: calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+        justify-content: center;
+        align-items: center;
+        margin-top: 0 !important;
+    }
+
+    .login-logo {
+        max-width: 90%;
+    }
+
+    .login-form input {
+        font-size: 100px;
+        padding: 14px 20px x;
+    }
+
+    .login-btn {
+        font-size: 18px;
+        padding: 14px 32px;
+    }
+
+    .btn-icon {
+        width: 30px;
+        height: 58px;
+        font-size: 14px;
+    }
+}
