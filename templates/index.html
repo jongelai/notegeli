@@ -26,7 +26,8 @@
     {% if manana %}
     <div class="banner-manana">
         {% for m in manana %}
-        📅 Mañana — {{ m }}<br>
+        <i class="bi bi-calendar-date"></i> Mañana — {{ m }}
+
         {% endfor %}
     </div>
     {% endif %}
@@ -47,7 +48,7 @@
         <div class="nota-fila {{ 'nota-calendario' if n.tiempo.es_fecha else '' }}">
             <a href="/editar/{{ n.archivo }}" class="nota-link">
                 <span class="tiempo-tag">
-                    {{ n.tiempo.valor[5:] if n.tiempo.es_fecha else n.tiempo.valor }}
+                    <i class="bi bi-calendar-date"></i> {{ n.tiempo.valor }}
                 </span>
                 <span class="nota-texto">{{ n.preview }}</span>
             </a>
