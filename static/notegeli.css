@@ -1,4 +1,5 @@
-html, body {
+html,
+body {
     margin: 0;
     padding: 0;
     background: #111;
@@ -8,60 +9,6 @@ html, body {
     font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif;
 }
 
-/* APP */
-.app-container {
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    padding: 12px;
-    overflow: hidden;
-}
-
-/* HEADER */
-.header-mini {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    margin-bottom: 10px;
-}
-.logo-mini { height: 28px; border-radius: 6px; }
-.title-mini { margin: 0; font-weight: 700; }
-
-/* MAÑANA */
-.banner-manana {
-    background: #241b10;
-    border-left: 4px solid #ff9f0a;
-    padding: 6px 10px;
-    border-radius: 8px;
-    color: #ffb340;
-    font-size: 0.9rem;
-    margin-bottom: 10px;
-}
-
-/* FORM */
-.nuevo-form {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    margin-bottom: 10px;
-}
-
-.textarea {
-    background: #181818;
-    border: 1px solid #222;
-    border-radius: 10px;
-    color: white;
-    padding: 8px 10px;
-    resize: none;
-    min-height: 90px;
-}
-
-/* FILA FECHA+BOTON */
-.add-row {
-    display: flex;
-    gap: 8px;
-}
 .input-fecha {
     flex: 1;
     background: #181818;
@@ -70,24 +17,6 @@ html, body {
     padding: 6px 10px;
     color: white !important;
     -webkit-text-fill-color: white !important;
-}
-.btn-amber {
-    background: #ff9f0a;
-    border: none;
-    color: black;
-    font-weight: 700;
-    padding: 6px 12px;
-    border-radius: 8px;
-}
-
-/* LISTA */
-.notes-scroll {
-    flex: 1;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    padding-bottom: 8px;
 }
 
 .nota-fila {
@@ -104,6 +33,20 @@ html, body {
     background: #1d2235;
 }
 
+.btn-amber {
+    background: #ff9f0a;
+    border: none;
+    color: black;
+    font-weight: 700;
+    padding: 6px 12px;
+    border-radius: 8px;
+}
+
+.nota-calendario {
+    border-left-color: #3d5afe;
+    background: #1d2235;
+}
+
 .nota-link {
     flex: 1;
     display: flex;
@@ -113,20 +56,108 @@ html, body {
     overflow: hidden;
 }
 
+
+
+
+.btn-delete {
+    color: #ff453a;
+    font-size: 1rem;
+    padding-left: 6px;
+}
+
+.textarea {
+    background: #181818;
+    border: 1px solid #222;
+    border-radius: 10px;
+    color: white;
+    padding: 8px 10px;
+    resize: none;
+    min-height: 90px;
+}
+
+.banner-manana {
+    background: #241b10;
+    border-left: 4px solid #ff9f0a;
+    padding: 6px 10px;
+    border-radius: 8px;
+    color: #ffb340;
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+}
+
+.input-fecha {
+    flex: 1;
+    background: #181818;
+    border: 1px solid #222;
+    border-radius: 8px;
+    padding: 6px 10px;
+    color: white !important;
+    -webkit-text-fill-color: white !important;
+}
+
+.app-container {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 12px;
+    overflow: hidden;
+}
+
+/* HEADER */
+.header-mini {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-bottom: 10px;
+}
+
+.logo-mini {
+    height: 28px;
+    border-radius: 6px;
+}
+
+.title-mini {
+    margin: 0;
+    font-weight: 700;
+}
+
+/* MAÑANA */
+
+
+/* FORM */
+.nuevo-form {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 10px;
+}
+
+
+
+/* FILA FECHA+BOTON */
+.add-row {
+    display: flex;
+    gap: 8px;
+}
+
+
+/* LISTA */
+
+
+
+
 .tiempo-tag {
     min-width: 45px;
     font-size: 0.75rem;
     opacity: .85;
 }
 
-.nota-texto {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.btn-delete {
-    color: #ff453a;
-    font-size: 1rem;
-    padding-left: 6px;
+.notes-scroll {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding-bottom: 8px;
 }
