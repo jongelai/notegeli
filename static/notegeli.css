@@ -106,10 +106,14 @@ body,html{
   -webkit-line-clamp:1;
   -webkit-box-orient:vertical;
 }
+input[type="date"] {
+  color:#e2e8f0 !important;
+  background:#2c2c2c !important;
+}
 
 /* TAG FECHA/HORA */
 .tiempo-tag{
-  width: 35%;
+  width:40%;
    display:inline-flex;
   align-items:center;
   gap:4px;
