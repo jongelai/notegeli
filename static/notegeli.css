@@ -1,5 +1,6 @@
 body,html{
-  background: #000 !important;
+  background: #000;
+  margin:0;
   padding:0;
   height:100vh;
   font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;
@@ -12,15 +13,11 @@ body,html{
   flex-direction:column;
   gap:10px;
   height:100vh;
-  background:#3c3c3c;
-  /*panelVSCode*/border:1px solid #161616;
+  background:#000 !important;
+  border-radius:0 !important;
   border-radius:0px;
   color:#f6de8e;
   overflow:hidden;
-  -webkit-border-radius:;
-  -moz-border-radius:;
-  -ms-border-radius:;
-  -o-border-radius:;
 }
 
 /* FORM + INPUTS */

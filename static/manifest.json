@@ -5,12 +5,13 @@
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
-  "orientation": "portrait-primary",
+  "orientation": "portrait",
   "theme_color": "#000000",
   "background_color": "#000000",
   "prefer_related_applications": false,
   "categories": ["productivity"],
   "dark_mode": true,
+  
 
   "icons": [
     {
