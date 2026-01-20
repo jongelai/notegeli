@@ -1,163 +1,275 @@
-html,
-body {
-    margin: 0;
-    padding: 0;
-    background: #111;
-    color: white;
-    height: 100vh;
-    overflow: hidden;
-    font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif;
+body,html{
+  margin:0;
+  padding:0;
+  height:100vh;
+  font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;
 }
 
-.input-fecha {
-    flex: 1;
-    background: #181818;
-    border: 1px solid #222;
-    border-radius: 8px;
-    padding: 6px 10px;
-    color: white !important;
-    -webkit-text-fill-color: white !important;
+/* PANEL PRINCIPAL */
+.app-container{
+  padding:12px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  height:100vh;
+  background:#3c3c3c; /* panel VSCode */
+  border:1px solid #c80202;
+  border-radius:10px;
+  color:#f6de8e;
 }
 
-.nota-fila {
-    display: flex;
-    align-items: center;
-    background: #1a1a1a;
-    padding: 8px;
-    border-radius: 8px;
-    border-left: 3px solid #333;
+/* FORM + INPUTS */
+.textarea
+{
+  background:#242323;
+  border:1px solid #4a8dff; /* azul VSCode más fashion */
+  border-radius:8px;
+  color:#d4d4d4;
+  box-shadow:
+    0 0 4px rgba(74,141,255,.75),
+    inset 0 0 2px rgba(74,141,255,.45),
+    0 0 0 1px rgba(74,141,255,1);
+}
+.input-fecha{
+  background:#2c2c2c !important;
+  border:2px solid rgba(74,141,255,.85) !important;
+  border-radius:10px !important;
+  padding:10px 14px !important;
+  font-size:.95rem;
+  color:#e2e8f0 !important;
+  box-shadow:
+    0 0 4px rgba(74,141,255,.75),
+    0 0 0 1px rgba(74,141,255,1);
 }
 
-.nota-calendario {
-    border-left-color: #3d5afe;
-    background: #1d2235;
+/* Placeholder más claro */
+.input-fecha::placeholder{
+  color:#a8b3c5;
 }
 
-.btn-amber {
-    background: #ff9f0a;
-    border: none;
-    color: black;
-    font-weight: 700;
-    padding: 6px 12px;
-    border-radius: 8px;
+/* Icono calendario moderno */
+.input-fecha::-webkit-calendar-picker-indicator{
+  filter:invert(90%) saturate(180%) hue-rotate(180deg);
+  opacity:.85;
+  cursor:pointer;
+  margin-left:6px;
 }
 
-.nota-calendario {
-    border-left-color: #3d5afe;
-    background: #1d2235;
+/* Hover efecto pro */
+.input-fecha:hover{
+  box-shadow:
+    0 0 7px rgba(74,141,255,.95),
+    0 0 0 1px rgba(74,141,255,1);
 }
 
-.nota-link {
-    flex: 1;
-    display: flex;
-    gap: 8px;
-    text-decoration: none !important;
-    color: white !important;
-    overflow: hidden;
+/* Focus estilo editor */
+.input-fecha:focus{
+  outline:none;
+  box-shadow:
+    0 0 10px rgba(74,141,255,1),
+    0 0 0 2px rgba(74,141,255,1);
+}
+
+.textarea{
+  min-height:8em; /* equivale a ~5 líneas */
+  line-height:1.1em;
+  padding:8px 10px;
+  resize:vertical; /* opcional si quieres que pueda estirarse */
+}
+
+/* LISTA NOTAS */
+.nota-fila{
+  display:flex;
+  align-items:center;
+  background:#2d2d2d;
+  padding:6px;
+  border-radius:8px;
+  border-left:3px solid #c6bd7a !important; /* violeta VSCode (más fashion) */
+  box-shadow:
+  0 0 4px rgba(74,141,255,.75),
+  inset 0 0 2px rgba(74,141,255,.45),
+  0 0 0 1px rgba(74,141,255,1);
+
+  color:#d4d4d4;
+}
+
+.nota-fila:hover{
+  background:#333333;
+  transform:translateX(2px);
+  box-shadow:
+    0 0 12px rgba(74,141,255,.55),
+    inset 0 0 5px rgba(74,141,255,.25);
 }
 
 
-
-
-.btn-delete {
-    color: #ff453a;
-    font-size: 1rem;
-    padding-left: 6px;
+.nota-fila:hover{
+  background:#333333;
+  transform:translateX(2px);
 }
 
-.textarea {
-    background: #181818;
-    border: 1px solid #222;
-    border-radius: 10px;
-    color: white;
-    padding: 8px 10px;
-    resize: none;
-    min-height: 90px;
+/* CALENDARIO */
+.nota-calendario{
+  border-left-color:#c586c0; /* violeta VSCode */
+  background:#323233;
 }
 
-.banner-manana {
-    background: #241b10;
-    border-left: 4px solid #ff9f0a;
-    padding: 6px 10px;
-    border-radius: 8px;
-    color: #ffb340;
-    font-size: 0.9rem;
-    margin-bottom: 10px;
-}
-
-.input-fecha {
-    flex: 1;
-    background: #181818;
-    border: 1px solid #222;
-    border-radius: 8px;
-    padding: 6px 10px;
-    color: white !important;
-    -webkit-text-fill-color: white !important;
-}
-
-.app-container {
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    padding: 12px;
-    overflow: hidden;
-}
-
-/* HEADER */
-.header-mini {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    margin-bottom: 10px;
-}
-
-.logo-mini {
-    height: 28px;
-    border-radius: 6px;
-}
-
-.title-mini {
-    margin: 0;
-    font-weight: 700;
+/* LINKS */
+.nota-link{
+  flex:1;
+  display:flex;
+  gap:8px;
+  text-decoration:none!important;
+  color:#d4d4d4!important;
+  overflow:hidden;
 }
 
 /* MAÑANA */
-
-
-/* FORM */
-.nuevo-form {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    margin-bottom: 10px;
+.banner-manana{
+  background:#2d2d2d;
+  padding:8px 10px;
+  border-radius:8px;
+  color:#ffb340;
+  border-left:3px solid #ffb340 !important;
+  box-shadow:
+    0 0 4px rgba(255,179,64,.75),
+    inset 0 0 2px rgba(255,179,64,.45),
+    0 0 0 1px rgba(255,179,64,1);
+  font-size:.9rem;
+  margin-bottom:10px;
 }
 
-
-
-/* FILA FECHA+BOTON */
-.add-row {
-    display: flex;
-    gap: 8px;
+/* AÑADIR */
+.btn-amber{
+  background:#d19a66;
+  color:#111;
+  font-weight:700;
+  padding:6px 12px;
+  border:none;
+  border-radius:6px;
 }
 
-
-/* LISTA */
-
-
-
-
-.tiempo-tag {
-    min-width: 45px;
-    font-size: 0.75rem;
-    opacity: .85;
+.btn-amber:hover{
+  filter:brightness(1.12);
 }
 
-.notes-scroll {
-    flex: 1;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    padding-bottom: 8px;
+/* BORRAR */
+.btn-delete{
+  color:#e06c75;
+  font-size:1rem;
+  padding-left:6px;
+  transition:opacity .15s;
+}
+
+.btn-delete:hover{
+  opacity:.75;
+}
+
+/* HEADER */
+.header-mini{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  margin-bottom:10px;
+  color:#d4d4d4;
+}
+
+.logo-mini{
+  height:28px;
+  border-radius:6px;
+}
+
+.title-mini{
+  margin:0;
+  font-weight:700;
+}
+
+/* FORM LAYOUT */
+.nuevo-form{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  margin-bottom:10px;
+}
+
+.add-row{
+  display:flex;
+  gap:8px;
+}
+
+.tiempo-tag{
+  min-width:45px;
+  font-size:.75rem;
+  opacity:.85;
+}
+
+/* LISTA SCROLL */
+.notes-scroll{
+  flex:1;
+  overflow-y:auto;
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+  padding-bottom:8px;
+}
+/* === EDITOR DE NOTA — ESTILO VS CODE === */
+
+/* Fondo general */
+body.container.bg-black.text-white {
+  background:#1e1e1e !important;
+  color:#d4d4d4 !important;
+}
+
+/* Header */
+.header img {
+  filter:drop-shadow(0 0 3px rgba(120,200,255,.3));
+}
+
+.header h2 {
+  color:#d4d4d4;
+}
+
+/* Input grupo */
+.input-group-text {
+  background:#2d2d2d !important;
+  border:1px solid #3c3c3c !important;
+  color:#d4d4d4 !important;
+}
+
+/* Campo fecha */
+input[type="date"] {
+  background:#2d2d2d !important;
+  border:1px solid #3c3c3c !important;
+  color:#d4d4d4 !important;
+}
+
+/* Textarea */
+textarea.form-control {
+  background:#2d2d2d !important;
+  border:1px solid #3c3c3c !important;
+  color:#d4d4d4 !important;
+  border-radius:8px !important;
+  box-shadow:0 0 6px rgba(92,146,255,.22);
+}
+
+/* Botón guardar */
+.btn-primary {
+  background:#3794ff !important;
+  border:none !important;
+  font-weight:700;
+}
+
+.btn-primary:hover {
+  filter:brightness(1.15);
+}
+
+/* Botón cancelar */
+.btn-outline-secondary {
+  border:1px solid #555 !important;
+  color:#bbb !important;
+}
+
+.btn-outline-secondary:hover {
+  background:#333 !important;
+  color:#fff !important;
 }

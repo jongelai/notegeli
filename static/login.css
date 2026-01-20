@@ -6,6 +6,24 @@ body {
     display: block;
     padding: 40px 0 0 0; /* pegado arriba */
 }
+.btn-amber {
+    background: #ff9f0a;
+    border: none;
+    color: black;
+    font-weight: 600;
+    padding: 8px 14px;
+    border-radius: 8px;
+    width: 100%;
+}
+.login-input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #333;
+    background: #1a1a1a;
+    color: white;
+    font-size: 0.95rem;
+}
 
 /* Caja login arriba */
 .login-box {
@@ -35,23 +53,5 @@ body {
     width: 230px;
 }
 
-.login-input {
-    width: 100%;
-    padding: 10px;
-    border-radius: 8px;
-    border: 1px solid #333;
-    background: #1a1a1a;
-    color: white;
-    font-size: 0.95rem;
-}
 
 /* Botón ámbar */
-.btn-amber {
-    background: #ff9f0a;
-    border: none;
-    color: black;
-    font-weight: 600;
-    padding: 8px 14px;
-    border-radius: 8px;
-    width: 100%;
-}
