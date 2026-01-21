@@ -10,14 +10,29 @@
 </head>
 <body class="container py-3 bg-black text-white">
 
-    <div class="header mb-4 d-flex align-items-center justify-content-center">
-        <img src="{{ url_for('static', filename='icons/512.png') }}" 
-             style="height:38px; border-radius:8px;" class="me-2">
-        <h3 style="font-weight: 800; margin: 0;">Editar</h3>
+       
+    <div class="header mb-4 d-flex align-items-center">
+    
+        <div class="titulo-editar d-flex align-items-center flex-grow-1 justify-content-center">
+            <img src="{{ url_for('static', filename='icons/512.png') }}" 
+                style="height:38px; border-radius:8px;" class="me-2">
+            <h3 class="m-0 fw-bold">Editar</h3>
+        </div>
+
+        <div class="color-picker ms-3">
+            <span class="color-dot" data-color="#ffcc66"></span>
+            <span class="color-dot" data-color="#ffd966"></span>
+            <span class="color-dot" data-color="#c3e88d"></span>
+            <span class="color-dot" data-color="#82aaff"></span>
+            <span class="color-dot" data-color="#f07178"></span>
+            <span class="color-dot" data-color="#b39ddb"></span>
+        </div>
+
     </div>
 
     <form method="POST">
-        <textarea name="texto" rows="12" class="form-control bg-dark text-white border-0 p-3" 
+        <input type="hidden" name="color" id="color-input" value="{{ color if color else '' }}">
+        <textarea name="texto" rows="12" class="form-control text-white border-0 p-3" 
                   style="border-radius: 12px;">{{ contenido }}</textarea>
 
         <div>
@@ -26,5 +41,29 @@
             </button>
         </div>
     </form>
+<script>
+const dots = document.querySelectorAll('.color-dot');
+const colorInput = document.getElementById('color-input');
+const textarea = document.querySelector('textarea');
+
+// Si la nota ya tenía color, aplícalo visualmente
+    {% if color %}
+    textarea.style.backgroundColor = "{{ color }}20"; // 20 = opacidad hex (suave)
+    colorInput.value = "{{ color }}";
+    {% endif %}
+
+// Al pulsar un color, lo guardamos y aplicamos
+dots.forEach(dot => {
+    dot.style.backgroundColor = dot.dataset.color;
+    dot.addEventListener('click', () => {
+        const col = dot.dataset.color;
+        colorInput.value = col;
+
+        // Fondo suave (Keep style)
+        textarea.style.backgroundColor = col + "20"; 
+    });
+});
+</script>
+
 </body>
 </html>

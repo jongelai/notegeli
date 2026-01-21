@@ -51,7 +51,11 @@
     <!-- LISTA NOTAS -->
     <div class="notes-scroll">
     {% for n in notas %}
-        <div class="nota-fila {{ 'nota-calendario' if n.tiempo.es_fecha else '' }}">
+        <div class="nota-fila 
+                {{ 'nota-calendario' if n.tiempo.es_fecha else '' }} 
+                {% if n.color %}tinted{% endif %}"
+        {% if n.color %}style="--color-base: {{ n.color }};"{% endif %}>
+
             <a href="/editar/{{ n.archivo }}" class="nota-link">
                 <span class="tiempo-tag">
                     <i class="bi bi-calendar-date"></i> {{ n.tiempo.valor }}

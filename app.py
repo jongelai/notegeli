@@ -86,23 +86,37 @@ def index():
         try:
             with open(os.path.join(NOTAS_DIR, a), "r", encoding="utf-8") as f:
                 contenido = f.read()
+
+            # --- EXTRAER COLOR ---
+            lineas = contenido.split("\n")
+            color = None
+            if lineas and lineas[0].startswith("COLOR:"):
+                color = lineas[0].replace("COLOR:", "").strip()
+                contenido = "\n".join(lineas[1:])  # quitar la línea de color del preview
+
             tiempo = extraer_info_tiempo(a)
             titulo = formatear_nombre(a)
+
             nota_obj = {
                 "archivo": a,
                 "titulo": titulo,
                 "preview": contenido,
-                "tiempo": tiempo
+                "tiempo": tiempo,
+                "color": color    # <-- AÑADIDO
             }
+
             if tiempo["es_fecha"]:
                 calendario.append(nota_obj)
                 if tiempo["valor"] == hoy_str:
                     avisos.append(titulo)
                 elif tiempo["valor"] == manana_str:
                     avisos_manana.append(titulo)
+
             notas_lista.append(nota_obj)
+
         except:
             continue
+
 
     calendario.sort(key=lambda x: x["tiempo"]["valor"])
 
@@ -124,25 +138,45 @@ def editar(archivo):
 
     path_viejo = os.path.join(NOTAS_DIR, archivo)
 
+    # --- POST (guardar nota + color) ---
     if request.method == "POST":
         nuevo_texto = request.form.get("texto") or ""
+        nuevo_color = request.form.get("color") or ""
         nuevo_texto = nuevo_texto.replace("\r\n", "\n").rstrip("\n")
+
         with open(path_viejo, "w", encoding="utf-8", newline="\n") as f:
+            if nuevo_color:
+                f.write(f"COLOR:{nuevo_color}\n")
             f.write(nuevo_texto)
+
         return redirect(url_for("index"))
 
+    # --- GET (cargar nota) ---
     if not os.path.exists(path_viejo):
         return redirect(url_for("index"))
 
     with open(path_viejo, "r", encoding="utf-8") as f:
-        contenido = f.read()
+        contenido = f.read() or ""   # <--- A prueba de vacíos
+
+    # --- Color ---
+    lineas = contenido.split("\n")
+    color = None
+
+    if lineas and lineas[0].startswith("COLOR:"):
+        color = lineas[0].replace("COLOR:", "").strip()
+        contenido = "\n".join(lineas[1:])  # quitar la línea COLOR
 
     contenido = contenido.replace("\r\n", "\n").rstrip("\n")
 
     info = extraer_info_tiempo(archivo)
     fecha_val = info["valor"] if info["es_fecha"] else ""
 
-    return render_template("editar.html", contenido=contenido, fecha=fecha_val)
+    return render_template(
+        "editar.html",
+        contenido=contenido,
+        fecha=fecha_val,
+        color=color
+    )
 
 @app.route("/borrar/<archivo>")
 def borrar(archivo):
