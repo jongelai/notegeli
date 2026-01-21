@@ -39,8 +39,12 @@
         <textarea name="texto" class="textarea" placeholder="Escribir nota..."></textarea>
 
         <div class="add-row">
-            <input type="date" name="fecha" class="input-fecha">
-            <button type="submit" class="btn-amber">Añadir</button>
+            <button type="button" class="btn-cal-pick">
+                 <i class="bi bi-calendar3"></i>
+                </button>
+                <span class="fecha-preview"></span>
+                <input type="date" name="fecha" class="input-fecha-hidden">
+                <button type="submit" class="btn-amber">Añadir</button>
         </div>
     </form>
 
@@ -67,5 +71,25 @@ if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("/service-worker.js");
 }
 </script>
+<script>
+const btn = document.querySelector(".btn-cal-pick");
+const hidden = document.querySelector(".input-fecha-hidden");
+const preview = document.querySelector(".fecha-preview");
+
+btn.addEventListener("click", () => {
+    hidden.showPicker(); // Chrome/Android va perfecto
+});
+
+hidden.addEventListener("change", () => {
+    const v = hidden.value; // yyyy-mm-dd
+    if (v) {
+        const [yyyy,mm,dd] = v.split("-");
+        preview.textContent = `${dd}/${mm}/${yyyy}`;
+    } else {
+        preview.textContent = "";
+    }
+});
+</script>
+
 </body>
 </html>
