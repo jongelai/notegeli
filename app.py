@@ -9,6 +9,13 @@ app.secret_key = "notegeli_pro_2026"
 USUARIO = "juan"
 PASSWORD = "1234"
 NOTAS_DIR = "notas"
+meses = [
+    "enero", "febrero", "marzo", "abril", "mayo", "junio",
+    "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"
+]
+
+hoy = datetime.now()
+fecha_larga = f"{hoy.day} {meses[hoy.month - 1]} {hoy.year}"
 
 if not os.path.exists(NOTAS_DIR):
     os.makedirs(NOTAS_DIR)
@@ -103,8 +110,13 @@ def index():
                            notas=notas_lista,
                            avisos=avisos,
                            manana=avisos_manana,
-                           calendario=calendario)
-
+                           calendario=calendario,
+                           current_year=datetime.now().year,
+                           current_date=datetime.now().strftime("%d/%m/%Y"),
+                           fecha_larga=fecha_larga)
+                           
+     
+    
 @app.route("/editar/<archivo>", methods=["GET", "POST"])
 def editar(archivo):
     if "user" not in session:

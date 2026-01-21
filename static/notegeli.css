@@ -19,7 +19,14 @@ body,html{
   color:#f6de8e;
   overflow:hidden;
 }
-
+.form-control {
+  background-color: #000;
+  color: #fff;
+  border: none;
+  padding: 1rem;
+  font-size: 1.2rem !important;
+  box-shadow:0 0 4px rgba(74,141,255,.75), inset 0 0 2px rgba(74,141,255,.45), 0 0 0 1px rgba(74,141,255,1);
+}
 /* FORM + INPUTS */
 .textarea{
     font-size: 2rem !important;
@@ -32,7 +39,7 @@ body,html{
   min-height:8em;
   line-height:1.1em;
   padding:8px 10px;
-  resize:none;
+  resize:horizontal;
   max-height:120px;
   overflow-y:auto;
 }
@@ -126,6 +133,11 @@ body,html{
   text-decoration:none!important;
   color:#d4d4d4!important;
 }
+.fecha-mini {
+  margin-left: 6px;
+  opacity: 0.8;
+  font-size: 0.5em;
+}
 .nota-texto{
   font-size:1.5rem;
   line-height:1.25rem;
@@ -162,7 +174,18 @@ input[type="date"] {
   color:#ffcc66;
   font-size:1rem;
 }
-
+.mi-boton {
+  margin-top: 10px;
+  width: 100%;
+  font-weight: bold;
+  padding: .5rem 0;
+  background-color: #ffcc66 !important;
+  border-radius:10px;
+  -webkit-border-radius:10px;
+  -moz-border-radius:10px;
+  -ms-border-radius:10px;
+  -o-border-radius:10px;
+}
 /* BORRAR */
 .btn-delete{
   color:#e06c75;

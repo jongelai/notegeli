@@ -6,7 +6,6 @@
 <title>Agenda 2026</title>
 <link rel="apple-touch-icon" href="/static/icons/192.png">
 <link rel="manifest" href="/manifest.json">
-
 <meta name="theme-color" content="#1e1e1e">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -21,7 +20,8 @@
     <!-- HEADER -->
     <div class="header-mini">
         <img src="{{ url_for('static', filename='icons/512.png') }}" class="logo-mini">
-        <h5 class="title-mini">AGENDA PERSONAL</h5>
+        <h5 class="title-mini">AGENDA <span class="fecha-mini">{{ fecha_larga }}</span>
+       
     </div>
 
     <!-- MAÑANA -->
