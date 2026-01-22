@@ -96,23 +96,31 @@ body,html{
 .btn-amber:hover{ filter:brightness(1.12); }
 
 /* FECHA */
-.fecha-preview{
+.fecha-preview{   
   color:#ff9900;
   font-weight:600;
   font-size:1rem;
 }
-
+.fecha-mini{
+    font-size:0.8em;
+}
 /* TARJETA NOTA — Opción D móvil */
-.nota-fila{
-  display:flex;
-  align-items:flex-start;
-  justify-content:space-between;
-  gap:6px;
-  padding:6px 8px;
-  border-radius:10px;
-  background:#fff;
-  box-shadow:0 1px 3px rgba(0,0,0,.07);
-  transition:background .15s ease;
+.nota-fila {
+  border: 2px solid #ffcc66;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 6px;
+  padding: 6px 8px;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 4px 3px 0px #df7f3f; /* Tu sombra sólida naranja fuerte */
+  transition: background .15s ease;
+  
+  /* AJUSTES DE MARGEN */
+  margin-right: 4px; /* Separación de la derecha */
+  margin-left:4px;  /* Separación de la izquierda */
+  
 }
 .add-row {
     display: flex;
@@ -227,8 +235,8 @@ body,html{
   align-items:center;
   justify-content:center;
   gap:6px;
-  margin-bottom:10px;
-  color:#666;
+  margin-bottom:2px;
+  color:#6e4a03;
 }
 .logo-mini{ height:20px; border-radius:6px; }
 .title-mini{ 
