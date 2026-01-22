@@ -28,156 +28,119 @@ def formatear_nombre(filename):
     return name
 
 def extraer_info_tiempo(filename):
-    name = filename.replace(".txt", "")
-    parts = name.split("_")
-
+    """Extrae la fecha solo si el archivo empieza por YYYY-MM-DD."""
+    parts = filename.split("_")
+    # Comprobar si el primer fragmento tiene formato de fecha (2026-01-22)
     if len(parts[0]) == 10 and "-" in parts[0]:
-        yyyy, mm, dd = parts[0].split("-")
-        return {"valor": f"{dd}/{mm}/{yyyy}", "es_fecha": True}
-    
-    if len(parts) >= 3:
-        ts = parts[-1]
-        if len(ts) >= 4:
-            return {"valor": f"{ts[:2]}:{ts[2:4]}", "es_fecha": False}
-    return {"valor": "00:00", "es_fecha": False}
+        try:
+            yyyy, mm, dd = parts[0].split("-")
+            return {"valor": f"{dd}/{mm}/{yyyy}", "es_fecha": True}
+        except:
+            pass
+    return {"valor": "", "es_fecha": False}
+
 
 @app.route("/", methods=["GET", "POST"])
 def index():
     if "user" not in session:
         return redirect(url_for("login"))
 
+    hoy = datetime.now()
+    fecha_larga = f"{hoy.day} {meses[hoy.month - 1]} {hoy.year}"
+
     if request.method == "POST":
         texto = request.form.get("texto")
         fecha = request.form.get("fecha")
+        color = request.form.get("color")
+        
         if texto:
-            ts = datetime.now().strftime("%H%M%S")
-            titulo_linea = texto.splitlines()[0][:20] if texto.strip() else "Nota"
-            titulo = "".join(e for e in titulo_linea if e.isalnum() or e == " ").strip()
+            timestamp = datetime.now().strftime("%H%M%S")
+            # Título limpio para el nombre de archivo
+            titulo_linea = texto.splitlines()[0][:15] if texto.strip() else "Nota"
+            titulo_limpio = "".join(e for e in titulo_linea if e.isalnum() or e == " ").strip().replace(" ", "-")
             
-            if fecha and fecha.strip():
-                prefijo = fecha
-            else:
-                prefijo = "sinfecha"
-                
-            nombre = f"{prefijo}_{titulo}_{ts}.txt"
+            prefijo = fecha if (fecha and fecha.strip()) else "sinfecha"
+            # Formato: prefijo_titulo_hora.txt
+            nombre = f"{prefijo}_{titulo_limpio}_{timestamp}.txt"
 
             with open(os.path.join(NOTAS_DIR, nombre), "w", encoding="utf-8", newline="\n") as f:
+                if color:
+                    f.write(f"COLOR:{color}\n")
                 f.write(texto.replace("\r\n", "\n").rstrip("\n"))
         return redirect(url_for("index"))
 
-    def sort_key(fname):
-        base = fname.replace(".txt", "")
-        parts= base.split("_")
-        ts = parts[-1]        # HHMMSS
-        return ts
-
-    archivos = sorted(os.listdir(NOTAS_DIR), key=sort_key, reverse=True)
-
-    hoy = datetime.now()
-    hoy_str = hoy.strftime('%Y-%m-%d')
-    manana_str = (hoy + timedelta(days=1)).strftime('%Y-%m-%d')
+    # Ordenar por fecha de modificación (Mtime) -> Lo más nuevo arriba
+    archivos = os.listdir(NOTAS_DIR)
+    archivos.sort(key=lambda x: os.path.getmtime(os.path.join(NOTAS_DIR, x)), reverse=True)
 
     notas_lista = []
-    avisos = []
     avisos_manana = []
-    calendario = []
+    manana_str = (hoy + timedelta(days=1)).strftime('%Y-%m-%d')
 
     for a in archivos:
         try:
             with open(os.path.join(NOTAS_DIR, a), "r", encoding="utf-8") as f:
                 contenido = f.read()
 
-            # --- EXTRAER COLOR ---
             lineas = contenido.split("\n")
             color = None
             if lineas and lineas[0].startswith("COLOR:"):
                 color = lineas[0].replace("COLOR:", "").strip()
-                contenido = "\n".join(lineas[1:])  # quitar la línea de color del preview
+                contenido_final = "\n".join(lineas[1:])
+            else:
+                contenido_final = contenido
 
             tiempo = extraer_info_tiempo(a)
-            titulo = formatear_nombre(a)
-
-            nota_obj = {
+            
+            notas_lista.append({
                 "archivo": a,
-                "titulo": titulo,
-                "preview": contenido,
+                "preview": contenido_final,
                 "tiempo": tiempo,
-                "color": color    # <-- AÑADIDO
-            }
+                "color": color
+            })
 
-            if tiempo["es_fecha"]:
-                calendario.append(nota_obj)
-                if tiempo["valor"] == hoy_str:
-                    avisos.append(titulo)
-                elif tiempo["valor"] == manana_str:
-                    avisos_manana.append(titulo)
-
-            notas_lista.append(nota_obj)
-
+            if tiempo["es_fecha"] and a.startswith(manana_str):
+                avisos_manana.append({
+                    "preview": contenido_final[:45],
+                    "archivo": a,
+                    "fecha": tiempo["valor"]
+                })
         except:
             continue
 
+    return render_template("index.html", notas=notas_lista, manana=avisos_manana, fecha_larga=fecha_larga)
 
-    calendario.sort(key=lambda x: x["tiempo"]["valor"])
-
-    return render_template("index.html",
-                           notas=notas_lista,
-                           avisos=avisos,
-                           manana=avisos_manana,
-                           calendario=calendario,
-                           current_year=datetime.now().year,
-                           current_date=datetime.now().strftime("%d/%m/%Y"),
-                           fecha_larga=fecha_larga)
-                           
-     
-    
-@app.route("/editar/<archivo>", methods=["GET", "POST"])
+@app.route("/editar/<path:archivo>", methods=["GET", "POST"])
 def editar(archivo):
-    if "user" not in session:
+    if "user" not in session: 
         return redirect(url_for("login"))
+    
+    path_nota = os.path.join(NOTAS_DIR, archivo)
+    
+    # Si la nota no existe físicamente, volvemos al índice
+    if not os.path.exists(path_nota): 
+        return redirect(url_for("index"))
 
-    path_viejo = os.path.join(NOTAS_DIR, archivo)
-
-    # --- POST (guardar nota + color) ---
     if request.method == "POST":
         nuevo_texto = request.form.get("texto") or ""
         nuevo_color = request.form.get("color") or ""
-        nuevo_texto = nuevo_texto.replace("\r\n", "\n").rstrip("\n")
-
-        with open(path_viejo, "w", encoding="utf-8", newline="\n") as f:
-            if nuevo_color:
+        with open(path_nota, "w", encoding="utf-8", newline="\n") as f:
+            if nuevo_color: 
                 f.write(f"COLOR:{nuevo_color}\n")
-            f.write(nuevo_texto)
-
+            f.write(nuevo_texto.replace("\r\n", "\n").rstrip("\n"))
         return redirect(url_for("index"))
 
-    # --- GET (cargar nota) ---
-    if not os.path.exists(path_viejo):
-        return redirect(url_for("index"))
-
-    with open(path_viejo, "r", encoding="utf-8") as f:
-        contenido = f.read() or ""   # <--- A prueba de vacíos
-
-    # --- Color ---
-    lineas = contenido.split("\n")
+    # Carga de la nota para mostrar en el formulario
+    with open(path_nota, "r", encoding="utf-8") as f:
+        contenido = f.read()
+    
     color = None
-
+    lineas = contenido.split("\n")
     if lineas and lineas[0].startswith("COLOR:"):
         color = lineas[0].replace("COLOR:", "").strip()
-        contenido = "\n".join(lineas[1:])  # quitar la línea COLOR
+        contenido = "\n".join(lineas[1:])
 
-    contenido = contenido.replace("\r\n", "\n").rstrip("\n")
-
-    info = extraer_info_tiempo(archivo)
-    fecha_val = info["valor"] if info["es_fecha"] else ""
-
-    return render_template(
-        "editar.html",
-        contenido=contenido,
-        fecha=fecha_val,
-        color=color
-    )
-
+    return render_template("editar.html", contenido=contenido, color=color, archivo=archivo)
 @app.route("/borrar/<archivo>")
 def borrar(archivo):
     if "user" not in session:

@@ -6,49 +6,49 @@
 <title>Agenda 2026</title>
 <link rel="apple-touch-icon" href="/static/icons/192.png">
 <link rel="manifest" href="/manifest.json">
-<meta name="theme-color" content="#1e1e1e">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#FFFFFF">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-<link href="{{ url_for('static', filename='notegeli.css') }}" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='notegeli.css') }}?v=1.1">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
 </head>
 
 <body>
 <div class="app-container">
 
-    <!-- HEADER -->
     <div class="header-mini">
         <img src="{{ url_for('static', filename='icons/512.png') }}" class="logo-mini">
-        <h5 class="title-mini">AGENDA <span class="fecha-mini">{{ fecha_larga }}</span>
-       
+        <h5 class="title-mini">AGENDA <span class="fecha-mini">{{ fecha_larga }}</span></h5>
     </div>
 
-    <!-- MAÑANA -->
-    {% if manana %}
-    <div class="banner-manana">
-        {% for m in manana %}
-        <i class="bi bi-calendar-date"></i> Mañana — {{ m }}
+        {% if manana %}
+        <div class="alert alert-warning d-flex flex-column gap-2 p-3 rounded shadow-sm mt-2">
+            {% for m in manana %}
+            <a href="{{ url_for('editar', archivo=m.archivo) }}" class="text-decoration-none text-dark">
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-calendar-event me-2"></i>
+                    <strong>Mañana:</strong> {{ m.preview }}
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+        {% endif %}
 
-        {% endfor %}
-    </div>
-    {% endif %}
-
-    <!-- FORM -->
     <form method="POST" class="nuevo-form">
         <textarea name="texto" class="textarea" placeholder="Escribir nota..."></textarea>
 
         <div class="add-row">
             <button type="button" class="btn-cal-pick">
                  <i class="bi bi-calendar3"></i>
-                </button>
-                <span class="fecha-preview"></span>
-                <input type="date" name="fecha" class="input-fecha-hidden">
-                <button type="submit" class="btn-amber">Añadir</button>
+            </button>
+            <span class="fecha-preview"></span>
+            <input type="date" name="fecha" class="input-fecha-hidden">
+            <input type="hidden" name="color" id="color-input"> 
+            <button type="submit" class="btn-amber">Añadir</button>
         </div>
     </form>
 
-    <!-- LISTA NOTAS -->
     <div class="notes-scroll">
     {% for n in notas %}
         <div class="nota-fila 
@@ -56,10 +56,14 @@
                 {% if n.color %}tinted{% endif %}"
         {% if n.color %}style="--color-base: {{ n.color }};"{% endif %}>
 
-            <a href="/editar/{{ n.archivo }}" class="nota-link">
+            <a href="{{ url_for('editar', archivo=n.archivo) }}" class="nota-link flex-fill">
+
+                {% if n.tiempo.valor  %}
                 <span class="tiempo-tag">
-                    <i class="bi bi-calendar-date"></i> {{ n.tiempo.valor }}
+                    <i class="bi {{ 'bi-calendar-date' if n.tiempo.es_fecha else 'bi-clock' }}"></i> 
+                    {{ n.tiempo.valor }}
                 </span>
+                {% endif %}
                 <span class="nota-texto">{{ n.preview }}</span>
             </a>
             <a href="/borrar/{{ n.archivo }}" class="btn-delete">
@@ -70,22 +74,24 @@
     </div>
 
 </div>
+
 <script>
+// Service Worker
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("/service-worker.js");
 }
-</script>
-<script>
+
+// Lógica de Calendario
 const btn = document.querySelector(".btn-cal-pick");
 const hidden = document.querySelector(".input-fecha-hidden");
 const preview = document.querySelector(".fecha-preview");
 
 btn.addEventListener("click", () => {
-    hidden.showPicker(); // Chrome/Android va perfecto
+    hidden.showPicker(); 
 });
 
 hidden.addEventListener("change", () => {
-    const v = hidden.value; // yyyy-mm-dd
+    const v = hidden.value; 
     if (v) {
         const [yyyy,mm,dd] = v.split("-");
         preview.textContent = `${dd}/${mm}/${yyyy}`;
@@ -93,7 +99,27 @@ hidden.addEventListener("change", () => {
         preview.textContent = "";
     }
 });
-</script>
 
+// Lógica de Colores (Ajustada para modo claro)
+const dots = document.querySelectorAll('.color-dot');
+const colorInput = document.getElementById('color-input');
+const textarea = document.querySelector('textarea');
+
+{% if color %}
+// Usamos una opacidad más baja (22) para que el color de fondo no tape el texto negro
+textarea.style.backgroundColor = "{{ color }}22"; 
+colorInput.value = "{{ color }}";
+{% endif %}
+
+dots.forEach(dot => {
+    dot.style.backgroundColor = dot.dataset.color;
+    dot.addEventListener('click', () => {
+        const col = dot.dataset.color;
+        if(colorInput) colorInput.value = col;
+        // En modo claro, el fondo debe ser muy sutil para leer bien
+        textarea.style.backgroundColor = col + "22"; 
+    });
+});
+</script>
 </body>
 </html>

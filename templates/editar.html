@@ -4,19 +4,18 @@
     <meta charset="UTF-8">
     <title>Editar - Notegeli</title>
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta name="theme-color" content="#FFFFFF">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='notegeli.css') }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
 </head>
-<body class="container py-3 bg-black text-white">
+<body class="container py-3">
 
-       
     <div class="header mb-4 d-flex align-items-center">
-    
         <div class="titulo-editar d-flex align-items-center flex-grow-1 justify-content-center">
             <img src="{{ url_for('static', filename='icons/512.png') }}" 
                 style="height:38px; border-radius:8px;" class="me-2">
-            <h3 class="m-0 fw-bold">Editar</h3>
+            <h3 class="m-0 fw-bold" style="color: #a67c00;">Editar</h3>
         </div>
 
         <div class="color-picker ms-3">
@@ -27,13 +26,12 @@
             <span class="color-dot" data-color="#f07178"></span>
             <span class="color-dot" data-color="#b39ddb"></span>
         </div>
-
     </div>
 
     <form method="POST">
         <input type="hidden" name="color" id="color-input" value="{{ color if color else '' }}">
-        <textarea name="texto" rows="12" class="form-control text-white border-0 p-3" 
-                  style="border-radius: 12px;">{{ contenido }}</textarea>
+        <textarea name="texto" rows="12" class="form-control p-3" 
+                  style="border-radius: 12px; color: #333;">{{ contenido }}</textarea>
 
         <div>
             <button type="submit" class="mi-boton">
@@ -41,16 +39,17 @@
             </button>
         </div>
     </form>
+
 <script>
 const dots = document.querySelectorAll('.color-dot');
 const colorInput = document.getElementById('color-input');
 const textarea = document.querySelector('textarea');
 
 // Si la nota ya tenía color, aplícalo visualmente
-    {% if color %}
-    textarea.style.backgroundColor = "{{ color }}20"; // 20 = opacidad hex (suave)
+{% if color %}
+    textarea.style.backgroundColor = "{{ color }}22"; // 22 para modo claro
     colorInput.value = "{{ color }}";
-    {% endif %}
+{% endif %}
 
 // Al pulsar un color, lo guardamos y aplicamos
 dots.forEach(dot => {
@@ -58,9 +57,8 @@ dots.forEach(dot => {
     dot.addEventListener('click', () => {
         const col = dot.dataset.color;
         colorInput.value = col;
-
-        // Fondo suave (Keep style)
-        textarea.style.backgroundColor = col + "20"; 
+        // Fondo suave (opacidad 22 es perfecta para blanco)
+        textarea.style.backgroundColor = col + "22"; 
     });
 });
 </script>

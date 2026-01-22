@@ -1,5 +1,5 @@
 body,html{
-  background: #000;
+  background: #FFFFFF; /* Cambiado a Blanco */
   margin:0;
   padding:0;
   height:100vh;
@@ -13,59 +13,60 @@ body,html{
   flex-direction:column;
   gap:10px;
   height:100vh;
-  background:#000 !important;
+  background:#FFFFFF !important; /* Cambiado a Blanco */
   border-radius:0 !important;
   border-radius:0px;
-  color:#f6de8e;
+  color:#a67c00; /* Cambiado a Dorado/Ocre oscuro */
   overflow:hidden;
 }
 .form-control {
-  background-color: #000;
-  color: #fff;
+  background-color: #FFFFFF; /* Cambiado a Blanco */
+  color: #333; /* Cambiado a Gris oscuro para lectura */
   border: none;
   padding: 1rem;
   font-size: 1.2rem !important;
-  box-shadow:0 0 4px rgba(74,141,255,.75), inset 0 0 2px rgba(74,141,255,.45), 0 0 0 1px rgba(74,141,255,1);
+  box-shadow:0 0 4px rgba(255,179,64,.5), inset 0 0 2px rgba(255,179,64,.3), 0 0 0 1px rgba(255,179,64,1); /* Glow Naranja */
 }
 /* FORM + INPUTS */
 .textarea{
-    font-size: 1.3rem !important;
-    line-height: 1.3 !important;
-  background:#242323;
-  border:1px solid #17428c;
-  border-radius:8px;
-  color:#d4d4d4;
-  box-shadow:0 0 4px rgba(74,141,255,.75), inset 0 0 2px rgba(74,141,255,.45), 0 0 0 1px rgba(74,141,255,1);
-  min-height:8em;
-  line-height:1.1em;
-  padding:8px 10px;
-  resize:horizontal;
-  max-height:120px;
-  overflow-y:auto;
+font-size: 1.3rem !important;
+line-height: 1.3 !important;
+background:#FFFBEB; /* Cambiado a Crema claro */
+border:1px solid #ffcc66; /* Cambiado a Ambar */
+border-radius:8px;
+color:#444; /* Cambiado a Gris oscuro */
+box-shadow:0 0 4px rgba(255,179,64,.5), inset 0 0 2px rgba(255,179,64,.3), 0 0 0 1px rgba(255,179,64,1);
+min-height:8em;
+line-height:1.1em;
+padding:8px 10px;
+resize:horizontal;
+max-height:120px;
+overflow-y:auto;
+filter: brightness(1.05) saturate(1.1);
 }
 
 /* Fecha input */
 .input-fecha{
-  background:#2c2c2c !important;
-  border:2px solid rgba(74,141,255,.85) !important;
+  background:#FFF !important;
+  border:2px solid rgba(255,179,64,.85) !important;
   border-radius:10px !important;
   padding:10px 14px !important;
   font-size:.95rem;
-  color:#e2e8f0 !important;
-  box-shadow:0 0 4px rgba(74,141,255,.75),0 0 0 1px rgba(74,141,255,1);
+  color:#444 !important;
+  box-shadow:0 0 4px rgba(255,179,64,.75),0 0 0 1px rgba(255,179,64,1);
 }
 .input-fecha::-webkit-calendar-picker-indicator{
-  filter:invert(90%) saturate(180%) hue-rotate(180deg);
+  filter: none; /* Icono calendario original o ajuste claro */
   opacity:.85;
   cursor:pointer;
   margin-left:6px;
 }
 .btn-cal-pick {
-    background:#2d2d2d;
-    border:1px solid #3c3c3c;
+    background:#FFFAF0; /* Floral White */
+    border:1px solid #ffcc66;
     border-radius:8px;
     padding:6px 10px;
-    color:#ffcc66;
+    color:#ff9900; /* Naranja */
     font-size:1.1rem;
     display:flex;
     align-items:center;
@@ -74,7 +75,7 @@ body,html{
 }
 
 .btn-cal-pick:hover {
-    background:#363636;
+    background:#FFF5E6;
 }
 
 .input-fecha-hidden {
@@ -82,7 +83,7 @@ body,html{
 }
 
 .fecha-preview {
-    color:#ffcc66;
+    color:#ff9900;
     font-weight:600;
     font-size:1rem;
     padding-top:2px 6px;
@@ -90,7 +91,7 @@ body,html{
 
 /* AÑADIR */
 .btn-amber{
-  background:#d19a66;
+  background:#ffcc66;
   color:#111;
   font-weight:700;
   padding:6px 12px;
@@ -98,30 +99,41 @@ body,html{
   border-radius:6px;
 }
 .btn-amber:hover{ filter:brightness(1.12); }
-
+.nota-link {
+    
+    display: block;
+    width: 100%;
+}
 /* LISTA NOTAS */
 .nota-fila{
   display:flex;
-  align-items:flex-start;
+  align-items:center;
   justify-content:space-between;
-  background:#2d2d2d;
+  background:#FFF; /* Cambiado a Blanco */
   padding:10px 12px;
   border-radius:10px;
-  border-left:6px solid #ffb340;
+  border-left:4px solid #ffcc66;
   gap:8px;
   width:99%;
-  box-shadow:0 0 6px rgba(74,141,255,.35), inset 0 0 3px rgba(74,141,255,.20);
+  box-shadow:0 0 6px rgba(255,179,64,.35), inset 0 0 3px rgba(255,179,64,.20);
 }
 .nota-fila:hover{
-  background:#333333;
+  background:#FFF9F0;
   transform:translateX(1px);
-  box-shadow:0 0 12px rgba(74,141,255,.55), inset 0 0 5px rgba(74,141,255,.25);
+  box-shadow:0 0 12px rgba(255,179,64,.55), inset 0 0 5px rgba(255,179,64,.25);
 }
 
 /* PLANIFICADA = calendario */
 .nota-calendario{
-  border-left-color:#ffb340;
-  box-shadow:0 0 8px rgba(255,179,64,.35), inset 0 0 3px rgba(255,179,64,.22);
+  border-left-color:#ff9900; /* Naranja más fuerte */
+  box-shadow:0 0 8px rgba(255,153,0,.35), inset 0 0 3px rgba(255,153,0,.22);
+}
+.alert {
+    border-left: 6px solid #ffb300;
+    background: #fff8e1;
+}
+.alert a:hover {
+    opacity: 0.75;
 }
 
 /* TEXTO */
@@ -131,7 +143,7 @@ body,html{
   gap:4px;
   flex:1;
   text-decoration:none!important;
-  color:#d4d4d4!important;
+  color:#333!important;
 }
 .fecha-mini {
   margin-left: 6px;
@@ -149,8 +161,53 @@ body,html{
   -webkit-box-orient:vertical;
 }
 input[type="date"] {
-  color:#e2e8f0 !important;
-  background:#2c2c2c !important;
+  color:#333 !important;
+  background:#FFF !important;
+  /* ELIMINAR RELOJ EN NOTAS NORMALES */
+/* Si el tag de tiempo no tiene texto (está vacío), lo ocultamos por completo */
+.tiempo-tag:empty, 
+.tiempo-tag:contains("") { 
+    display: none !important; 
+}
+
+/* BOTÓN BORRAR PRO */
+/* Usamos tres clases para ganar prioridad sobre Bootstrap */
+body .app-container .btn-delete {
+    color: #e06c75 !important;
+    font-size: 3.5rem !important; /* Tamaño gigante para probar */
+    width: 80px !important;      /* Área de toque fija */
+    height: 80px !important;     /* Área de toque fija */
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-decoration: none !important;
+    background: transparent !important;
+    border: none !important;
+}
+
+/* Aseguramos que el icono dentro del botón también crezca */
+body .app-container .btn-delete i {
+    font-size: 3.5rem !important;
+    display: block !important;
+}
+
+.btn-delete:hover {
+    background: rgba(224, 108, 117, 0.15);
+    /*Fondorojizosuavealpasarelratón*/transform: scale(1.1);
+    color: #d15c65;
+    -webkit-transform: scale(1.1);
+    -moz-transform: scale(1.1);
+    -ms-transform: scale(1.1);
+    -o-transform: scale(1.1);
+}
+
+/* AJUSTE TARJETAS */
+.nota-fila {
+    display: flex !important;
+    min-height: 80px; /* Un poco más de cuerpo a la tarjeta */
+    align-items: center; /* Centra verticalmente el contenido y el botón basura */
+    justify-content: space-between !important;
+}
 }
 .color-picker {
   display: flex;
@@ -159,12 +216,12 @@ input[type="date"] {
 
 .color-dot {
  padding: 4px;
-  width: 20px;
-  height:20px;
-  border-radius: 50%;
-  cursor: pointer;
-  border: 2px solid rgba(255,255,255,0.5);
-  transition: transform 0.15s ease;
+ width: 20px;
+ height:20px;
+ border-radius: 50%;
+ cursor: pointer;
+ border: 2px solid rgba(0,0,0,0.1); /* Borde suave */
+ transition: transform 0.15s ease;
 }
 
 .color-dot:hover {
@@ -180,7 +237,7 @@ input[type="date"] {
 /* TAG FECHA/HORA */
 .tiempo-tag{
   width:40%;
-   display:inline-flex;
+  display:inline-flex;
   align-items:center;
   gap:4px;
   padding:2px 6px;
@@ -189,18 +246,18 @@ input[type="date"] {
   border-radius:6px;
 }
 .nota-fila.tinted {
-    background-color: color-mix(in srgb, var(--color-base) 30%, transparent);
+    background-color: color-mix(in srgb, var(--color-base) 15%, #FFF); /* Mezcla con blanco */
     border-radius: 10px;
     transition: background-color .2s ease;
 }
 
 /* Badge amber solo en planificadas */
 .nota-calendario .tiempo-tag{
-  background:rgba(255,204,102,0.18);
-  color:#ffcc66;
+  background:rgba(255,204,102,0.25);
+  color:#e68a00;
 }
 .nota-calendario .tiempo-tag i{
-  color:#ffcc66;
+  color:#e68a00;
   font-size:1rem;
 }
 .mi-boton {
@@ -217,10 +274,16 @@ input[type="date"] {
 }
 /* BORRAR */
 .btn-delete{
-  color:#e06c75;
-  font-size:1rem;
-  padding-left:6px;
-  cursor:pointer;
+  all: unset !important; /* Elimina cualquier estilo previo de Bootstrap */
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 70px !important;  /* Área táctil real de 70px */
+    height: 70px !important;
+    color: #e06c75 !important;
+    cursor: pointer !important;
+    font-size: 2rem !important; /* Tamaño del icono */
+    line-height: 1 !important;
 }
 .btn-delete:hover{ opacity:.75; }
 
@@ -231,7 +294,7 @@ input[type="date"] {
   justify-content:center;
   gap:6px;
   margin-bottom:10px;
-  color:#d4d4d4;
+  color:#666;
 }
 .logo-mini{ height:28px; border-radius:6px; }
 .title-mini{ margin:0; font-weight:700; }
@@ -259,24 +322,24 @@ input[type="date"] {
 /* BANNER MAÑANA */
 .banner-manana{
   font-weight:600;
-  color:#ffcc66;
+  color:#ff9900;
   padding:6px 10px;
   margin-bottom:4px;
 }
 .banner-manana i{
-  color:#ffcc66;
+  color:#ff9900;
   margin-right:4px;
 }
 
 /* EDITOR */
 body.container.bg-black.text-white{
-  background:#1e1e1e !important;
-  color:#d4d4d4 !important;
+  background:#F5F5F5 !important;
+  color:#333 !important;
 }
 .textarea .form-control{
-  font-size: 3rem !important;
+    font-size: 3rem !important;
     line-height: 1.2 !important;
-    background: #111 !important;
+    background: #FFF !important;
     color: #ffcc66 !important;
 }
 .btn-primary{
@@ -285,6 +348,6 @@ body.container.bg-black.text-white{
   font-weight:700;
 }
 .btn-outline-secondary{
-  border:1px solid #555 !important;
-  color:#bbb !important;
+  border:1px solid #ccc !important;
+  color:#666 !important;
 }
