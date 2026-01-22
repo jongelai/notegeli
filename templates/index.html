@@ -21,19 +21,24 @@
         <img src="{{ url_for('static', filename='icons/512.png') }}" class="logo-mini">
         <h5 class="title-mini">AGENDA <span class="fecha-mini">{{ fecha_larga }}</span></h5>
     </div>
-
             {% if manana %}
             <div class="banner-manana">
                 {% for m in manana %}
-                <a href="{{ url_for('editar', archivo=m.archivo) }}" class="banner-item">
-                    <i class="bi bi-calendar-event"></i>
-                    <span class="banner-label">Mañana:</span>
-                    <span class="banner-texto">{{ m.preview }}</span>
-                </a>
+                <div class="banner-item">
+                    <a href="{{ url_for('editar', archivo=m.archivo) }}" class="banner-link">
+                        <i class="bi bi-calendar-event"></i>
+                        <span class="banner-label">Mañana:</span>
+                        <span class="banner-texto">{{ m.preview }}</span>
+                    </a>
+                    <a href="{{ url_for('borrar', archivo=m.archivo) }}" class="banner-delete">
+                        <i class="bi bi-trash3"></i>
+                    </a>
+                </div>
                 {% endfor %}
             </div>
             {% endif %}
 
+    
     <form method="POST" class="nuevo-form">
         <textarea name="texto" class="textarea" placeholder="Escribir nota..."></textarea>
 
