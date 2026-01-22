@@ -1,1 +1,2 @@
+COLOR:#82aaff
 Nota con fecha

@@ -22,18 +22,17 @@
         <h5 class="title-mini">AGENDA <span class="fecha-mini">{{ fecha_larga }}</span></h5>
     </div>
 
-        {% if manana %}
-        <div class="alert alert-warning d-flex flex-column gap-2 p-3 rounded shadow-sm mt-2">
-            {% for m in manana %}
-            <a href="{{ url_for('editar', archivo=m.archivo) }}" class="text-decoration-none text-dark">
-                <div class="d-flex align-items-center">
-                    <i class="bi bi-calendar-event me-2"></i>
-                    <strong>Mañana:</strong> {{ m.preview }}
-                </div>
-            </a>
-            {% endfor %}
-        </div>
-        {% endif %}
+            {% if manana %}
+            <div class="banner-manana">
+                {% for m in manana %}
+                <a href="{{ url_for('editar', archivo=m.archivo) }}" class="banner-item">
+                    <i class="bi bi-calendar-event"></i>
+                    <span class="banner-label">Mañana:</span>
+                    <span class="banner-texto">{{ m.preview }}</span>
+                </a>
+                {% endfor %}
+            </div>
+            {% endif %}
 
     <form method="POST" class="nuevo-form">
         <textarea name="texto" class="textarea" placeholder="Escribir nota..."></textarea>
@@ -45,7 +44,7 @@
             <span class="fecha-preview"></span>
             <input type="date" name="fecha" class="input-fecha-hidden">
             <input type="hidden" name="color" id="color-input"> 
-            <button type="submit" class="btn-amber">Añadir</button>
+            <button type="submit" class="btn-amber">+ Añadir</button>
         </div>
     </form>
 

@@ -28,9 +28,9 @@
         </div>
     </div>
 
-    <form method="POST">
+    <form method="POST" class="editar-form">
         <input type="hidden" name="color" id="color-input" value="{{ color if color else '' }}">
-        <textarea name="texto" rows="12" class="form-control p-3" 
+        <textarea name="texto" rows="12" class="textarea" 
                   style="border-radius: 12px; color: #333;">{{ contenido }}</textarea>
 
         <div>
