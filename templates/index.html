@@ -1,129 +1,129 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Agenda 2026</title>
-<link rel="apple-touch-icon" href="/static/icons/192.png">
-<link rel="manifest" href="/manifest.json">
-<meta name="theme-color" content="#FFFFFF">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet" href="{{ url_for('static', filename='notegeli.css') }}?v=1.1">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notegeli Cyber</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='notegeli.css') }}?v=1.2">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
 </head>
-
 <body>
-<div class="app-container">
+    <div class="app-container">
+        
+        <div id="view-main">
+            <div class="header-mini d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center gap-2">
+                    <img src="{{ url_for('static', filename='icons/512.png') }}" class="logo-mini" style="height:24px">
+                    <h4 class="m-0 fw-bold">AGENDA <span class="fecha-mini">{{ fecha_larga }}</span></h4>
+                </div>
+                <div class="theme-switch-wrapper">
+                    <label class="theme-switch">
+                        <input type="checkbox" id="checkbox">
+                        <div class="slider round">
+                            <i class="bi bi-sun-fill"></i>
+                            <i class="bi bi-moon-stars-fill"></i>
+                        </div>
+                    </label>
+                </div>
+            </div>
 
-    <div class="header-mini">
-        <img src="{{ url_for('static', filename='icons/512.png') }}" class="logo-mini">
-        <h4 class="title-mini">AGENDA <span class="fecha-mini">{{ fecha_larga }}</span></h4>
-    </div>
-            {% if manana %}
-            <div class="banner-manana">
-                {% for m in manana %}
-                <div class="banner-item">
-                    <a href="{{ url_for('editar', archivo=m.archivo) }}" class="banner-link">
-                        <i class="bi bi-calendar-event"></i>
-                        <span class="banner-label">Mañana:</span>
-                        <span class="banner-texto">{{ m.preview }}</span>
-                    </a>
-                    <a href="{{ url_for('borrar', archivo=m.archivo) }}" class="banner-delete">
-                        <i class="bi bi-trash3"></i>
-                    </a>
+            <form method="POST" action="/nuevo" class="nuevo-form mt-3">
+                <textarea name="texto" class="textarea" placeholder="Escribir nota..."></textarea>
+                <div class="add-row d-flex gap-2 mt-2 align-items-center">
+                    <button type="button" class="btn-cal-pick btn"><i class="bi bi-calendar3"></i></button>
+                    <span class="fecha-preview flex-grow-1"></span>
+                    <input type="date" name="fecha" class="input-fecha-hidden d-none">
+                    <button type="submit" class="btn-amber">+ Añadir</button>
+                </div>
+            </form>
+
+            <div class="notes-scroll mt-3">
+                {% for n in notas %}
+                <div class="nota-fila {% if n.color %}tinted{% endif %}" style="{% if n.color %}--color-base: {{ n.color }};{% endif %}">
+                    <div onclick="abrirEditor('{{ n.archivo }}', `{{ n.contenido_raw }}`)" class="nota-link flex-fill">
+                        <span class="nota-texto">{{ n.preview }}</span>
+                    </div>
+                    <a href="/borrar/{{ n.archivo }}" class="btn-delete"><i class="bi bi-trash3"></i></a>
                 </div>
                 {% endfor %}
             </div>
-            {% endif %}
-
-    
-    <form method="POST" class="nuevo-form">
-        <textarea name="texto" class="textarea" placeholder="Escribir nota..."></textarea>
-
-        <div class="add-row">
-            <button type="button" class="btn-cal-pick">
-                 <i class="bi bi-calendar3"></i>
-            </button>
-            <span class="fecha-preview"></span>
-            <input type="date" name="fecha" class="input-fecha-hidden">
-            <input type="hidden" name="color" id="color-input"> 
-            <button type="submit" class="btn-amber">+ Añadir</button>
         </div>
-    </form>
 
-    <div class="notes-scroll">
-    {% for n in notas %}
-        <div class="nota-fila 
-                {{ 'nota-calendario' if n.tiempo.es_fecha else '' }} 
-                {% if n.color %}tinted{% endif %}"
-        {% if n.color %}style="--color-base: {{ n.color }};"{% endif %}>
+        <div id="view-edit" style="display: none;">
+            <div class="header-mini d-flex align-items-center mb-3">
+                <button onclick="cerrarEditor()" class="btn btn-link p-0 me-3" style="color:inherit; font-size:1.5rem">
+                    <i class="bi bi-arrow-left"></i>
+                </button>
+                <h4 class="m-0 fw-bold">Editar Nota</h4>
+            </div>
+            
+            <form id="form-edit" method="POST" action="/editar_guardar" class="h-100 d-flex flex-column">
+                <input type="hidden" name="archivo" id="edit-archivo">
+                <input type="hidden" name="color" id="edit-color-input">
+                
+                <div class="color-picker-row">
+                    <div class="color-dot" data-color="#ffd966" style="background:#ffd966"></div>
+                    <div class="color-dot" data-color="#c3e88d" style="background:#c3e88d"></div>
+                    <div class="color-dot" data-color="#82aaff" style="background:#82aaff"></div>
+                    <div class="color-dot" data-color="#f07178" style="background:#f07178"></div>
+                    <div class="color-dot" data-color="#ffffff" style="background:#ffffff; border:1px solid #ddd"></div>
+                </div>
 
-            <a href="{{ url_for('editar', archivo=n.archivo) }}" class="nota-link flex-fill">
-
-                {% if n.tiempo.valor  %}
-                <span class="tiempo-tag">
-                    <i class="bi {{ 'bi-calendar-date' if n.tiempo.es_fecha else 'bi-clock' }}"></i> 
-                    {{ n.tiempo.valor }}
-                </span>
-                {% endif %}
-                <span class="nota-texto">{{ n.preview }}</span>
-            </a>
-            <a href="/borrar/{{ n.archivo }}" class="btn-delete">
-                <i class="bi bi-trash3"></i>
-            </a>
+                <textarea name="texto" id="edit-textarea" class="textarea flex-grow-1" style="min-height: 300px;"></textarea>
+                <button type="submit" class="btn-amber w-100 mt-3 py-3">GUARDAR CAMBIOS</button>
+            </form>
         </div>
-    {% endfor %}
+
     </div>
 
-</div>
+    <script>
+        const toggleSwitch = document.querySelector('#checkbox');
+        const viewMain = document.getElementById('view-main');
+        const viewEdit = document.getElementById('view-edit');
 
-<script>
-// Service Worker
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("/service-worker.js");
-}
+        // GESTIÓN DE TEMAS
+        toggleSwitch.addEventListener('change', (e) => {
+            const theme = e.target.checked ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+        });
 
-// Lógica de Calendario
-const btn = document.querySelector(".btn-cal-pick");
-const hidden = document.querySelector(".input-fecha-hidden");
-const preview = document.querySelector(".fecha-preview");
+        if (localStorage.getItem('theme') === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            toggleSwitch.checked = true;
+        }
 
-btn.addEventListener("click", () => {
-    hidden.showPicker(); 
-});
+        // GESTIÓN DE VISTAS (SPA)
+        function abrirEditor(archivo, contenido) {
+            viewMain.style.display = 'none';
+            viewEdit.style.display = 'flex';
+            document.getElementById('edit-archivo').value = archivo;
+            document.getElementById('edit-textarea').value = contenido;
+        }
 
-hidden.addEventListener("change", () => {
-    const v = hidden.value; 
-    if (v) {
-        const [yyyy,mm,dd] = v.split("-");
-        preview.textContent = `${dd}/${mm}/${yyyy}`;
-    } else {
-        preview.textContent = "";
-    }
-});
+        function cerrarEditor() {
+            viewEdit.style.display = 'none';
+            viewMain.style.display = 'flex';
+        }
 
-// Lógica de Colores (Ajustada para modo claro)
-const dots = document.querySelectorAll('.color-dot');
-const colorInput = document.getElementById('color-input');
-const textarea = document.querySelector('textarea');
+        // COLORES EN EL EDITOR
+        document.querySelectorAll('#view-edit .color-dot').forEach(dot => {
+            dot.addEventListener('click', () => {
+                const col = dot.dataset.color;
+                document.getElementById('edit-color-input').value = col;
+                const opacity = document.documentElement.getAttribute('data-theme') === 'dark' ? "44" : "22";
+                document.getElementById('edit-textarea').style.backgroundColor = col + opacity;
+            });
+        });
 
-{% if color %}
-// Usamos una opacidad más baja (22) para que el color de fondo no tape el texto negro
-textarea.style.backgroundColor = "{{ color }}22"; 
-colorInput.value = "{{ color }}";
-{% endif %}
-
-dots.forEach(dot => {
-    dot.style.backgroundColor = dot.dataset.color;
-    dot.addEventListener('click', () => {
-        const col = dot.dataset.color;
-        if(colorInput) colorInput.value = col;
-        // En modo claro, el fondo debe ser muy sutil para leer bien
-        textarea.style.backgroundColor = col + "22"; 
-    });
-});
-</script>
+        // Lógica de calendario simplificada
+        document.querySelector(".btn-cal-pick").addEventListener("click", () => {
+            document.querySelector(".input-fecha-hidden").showPicker();
+        });
+        document.querySelector(".input-fecha-hidden").addEventListener("change", (e) => {
+            document.querySelector(".fecha-preview").textContent = e.target.value;
+        });
+    </script>
 </body>
 </html>
