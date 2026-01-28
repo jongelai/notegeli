@@ -1,6 +1,20 @@
 /* =========================================
    1. RESET Y VARIABLES (SISTEMA DE TEMAS)
    ========================================= */
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    /* Estas líneas aseguran que el contenido no quede tapado por el notch */
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+    min-height: 100vh;
+}
+
+.app-container {
+    /* Ajustamos el contenedor para que respete las áreas seguras */
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+}
 :root {
     --bg-app: #f8f9fa;
     --bg-nota: #ffffff;
@@ -220,4 +234,69 @@ input:checked + .slider:before { transform: translateX(24px); }
     padding: 8px;
     font-size: 1.2rem;
     text-decoration: none;
+}
+/* --- MODO OSCURO (Cyber Neon) --- */
+[data-theme="dark"] .header-mini h4 {
+    background: linear-gradient(90deg, #00f2fe 0%, #7000ff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 1.4rem !important; /* Título grande */
+    font-weight: 800;
+    letter-spacing: 1px;
+    filter: drop-shadow(0 0 10px rgba(112, 0, 255, 0.4));
+    text-transform: uppercase;
+    display: flex;
+    align-items: baseline;
+}
+
+[data-theme="dark"] .fecha-mini {
+    font-size: 0.8rem !important; /* Fecha mucho más pequeña */
+    color: #00f2fe !important;
+    text-shadow: 0 0 5px rgba(0, 242, 254, 0.6);
+    font-weight: 400;
+    margin-left: 10px;
+    -webkit-text-fill-color: #00f2fe; /* Color sólido para legibilidad */
+    text-transform: none;
+}
+
+/* --- MODO CLARO (Minimalista) --- */
+[data-theme="light"] .header-mini h4 {
+    color: #1a1a1a;
+    font-size: 1.3rem !important; /* Título estándar */
+    font-weight: 700;
+    background: none;
+    -webkit-text-fill-color: initial;
+    filter: none;
+    display: flex;
+    align-items: baseline;
+}
+
+[data-theme="light"] .fecha-mini {
+    font-size: 0.8rem !important; /* Misma escala pequeña que en dark */
+    color: #888 !important; /* Gris suave */
+    font-weight: 400;
+    margin-left: 10px;
+    -webkit-text-fill-color: #888;
+    text-transform: none;
+}
+/* Icono calendario en el formulario principal */
+.btn-cal-pick i {
+    font-size: 1.6rem !important; /* Más grande y fácil de pulsar */
+    color: var(--border-neon);
+}
+
+/* Icono calendario dentro del editor (el que pusimos abajo a la izquierda) */
+.btn-cal-pick-edit i {
+    font-size: 1.8rem !important; /* Un poco más grande para el pulgar */
+    color: var(--border-neon);
+    display: block;
+}
+
+/* Ajuste del contenedor del calendario en el editor para que no se vea apretado */
+.edit-date-container {
+    padding: 10px 15px !important; /* Más espacio interno */
+    min-width: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
