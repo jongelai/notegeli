@@ -2,12 +2,15 @@
    1. RESET Y VARIABLES (SISTEMA DE TEMAS)
    ========================================= */
 body {
+    padding-top: env(safe-area-inset-top, 20px);
+    padding-bottom: env(safe-area-inset-bottom, 20px);
     background-color: var(--bg-color);
     color: var(--text-color);
     /* Estas líneas aseguran que el contenido no quede tapado por el notch */
     padding-top: env(safe-area-inset-top);
     padding-bottom: env(safe-area-inset-bottom);
     min-height: 100vh;
+    
 }
 
 .app-container {
@@ -99,7 +102,7 @@ body, html {
     0% { transform: scale(1); filter: drop-shadow(0 0 2px #00ffcc); }
     50% { transform: scale(1.1); filter: drop-shadow(0 0 8px #00ffcc); }
     100% { transform: scale(1); filter: drop-shadow(0 0 2px #00ffcc); }
-}
+}}
 
 .pulse-icon {
     animation: pulse-neon 2s infinite ease-in-out;
@@ -187,7 +190,17 @@ body, html {
     padding: 8px 16px;
     cursor: pointer;
 }
-
+[data-theme="light"] .btn-amber {
+    background: #00c2cb !important; /* Turquesa Pro */
+    color: white !important;
+    border: none !important;
+    font-weight: 700 !important;
+    border-radius: 10px !important;
+    padding: 10px 22px !important;
+    box-shadow: 0 4px 12px rgba(0, 194, 203, 0.25);
+    transition: all 0.2s ease;
+    text-transform: none; /* Menos agresivo */
+}
 [data-theme="dark"] .btn-amber {
     background: transparent;
     color: var(--border-neon);
@@ -284,10 +297,50 @@ input:checked + .slider:before { transform: translateX(24px); }
     font-size: 1.6rem !important; /* Más grande y fácil de pulsar */
     color: var(--border-neon);
 }
+/* Estilo base para el botón del calendario */
+.btn-cal-pick {
+    background: rgba(0, 255, 204, 0.1) !important;
+    border: 2px solid var(--border-neon) !important;
+    border-radius: 12px !important;
+    padding: 10px 15px !important;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* El brillo principal */
+    box-shadow: 0 0 15px rgba(0, 255, 204, 0.3);
+}
 
+.btn-cal-pick i {
+    font-size: 1.2rem !important;
+    color: var(--border-neon);
+    filter: drop-shadow(0 0 5px var(--border-neon));
+}
+
+/* Ajustes específicos según el modo */
+[data-theme="dark"] .btn-cal-pick {
+    box-shadow: 0 0 20px rgba(0, 255, 204, 0.4);
+}
+
+[data-theme="light"] .btn-cal-pick {
+    background: #ffffff !important;
+    border-color: #00b38f !important;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .btn-cal-pick i {
+    color: #00b38f;
+    filter: none; /* En modo claro es mejor sin brillo para que sea legible */
+}
+
+/* Efecto al pulsar (feedback táctil) */
+.btn-cal-pick:active {
+    transform: scale(0.9);
+    box-shadow: 0 0 5px var(--border-neon);
+}
 /* Icono calendario dentro del editor (el que pusimos abajo a la izquierda) */
 .btn-cal-pick-edit i {
-    font-size: 1.8rem !important; /* Un poco más grande para el pulgar */
+    font-size: 1.2rem !important; /* Un poco más grande para el pulgar */
     color: var(--border-neon);
     display: block;
 }
