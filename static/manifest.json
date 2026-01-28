@@ -1,18 +1,15 @@
 {
   "id": "/",
-  "name": "Notegeli",
+  "name": "Notegeli Agenda",
   "short_name": "Notegeli",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait",
-  "theme_color": "#000000",
-  "background_color": "#000000",
+  "theme_color": "#050505",
+  "background_color": "#050505",
   "prefer_related_applications": false,
   "categories": ["productivity"],
-  "dark_mode": true,
-  
-
   "icons": [
     {
       "src": "/static/icons/192.png",
@@ -24,7 +21,7 @@
       "src": "/static/icons/512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     }
   ]
 }
