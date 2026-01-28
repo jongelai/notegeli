@@ -124,6 +124,21 @@
         document.querySelector(".input-fecha-hidden").addEventListener("change", (e) => {
             document.querySelector(".fecha-preview").textContent = e.target.value;
         });
+        
     </script>
+    <script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            // Registramos el worker desde la raíz '/' para que tenga control total
+            navigator.serviceWorker.register('/service-worker.js')
+                .then(reg => {
+                    console.log('Notegeli PWA: Registro exitoso', reg.scope);
+                })
+                .catch(err => {
+                    console.log('Notegeli PWA: Error al registrar', err);
+                });
+        });
+    }
+</script>
 </body>
 </html>
