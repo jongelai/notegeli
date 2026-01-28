@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notegeli Cyber</title>
+    <title>Notegeli</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='notegeli.css') }}?v=1.2">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
@@ -15,7 +15,7 @@
             <div class="header-mini d-flex align-items-center justify-content-between">
                 <div class="d-flex align-items-center gap-2">
                     <img src="{{ url_for('static', filename='icons/512.png') }}" class="logo-mini" style="height:24px">
-                    <h4 class="m-0 fw-bold">AGENDA <span class="fecha-mini">{{ fecha_larga }}</span></h4>
+                    <h4 class="m-0 fw-bold">NOTAS <span class="fecha-mini">{{ fecha_larga }}</span></h4>
                 </div>
                 <div class="theme-switch-wrapper">
                     <label class="theme-switch">
@@ -71,7 +71,7 @@
                 </div>
 
                 <textarea name="texto" id="edit-textarea" class="textarea flex-grow-1" style="min-height: 300px;"></textarea>
-                <button type="submit" class="btn-amber w-100 mt-3 py-3">GUARDAR CAMBIOS</button>
+                <button type="submit" class="btn-amber w-100 mt-3 py-3">Volver</button>
             </form>
         </div>
 

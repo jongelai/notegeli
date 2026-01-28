@@ -1,60 +1,48 @@
-/* RESET Y BASES */
-body, html {
-    margin: 0; padding: 0;
-    height: 100vh; width: 100%;
-    font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif;
-    background: #FFFFFF;
-}
-
+/* =========================================
+   1. RESET Y VARIABLES (SISTEMA DE TEMAS)
+   ========================================= */
 :root {
-    --text-main: #9b6b00;
-    --bg-app: #FFFFFF;
+    --bg-app: #f8f9fa;
+    --bg-nota: #ffffff;
+    --text-nota: #212529;
+    --border-nota: #dee2e6;
+    --bg-textarea: #FFFBEB;
+    --accent: #ffcc66;
+    --accent-dark: #9b6b00;
 }
 
 [data-theme="dark"] {
     --bg-app: #050505;
-    --bg-surface: #121212;
-    --neon-text: #00ffcc;
-    --main-text: #e0e0e0;
-    --border-neon: #00ffcc44;
+    --bg-nota: #1a1a1a;
+    --text-nota: #e0e0e0;
+    --border-nota: #333333;
+    --bg-textarea: #151515;
+    --border-neon: #00ffcc;
+    --shadow-neon: rgba(0, 255, 204, 0.3);
 }
 
+body, html {
+    margin: 0; padding: 0;
+    height: 100vh; width: 100%;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg-app);
+    transition: background-color 0.3s ease;
+}
+
+/* =========================================
+   2. CONTENEDORES Y VISTAS
+   ========================================= */
 .app-container {
+    min-height: 100vh;
     width: 100%;
-    max-width: 100%;
-    height: 100vh;
     padding: 10px;
     display: flex;
     flex-direction: column;
     background: var(--bg-app) !important;
     overflow: hidden;
+    box-sizing: border-box;
 }
 
-/* MODO OSCURO GLOBAL */
-[data-theme="dark"] body, [data-theme="dark"] .app-container {
-    background-color: var(--bg-app) !important;
-    color: var(--main-text) !important;
-}
-
-/* TEXTAREA UNIFICADO */
-.textarea {
-    width: 100%;
-    font-size: 1.2rem;
-    background: #FFFBEB;
-    border: 1px solid #ffcc66;
-    border-radius: 12px;
-    padding: 12px;
-    color: #333;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-}
-
-[data-theme="dark"] .textarea {
-    background-color: var(--bg-surface) !important;
-    color: var(--main-text) !important;
-    border-color: var(--border-neon) !important;
-}
-
-/* VISTAS */
 #view-main, #view-edit {
     width: 100%;
     height: 100%;
@@ -62,27 +50,30 @@ body, html {
     flex-direction: column;
 }
 
-/* COLOR PICKER (AHORA EN FILA HORIZONTAL) */
-.color-picker-row {
-    display: flex;
-    flex-direction: row; /* Asegura que sea horizontal */
-    gap: 12px;
-    justify-content: center;
-    padding: 10px 0;
+/* =========================================
+   3. FORMULARIOS Y TEXTAREA
+   ========================================= */
+.textarea {
+    width: 100%;
+    font-size: 1.1rem;
+    background: var(--bg-textarea);
+    border: 1px solid var(--accent);
+    border-radius: 12px;
+    padding: 12px;
+    color: var(--text-nota);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    box-sizing: border-box;
+    outline: none;
 }
 
-.color-dot {
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    cursor: pointer;
-    border: 2px solid rgba(0,0,0,0.1);
-    transition: transform 0.2s;
+[data-theme="dark"] .textarea {
+    border-color: var(--border-neon) !important;
+    box-shadow: 0 0 10px var(--shadow-neon);
 }
 
-.color-dot:hover { transform: scale(1.2); }
-
-/* NOTAS */
+/* =========================================
+   4. LISTA DE NOTAS (SCROLL)
+   ========================================= */
 .notes-scroll {
     flex: 1;
     overflow-y: auto;
@@ -93,37 +84,86 @@ body, html {
 }
 
 .nota-fila {
-    border: 2px solid #ffcc66;
     display: flex;
-    padding: 10px;
-    border-radius: 14px;
-    background: #fff;
-    box-shadow: 4px 3px 0px #df7f3f;
+    align-items: center;
+    padding: 12px;
+    border-radius: 12px;
+    background: var(--bg-nota);
+    border: 1px solid var(--border-nota);
+    max-width: 100%;
+    box-sizing: border-box;
+    transition: transform 0.1s ease, box-shadow 0.2s ease;
 }
 
-[data-theme="dark"] .nota-fila {
-    background: var(--bg-surface) !important;
-    border-color: var(--border-neon) !important;
-    box-shadow: 4px 3px 0px #006655;
-    color: var(--main-text);
+.nota-texto {
+    color: var(--text-nota);
+    font-size: 0.95rem;
+    flex-grow: 1;
+    /* ARREGLO PARA TEXTO LARGO */
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    max-width: 75vw;
 }
 
-/* BOTONES */
+/* =========================================
+   5. SISTEMA DE COLORES (TINTED)
+   ========================================= */
+/* Modo Claro: Color sólido suave */
+.nota-fila.tinted {
+    background-color: var(--color-base) !important;
+    border-color: rgba(0,0,0,0.1) !important;
+}
+
+/* Modo Oscuro: Efecto Neón Cyber */
+[data-theme="dark"] .nota-fila.tinted {
+    background: linear-gradient(145deg, #151515, #0a0a0a) !important;
+    border: 1px solid var(--color-base) !important;
+    border-left: 6px solid var(--color-base) !important; /* Acento lateral */
+    box-shadow: 0 0 12px var(--color-base)55; /* Resplandor exterior */
+}
+
+[data-theme="dark"] .nota-fila:not(.tinted) {
+    box-shadow: 4px 3px 0px var(--border-neon); /* Sombra bloque cyber */
+}
+
+/* =========================================
+   6. COMPONENTES: BOTONES, SWITCH, DOTS
+   ========================================= */
 .btn-amber {
-    background: #ffcc66;
-    color: #9b6b00;
+    background: var(--accent);
+    color: var(--accent-dark);
     font-weight: 700;
-    border: 1px solid #9b6b00;
+    border: 1px solid var(--accent-dark);
     border-radius: 8px;
     padding: 8px 16px;
+    cursor: pointer;
 }
 
 [data-theme="dark"] .btn-amber {
     background: transparent;
-    color: var(--neon-text);
-    border-color: var(--neon-text);
-    box-shadow: 0 0 8px var(--border-neon);
+    color: var(--border-neon);
+    border-color: var(--border-neon);
+    box-shadow: 0 0 8px var(--shadow-neon);
 }
+
+.color-picker-row {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    padding: 10px 0;
+}
+
+.color-dot {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid rgba(0,0,0,0.2);
+    transition: transform 0.2s;
+}
+
+.color-dot:active { transform: scale(0.9); }
 
 /* SWITCH THEME */
 .theme-switch-wrapper { display: flex; align-items: center; }
@@ -138,5 +178,12 @@ body, html {
     position: absolute; content: ""; height: 18px; width: 18px; left: 4px; bottom: 4px;
     background-color: white; transition: .4s; border-radius: 50%;
 }
-input:checked + .slider { background-color: #00ffcc; }
+input:checked + .slider { background-color: var(--border-neon); }
 input:checked + .slider:before { transform: translateX(24px); }
+
+.btn-delete {
+    color: #ff4444;
+    padding: 8px;
+    font-size: 1.2rem;
+    text-decoration: none;
+}
