@@ -91,16 +91,32 @@ def index():
 @app.route("/editar_guardar", methods=["POST"])
 def editar_guardar():
     if "user" not in session: return redirect(url_for("login"))
-    archivo = request.form.get("archivo")
-    nuevo_texto = request.form.get("texto") or ""
-    nuevo_color = request.form.get("color") or ""
     
-    if archivo:
-        path_nota = os.path.join(NOTAS_DIR, archivo)
-        if os.path.exists(path_nota):
-            with open(path_nota, "w", encoding="utf-8", newline="\n") as f:
-                if nuevo_color: f.write(f"COLOR:{nuevo_color}\n")
-                f.write(nuevo_texto.replace("\r\n", "\n").rstrip("\n"))
+    archivo_viejo = request.form.get("archivo")
+    nuevo_texto = request.form.get("texto")
+    nuevo_color = request.form.get("color")
+    nueva_fecha = request.form.get("nueva_fecha") # YYYY-MM-DD
+
+    if not archivo_viejo: return redirect(url_for("index"))
+
+    path_viejo = os.path.join(NOTAS_DIR, archivo_viejo)
+    
+    # Si se eligió una fecha nueva, calculamos el nuevo nombre
+    if nueva_fecha and nueva_fecha.strip():
+        timestamp = datetime.now().strftime("%H%M%S")
+        titulo = "".join(e for e in nuevo_texto.splitlines()[0][:15] if e.isalnum() or e == " ").strip().replace(" ", "-")
+        nombre_nuevo = f"{nueva_fecha}_{titulo}_{timestamp}.txt"
+        path_nuevo = os.path.join(NOTAS_DIR, nombre_nuevo)
+        # Borramos el viejo si el nombre cambia
+        if os.path.exists(path_viejo): os.remove(path_viejo)
+        path_final = path_nuevo
+    else:
+        path_final = path_viejo
+
+    with open(path_final, "w", encoding="utf-8") as f:
+        if nuevo_color: f.write(f"COLOR:{nuevo_color}\n")
+        f.write(nuevo_texto.replace("\r\n", "\n").rstrip("\n"))
+
     return redirect(url_for("index"))
 
 @app.route("/borrar/<archivo>")

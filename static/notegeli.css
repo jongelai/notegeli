@@ -70,7 +70,36 @@ body, html {
     border-color: var(--border-neon) !important;
     box-shadow: 0 0 10px var(--shadow-neon);
 }
+.avisos-seccion {
+    margin-top: 40px !important; /* Aumenta esto para alejarlo más del título superior */
+    padding: 0 5px;
+}
 
+.aviso-barra {
+    transition: opacity 0.3s;
+}
+
+.aviso-barra:hover {
+    background: rgba(255,255,255,0.1) !important;
+    @keyframes pulse-neon {
+    0% { transform: scale(1); filter: drop-shadow(0 0 2px #00ffcc); }
+    50% { transform: scale(1.1); filter: drop-shadow(0 0 8px #00ffcc); }
+    100% { transform: scale(1); filter: drop-shadow(0 0 2px #00ffcc); }
+}
+
+.pulse-icon {
+    animation: pulse-neon 2s infinite ease-in-out;
+    display: inline-block;
+}
+
+/* Ajuste de contraste para el texto del aviso en modo claro */
+[data-theme="light"] .aviso-barra span {
+    color: #1a1a1a !important; /* Negro fuerte para leer bien */
+}
+[data-theme="light"] .aviso-barra small {
+    color: #008f72 !important; /* Verde más oscuro para contraste */
+}
+}
 /* =========================================
    4. LISTA DE NOTAS (SCROLL)
    ========================================= */
@@ -104,6 +133,11 @@ body, html {
     overflow-wrap: break-word;
     word-break: break-word;
     max-width: 75vw;
+    display: -webkit-box;
+    -webkit-line-clamp: 3; /* Número de líneas exactas */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 /* =========================================

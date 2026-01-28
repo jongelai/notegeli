@@ -28,7 +28,31 @@
                 </div>
             </div>
 
-            <form method="POST" action="/" class="nuevo-form mt-3">
+            {% if manana %}
+                <div class="avisos-seccion" style="margin-top: 40px; margin-bottom: 5px;">
+                    {% for m in manana %}
+                        <div id="aviso-{{ loop.index }}" class="aviso-barra d-flex align-items-center" 
+                             style="background: rgba(0, 255, 204, 0.1); border: 1px solid rgba(0, 255, 204, 0.3); border-radius: 10px; padding: 10px 15px; margin-bottom: 8px; transition: all 0.4s ease;">
+                            
+                            <div class="calendar-icon-container" style="margin-right: 12px;">
+                                <i class="bi bi-calendar3 pulse-icon" style="color: #00b38f; font-size: 1.1rem;"></i>
+                            </div>
+
+                            <div class="flex-grow-1" style="overflow: hidden;">
+                                <small style="color: #00b38f; font-weight: bold; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; display: block;">Mañana</small>
+                                <span style="color: var(--text-nota); font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block;">{{ m.preview }}</span>
+                            </div>
+
+                            <button onclick="borrarAvisoDirecto('/borrar/{{ m.archivo }}', 'aviso-{{ loop.index }}')" 
+                                    style="background: none; border: none; color: #ff4444; padding: 5px; cursor: pointer;">
+                                <i class="bi bi-trash3-fill"></i>
+                            </button>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <form method="POST" action="/" class="nuevo-form mt-2">
                 <textarea name="texto" class="textarea" placeholder="Escribir nota..."></textarea>
                 <div class="add-row d-flex gap-2 mt-2 align-items-center">
                     <button type="button" class="btn-cal-pick btn"><i class="bi bi-calendar3"></i></button>
@@ -71,7 +95,17 @@
                 </div>
 
                 <textarea name="texto" id="edit-textarea" class="textarea flex-grow-1" style="min-height: 300px;"></textarea>
-                <button type="submit" class="btn-amber w-100 mt-3 py-3">Volver</button>
+                
+                <div class="d-flex align-items-center gap-2 mt-3">
+                    <div class="d-flex align-items-center" style="background: rgba(255,255,255,0.05); padding: 8px 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
+                        <button type="button" class="btn-cal-pick-edit btn p-0">
+                            <i class="bi bi-calendar3" style="color: var(--border-neon); font-size: 1.4rem;"></i>
+                        </button>
+                        <input type="date" name="nueva_fecha" id="edit-fecha-input" class="d-none">
+                        <span id="edit-fecha-preview" style="font-size: 0.75rem; color: var(--border-neon); margin-left: 8px; font-weight: bold;"></span>
+                    </div>
+                    <button type="submit" class="btn-amber flex-grow-1 py-3">Guardar</button>
+                </div>
             </form>
         </div>
 
@@ -81,6 +115,28 @@
         const toggleSwitch = document.querySelector('#checkbox');
         const viewMain = document.getElementById('view-main');
         const viewEdit = document.getElementById('view-edit');
+
+        // BORRADO SIN VENTANA EMERGENTE
+        async function borrarAvisoDirecto(url, elementoId) {
+            const elemento = document.getElementById(elementoId);
+            elemento.style.transform = "scale(0.9)";
+            elemento.style.opacity = "0";
+            try {
+                const response = await fetch(url);
+                if (response.ok) {
+                    setTimeout(() => {
+                        elemento.remove();
+                        if (document.querySelectorAll('.aviso-barra').length === 0) {
+                            const seccion = document.querySelector('.avisos-seccion');
+                            if(seccion) seccion.remove();
+                        }
+                    }, 300);
+                }
+            } catch (err) {
+                elemento.style.opacity = "1";
+                elemento.style.transform = "scale(1)";
+            }
+        }
 
         // GESTIÓN DE TEMAS
         toggleSwitch.addEventListener('change', (e) => {
@@ -94,12 +150,13 @@
             toggleSwitch.checked = true;
         }
 
-        // GESTIÓN DE VISTAS (SPA)
         function abrirEditor(archivo, contenido) {
             viewMain.style.display = 'none';
             viewEdit.style.display = 'flex';
             document.getElementById('edit-archivo').value = archivo;
             document.getElementById('edit-textarea').value = contenido;
+            document.getElementById('edit-fecha-input').value = "";
+            document.getElementById('edit-fecha-preview').textContent = "";
         }
 
         function cerrarEditor() {
@@ -117,28 +174,30 @@
             });
         });
 
-        // Lógica de calendario simplificada
+        // LÓGICA CALENDARIOS
         document.querySelector(".btn-cal-pick").addEventListener("click", () => {
             document.querySelector(".input-fecha-hidden").showPicker();
         });
         document.querySelector(".input-fecha-hidden").addEventListener("change", (e) => {
             document.querySelector(".fecha-preview").textContent = e.target.value;
         });
+
+        document.querySelector(".btn-cal-pick-edit").addEventListener("click", () => {
+            document.querySelector("#edit-fecha-input").showPicker();
+        });
+        document.querySelector("#edit-fecha-input").addEventListener("change", (e) => {
+            document.getElementById("edit-fecha-preview").textContent = e.target.value;
+        });
         
     </script>
     <script>
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-            // Registramos el worker desde la raíz '/' para que tenga control total
             navigator.serviceWorker.register('/service-worker.js')
-                .then(reg => {
-                    console.log('Notegeli PWA: Registro exitoso', reg.scope);
-                })
-                .catch(err => {
-                    console.log('Notegeli PWA: Error al registrar', err);
-                });
+                .then(reg => console.log('PWA lista'))
+                .catch(err => console.log('Error PWA', err));
         });
     }
-</script>
+    </script>
 </body>
 </html>
