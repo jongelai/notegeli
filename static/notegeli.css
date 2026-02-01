@@ -245,7 +245,7 @@ input:checked + .slider:before { transform: translateX(24px); }
 .btn-delete {
     color: #ff4444;
     padding: 8px;
-    font-size: 1.2rem;
+    font-size: 1.3rem;
     text-decoration: none;
 }
 /* --- MODO OSCURO (Cyber Neon) --- */
@@ -340,7 +340,7 @@ input:checked + .slider:before { transform: translateX(24px); }
 }
 /* Icono calendario dentro del editor (el que pusimos abajo a la izquierda) */
 .btn-cal-pick-edit i {
-    font-size: 1.2rem !important; /* Un poco más grande para el pulgar */
+    font-size: 1.3rem !important; /* Un poco más grande para el pulgar */
     color: var(--border-neon);
     display: block;
 }
