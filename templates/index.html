@@ -18,41 +18,39 @@
 </head>
 <body>
     <div class="app-container">
-        
         <div id="view-main">
             <div class="header-mini d-flex align-items-center justify-content-between">
                 <div class="d-flex align-items-center gap-2">
                     <img src="{{ url_for('static', filename='icons/512.png') }}" class="logo-mini" style="height:24px">
                     <h4 class="m-0 fw-bold">NOTAS <span class="fecha-mini">{{ fecha_larga }}</span></h4>
                 </div>
-                <div class="theme-switch-wrapper">
-                    <label class="theme-switch">
-                        <input type="checkbox" id="checkbox">
-                        <div class="slider round">
-                            <i class="bi bi-sun-fill"></i>
-                            <i class="bi bi-moon-stars-fill"></i>
-                        </div>
-                    </label>
+                <div class="d-flex align-items-center gap-3">
+                    <a href="/logout" style="color:inherit; font-size:1.2rem"><i class="bi bi-box-arrow-right"></i></a>
+                    <div class="theme-switch-wrapper">
+                        <label class="theme-switch">
+                            <input type="checkbox" id="checkbox">
+                            <div class="slider round">
+                                <i class="bi bi-sun-fill"></i>
+                                <i class="bi bi-moon-stars-fill"></i>
+                            </div>
+                        </label>
+                    </div>
                 </div>
             </div>
 
             {% if manana %}
                 <div class="avisos-seccion" style="margin-top: 40px; margin-bottom: 5px;">
                     {% for m in manana %}
-                        <div id="aviso-{{ loop.index }}" class="aviso-barra d-flex align-items-center" 
-                             style="background: rgba(0, 255, 204, 0.1); border: 1px solid rgba(0, 255, 204, 0.3); border-radius: 10px; padding: 10px 15px; margin-bottom: 8px; transition: all 0.4s ease;">
-                            
+                        <div id="aviso-{{ m.id }}" class="aviso-barra d-flex align-items-center" 
+                             style="background: rgba(0, 255, 204, 0.1); border: 1px solid rgba(0, 255, 204, 0.3); border-radius: 10px; padding: 10px 15px; margin-bottom: 8px;">
                             <div class="calendar-icon-container" style="margin-right: 12px;">
                                 <i class="bi bi-calendar3 pulse-icon" style="color: #00b38f; font-size: 1.1rem;"></i>
                             </div>
-
                             <div class="flex-grow-1" style="overflow: hidden;">
-                                <small style="color: #00b38f; font-weight: bold; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; display: block;">Mañana</small>
-                                <span style="color: var(--text-nota); font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block;">{{ m.preview }}</span>
+                                <small style="color: #00b38f; font-weight: bold; font-size: 0.7rem;">Mañana</small>
+                                <span style="color: var(--text-nota); display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ m.contenido }}</span>
                             </div>
-
-                            <button onclick="borrarAvisoDirecto('/borrar/{{ m.archivo }}', 'aviso-{{ loop.index }}')" 
-                                    style="background: none; border: none; color: #ff4444; padding: 5px; cursor: pointer;">
+                            <button onclick="borrarAvisoDirecto('/borrar/{{ m.id }}', 'aviso-{{ m.id }}')" style="background:none; border:none; color:#ff4444">
                                 <i class="bi bi-trash3-fill"></i>
                             </button>
                         </div>
@@ -72,106 +70,36 @@
 
             <div class="notes-scroll mt-3">
                 {% for n in notas %}
-                    <div class="nota-fila {% if n.color %}tinted{% endif %}" style="{% if n.color %}--color-base: {{ n.color }};{% endif %}">
-                        <div onclick="abrirEditor('{{ n.archivo }}', `{{ n.contenido_raw }}`)" class="nota-link flex-fill">
-                            <span class="nota-texto">{{ n.preview }}</span>
+                    <div class="nota-fila {% if n.color %}tinted{% endif %}" id="nota-{{ n.id }}" style="{% if n.color %}--color-base: {{ n.color }};{% endif %}">
+                        <div class="nota-link flex-fill">
+                            <span class="nota-texto">{{ n.contenido }}</span>
                         </div>
-                        <a href="/borrar/{{ n.archivo }}" class="btn-delete"><i class="bi bi-trash3"></i></a>
+                        <a href="/borrar/{{ n.id }}" class="btn-delete"><i class="bi bi-trash3"></i></a>
                     </div>
                 {% else %}
                     <div class="skeleton-container">
-                        <div class="nota-fila ghost-note">
-                            <div class="nota-link"><span class="nota-texto">No hay ninguna nota...</span></div>
-                        </div>
-                        <div class="nota-fila ghost-note" style="opacity: 0.3;">
-                            <div class="nota-link"><span class="nota-texto">pulsa el calendario para poner fechas...</span></div>
-                        </div>
-                        <div class="nota-fila ghost-note" style="opacity: 0.1;">
-                            <div class="nota-link"><span class="nota-texto">...............</span></div>
-                        </div>
-                        
-                        
+                        <div class="nota-fila ghost-note"><div class="nota-link">No hay notas todavía...</div></div>
                     </div>
                 {% endfor %}
             </div>
         </div>
-
-        <div id="view-edit" style="display: none;">
-            <div class="header-mini d-flex align-items-center mb-3">
-                <button onclick="cerrarEditor()" class="btn btn-link p-0 me-3" style="color:inherit; font-size:1.5rem">
-                    <i class="bi bi-arrow-left"></i>
-                </button>
-                <h4 class="m-0 fw-bold">Editar Nota</h4>
-            </div>
-            
-            <form id="form-edit" method="POST" action="/editar_guardar" class="h-100 d-flex flex-column">
-                <input type="hidden" name="archivo" id="edit-archivo">
-                <input type="hidden" name="color" id="edit-color-input">
-                
-                <div class="color-picker-row">
-                    <div class="color-dot" data-color="#ffd966" style="background:#ffd966"></div>
-                    <div class="color-dot" data-color="#c3e88d" style="background:#c3e88d"></div>
-                    <div class="color-dot" data-color="#82aaff" style="background:#82aaff"></div>
-                    <div class="color-dot" data-color="#f07178" style="background:#f07178"></div>
-                    <div class="color-dot" data-color="#ffffff" style="background:#ffffff; border:1px solid #ddd"></div>
-                </div>
-
-                <textarea name="texto" id="edit-textarea" class="textarea flex-grow-1" style="min-height: 300px;"></textarea>
-                
-                <div class="d-flex align-items-center gap-2 mt-3">
-                    <div class="d-flex align-items-center" style="background: rgba(255,255,255,0.05); padding: 8px 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
-                        <button type="button" class="btn-cal-pick-edit btn p-0">
-                            <i class="bi bi-calendar3" style="color: var(--border-neon); font-size: 1.4rem;"></i>
-                        </button>
-                        <input type="date" name="nueva_fecha" id="edit-fecha-input" class="d-none">
-                        <span id="edit-fecha-preview" style="font-size: 0.75rem; color: var(--border-neon); margin-left: 8px; font-weight: bold;"></span>
-                    </div>
-                    <button type="submit" class="btn-amber flex-grow-1 py-3">Guardar</button>
-                </div>
-            </form>
-        </div>
-
     </div>
 
     <script>
         const toggleSwitch = document.querySelector('#checkbox');
-        const viewMain = document.getElementById('view-main');
-        const viewEdit = document.getElementById('view-edit');
-
-        // BORRADO SIN VENTANA EMERGENTE
+        
         async function borrarAvisoDirecto(url, elementoId) {
             const elemento = document.getElementById(elementoId);
-            elemento.style.transform = "scale(0.9)";
             elemento.style.opacity = "0";
-            try {
-                const response = await fetch(url);
-                if (response.ok) {
-                    setTimeout(() => {
-                        elemento.remove();
-                        if (document.querySelectorAll('.aviso-barra').length === 0) {
-                            const seccion = document.querySelector('.avisos-seccion');
-                            if(seccion) seccion.remove();
-                        }
-                    }, 300);
-                }
-            } catch (err) {
-                elemento.style.opacity = "1";
-                elemento.style.transform = "scale(1)";
-            }
+            elemento.style.transform = "scale(0.9)";
+            const response = await fetch(url);
+            if (response.ok) setTimeout(() => elemento.remove(), 300);
         }
 
-        // GESTIÓN DE TEMAS
         toggleSwitch.addEventListener('change', (e) => {
             const theme = e.target.checked ? 'dark' : 'light';
             document.documentElement.setAttribute('data-theme', theme);
             localStorage.setItem('theme', theme);
-            
-            const metas = document.querySelectorAll('meta[name="theme-color"]');
-            metas.forEach(meta => {
-                if (theme === 'dark') {
-                    meta.setAttribute("content", "#050505");
-                } else {meta.setAttribute("content", "#ffffff");}
-            });
         });
 
         if (localStorage.getItem('theme') === 'dark') {
@@ -179,46 +107,10 @@
             toggleSwitch.checked = true;
         }
 
-        function abrirEditor(archivo, contenido) {
-            viewMain.style.display = 'none';
-            viewEdit.style.display = 'flex';
-            document.getElementById('edit-archivo').value = archivo;
-            document.getElementById('edit-textarea').value = contenido;
-            document.getElementById('edit-fecha-input').value = "";
-            document.getElementById('edit-fecha-preview').textContent = "";
-        }
-
-        function cerrarEditor() {
-            viewEdit.style.display = 'none';
-            viewMain.style.display = 'flex';
-        }
-
-        // COLORES EN EL EDITOR
-        document.querySelectorAll('#view-edit .color-dot').forEach(dot => {
-            dot.addEventListener('click', () => {
-                const col = dot.dataset.color;
-                document.getElementById('edit-color-input').value = col;
-                const opacity = document.documentElement.getAttribute('data-theme') === 'dark' ? "44" : "22";
-                document.getElementById('edit-textarea').style.backgroundColor = col + opacity;
-            });
-        });
-
-        // LÓGICA CALENDARIOS
-        document.querySelector(".btn-cal-pick").addEventListener("click", () => {
-            document.querySelector(".input-fecha-hidden").showPicker();
-        });
-        document.querySelector(".input-fecha-hidden").addEventListener("change", (e) => {
-            document.querySelector(".fecha-preview").textContent = e.target.value;
-        });
-
-        document.querySelector(".btn-cal-pick-edit").addEventListener("click", () => {
-            document.querySelector("#edit-fecha-input").showPicker();
-        });
-        document.querySelector("#edit-fecha-input").addEventListener("change", (e) => {
-            document.getElementById("edit-fecha-preview").textContent = e.target.value;
-        });
-        
+        document.querySelector(".btn-cal-pick").addEventListener("click", () => document.querySelector(".input-fecha-hidden").showPicker());
+        document.querySelector(".input-fecha-hidden").addEventListener("change", (e) => document.querySelector(".fecha-preview").textContent = e.target.value);
     </script>
+
     <script>
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {

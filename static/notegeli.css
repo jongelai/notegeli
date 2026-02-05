@@ -202,6 +202,11 @@ margin-bottom: 4px;
     transition: all 0.2s ease;
     text-transform: none; /* Menos agresivo */
 }
+[data-theme="light"] .btn-amber:active {
+    background: #00a8af !important;
+    transform: scale(0.96);
+    box-shadow: 0 2px 6px rgba(0, 194, 203, 0.2);
+}
 [data-theme="dark"] .btn-amber {
     background: transparent;
     color: var(--border-neon);

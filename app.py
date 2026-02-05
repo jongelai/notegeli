@@ -1,153 +1,115 @@
 import os
-from flask import Flask, render_template, request, redirect, url_for, session, send_from_directory
+from flask import Flask, render_template, request, redirect, url_for, session, send_from_directory,flash #
+from flask_sqlalchemy import SQLAlchemy
+from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, timedelta
 
 app = Flask(__name__)
 app.secret_key = "notegeli_pro_2026"
 
-USUARIO = "juan"
-PASSWORD = "1234"
-NOTAS_DIR = "notas"
+# Configuración de Base de Datos SQLite
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///notegeli.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db = SQLAlchemy(app)
+
+# --- MODELOS ---
+class Usuario(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(50), unique=True, nullable=False)
+    password = db.Column(db.String(255), nullable=False)
+    notas = db.relationship('Nota', backref='autor', lazy=True, cascade="all, delete-orphan")
+
+class Nota(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    contenido = db.Column(db.Text, nullable=False)
+    fecha_recordatorio = db.Column(db.String(10)) 
+    color = db.Column(db.String(20))
+    fecha_creacion = db.Column(db.DateTime, default=datetime.now)
+    usuario_id = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
+
+# Crear base de datos
+with app.app_context():
+    db.create_all()
+
 meses = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"]
 
-if not os.path.exists(NOTAS_DIR):
-    os.makedirs(NOTAS_DIR)
-
-# --- FUNCIONES DE APOYO ---
-def extraer_info_tiempo(filename):
-    parts = filename.split("_")
-    if len(parts[0]) == 10 and "-" in parts[0]:
-        try:
-            yyyy, mm, dd = parts[0].split("-")
-            return {"valor": f"{dd}/{mm}/{yyyy}", "es_fecha": True}
-        except: pass
-    return {"valor": "", "es_fecha": False}
-
-# --- RUTAS PRINCIPALES ---
+@app.route("/quien-hay")
+def lista_usuarios():
+    # Solo deja entrar si tú estás logueado (opcional)
+    users = Usuario.query.all()
+    lista = "<br>".join([f"ID: {u.id} | Nombre: {u.username}" for u in users])
+    return f"<h1>Usuarios registrados:</h1>{lista}"
 @app.route("/", methods=["GET", "POST"])
 def index():
-    if "user" not in session:
+    if "user_id" not in session:
         return redirect(url_for("login"))
 
     hoy = datetime.now()
     fecha_larga = f"{hoy.day} {meses[hoy.month - 1]} {hoy.year}"
-
+    
     if request.method == "POST":
         texto = request.form.get("texto")
         fecha = request.form.get("fecha")
         color = request.form.get("color")
-        
         if texto:
-            timestamp = datetime.now().strftime("%H%M%S")
-            titulo_linea = texto.splitlines()[0][:15] if texto.strip() else "Nota"
-            titulo_limpio = "".join(e for e in titulo_linea if e.isalnum() or e == " ").strip().replace(" ", "-")
-            prefijo = fecha if (fecha and fecha.strip()) else "sinfecha"
-            nombre = f"{prefijo}_{titulo_limpio}_{timestamp}.txt"
-
-            with open(os.path.join(NOTAS_DIR, nombre), "w", encoding="utf-8", newline="\n") as f:
-                if color: f.write(f"COLOR:{color}\n")
-                f.write(texto.replace("\r\n", "\n").rstrip("\n"))
+            nueva = Nota(contenido=texto, fecha_recordatorio=fecha, color=color, usuario_id=session["user_id"])
+            db.session.add(nueva)
+            db.session.commit()
         return redirect(url_for("index"))
 
-    archivos = os.listdir(NOTAS_DIR)
-    archivos.sort(key=lambda x: os.path.getmtime(os.path.join(NOTAS_DIR, x)), reverse=True)
-
-    notas_lista = []
-    avisos_manana = []
+    notas_db = Nota.query.filter_by(usuario_id=session["user_id"]).order_by(Nota.fecha_creacion.desc()).all()
     manana_str = (hoy + timedelta(days=1)).strftime('%Y-%m-%d')
+    avisos_manana = [n for n in notas_db if n.fecha_recordatorio == manana_str]
 
-    for a in archivos:
-        try:
-            with open(os.path.join(NOTAS_DIR, a), "r", encoding="utf-8") as f:
-                contenido = f.read()
+    return render_template("index.html", notas=notas_db, manana=avisos_manana, fecha_larga=fecha_larga)
 
-            lineas = contenido.split("\n")
-            color = None
-            if lineas and lineas[0].startswith("COLOR:"):
-                color = lineas[0].replace("COLOR:", "").strip()
-                contenido_final = "\n".join(lineas[1:])
-            else:
-                contenido_final = contenido
-
-            tiempo = extraer_info_tiempo(a)
-            notas_lista.append({
-                "archivo": a,
-                "preview": contenido_final,
-                "contenido_raw": contenido_final,
-                "tiempo": tiempo,
-                "color": color
-            })
-
-            if tiempo["es_fecha"] and a.startswith(manana_str):
-                avisos_manana.append({
-                    "preview": contenido_final[:45],
-                    "archivo": a,
-                    "fecha": tiempo["valor"]
-                })
-        except: continue
-
-    return render_template("index.html", notas=notas_lista, manana=avisos_manana, fecha_larga=fecha_larga)
-
-@app.route("/editar_guardar", methods=["POST"])
-def editar_guardar():
-    if "user" not in session: return redirect(url_for("login"))
-    
-    archivo_viejo = request.form.get("archivo")
-    nuevo_texto = request.form.get("texto")
-    nuevo_color = request.form.get("color")
-    nueva_fecha = request.form.get("nueva_fecha") # YYYY-MM-DD
-
-    if not archivo_viejo: return redirect(url_for("index"))
-
-    path_viejo = os.path.join(NOTAS_DIR, archivo_viejo)
-    
-    # Si se eligió una fecha nueva, calculamos el nuevo nombre
-    if nueva_fecha and nueva_fecha.strip():
-        timestamp = datetime.now().strftime("%H%M%S")
-        titulo = "".join(e for e in nuevo_texto.splitlines()[0][:15] if e.isalnum() or e == " ").strip().replace(" ", "-")
-        nombre_nuevo = f"{nueva_fecha}_{titulo}_{timestamp}.txt"
-        path_nuevo = os.path.join(NOTAS_DIR, nombre_nuevo)
-        # Borramos el viejo si el nombre cambia
-        if os.path.exists(path_viejo): os.remove(path_viejo)
-        path_final = path_nuevo
-    else:
-        path_final = path_viejo
-
-    with open(path_final, "w", encoding="utf-8") as f:
-        if nuevo_color: f.write(f"COLOR:{nuevo_color}\n")
-        f.write(nuevo_texto.replace("\r\n", "\n").rstrip("\n"))
-
-    return redirect(url_for("index"))
-
-@app.route("/borrar/<archivo>")
-def borrar(archivo):
-    if "user" not in session: return redirect(url_for("login"))
-    path = os.path.join(NOTAS_DIR, archivo)
-    if os.path.exists(path): os.remove(path)
-    return redirect(url_for("index"))
-
-# --- RUTAS DE ACCESO ---
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        if request.form.get("usuario") == USUARIO and request.form.get("password") == PASSWORD:
-            session["user"] = USUARIO
+        u = request.form.get("usuario")
+        p = request.form.get("password")
+        user = Usuario.query.filter_by(username=u).first()
+        
+        if user and check_password_hash(user.password, p):
+            session["user_id"] = user.id
             return redirect(url_for("index"))
+        else:
+            flash("Usuario o contraseña incorrectos", "danger") # <--- Mensaje de error
+            
     return render_template("login.html")
+
+@app.route("/registro", methods=["GET", "POST"])
+def registro():
+    if request.method == "POST":
+        u, p = request.form.get("usuario"), request.form.get("password")
+        if u and p:
+            nuevo = Usuario(username=u, password=generate_password_hash(p))
+            try:
+                db.session.add(nuevo)
+                db.session.commit()
+                return redirect(url_for("login"))
+            except: return "El usuario ya existe."
+    return render_template("registro.html")
+
+@app.route("/borrar/<int:id>")
+def borrar(id):
+    if "user_id" not in session: return redirect(url_for("login"))
+    nota = Nota.query.get(id)
+    if nota and nota.usuario_id == session["user_id"]:
+        db.session.delete(nota)
+        db.session.commit()
+    return redirect(url_for("index"))
 
 @app.route("/logout")
 def logout():
     session.clear()
     return redirect(url_for("login"))
 
-# --- RUTAS PWA (CRUCIALES) ---
 @app.route('/manifest.json')
-def manifest():
-    return send_from_directory('static', 'manifest.json')
+def manifest(): return send_from_directory('static', 'manifest.json')
 
 @app.route('/service-worker.js')
-def service_worker():
-    return send_from_directory('static', 'service-worker.js')
+def service_worker(): return send_from_directory('static', 'service-worker.js')
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000, debug=True)
