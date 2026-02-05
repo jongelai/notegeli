@@ -159,24 +159,51 @@ margin-bottom: 4px;
 }
 
 /* =========================================
-   5. SISTEMA DE COLORES (TINTED)
+   5. SISTEMA DE COLORES (TINTED) - FIX INICIO
    ========================================= */
-/* Modo Claro: Color sólido suave */
+
+/* Estilo por defecto (Modo Claro con Difuminado) */
 .nota-fila.tinted {
-    background-color: var(--color-base) !important;
-    border-color: rgba(0,0,0,0.1) !important;
+    /* Gradiente suave de inicio */
+    background: linear-gradient(90deg, var(--color-base) 0%, rgba(255,255,255,1) 40%) !important;
+    border-color: rgba(0,0,0,0.05) !important;
+    border-left: 6px solid var(--color-base) !important;
+    position: relative;
+    overflow: hidden; /* Importante para el difuminado */
 }
 
-/* Modo Oscuro: Efecto Neón Cyber */
+/* Capa de suavizado que siempre debe estar presente en claro */
+.nota-fila.tinted::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(255, 255, 255, 0.6); 
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Asegurar que el contenido se vea sobre el difuminado */
+.nota-fila.tinted .nota-link,
+.nota-fila.tinted .btn-delete {
+    position: relative;
+    z-index: 1;
+}
+
+/* Modo Oscuro: Sobrescribe el difuminado para volver al estilo Cyber */
 [data-theme="dark"] .nota-fila.tinted {
     background: linear-gradient(145deg, #151515, #0a0a0a) !important;
     border: 1px solid var(--color-base) !important;
-    border-left: 6px solid var(--color-base) !important; /* Acento lateral */
-    box-shadow: 0 0 12px var(--color-base)55; /* Resplandor exterior */
+    border-left: 6px solid var(--color-base) !important;
+    box-shadow: 0 0 12px var(--color-base)55;
+}
+
+/* Quitamos la capa blanca en modo oscuro */
+[data-theme="dark"] .nota-fila.tinted::before {
+    display: none;
 }
 
 [data-theme="dark"] .nota-fila:not(.tinted) {
-    box-shadow: 4px 3px 0px var(--border-neon); /* Sombra bloque cyber */
+    box-shadow: 4px 3px 0px var(--border-neon);
 }
 
 /* =========================================

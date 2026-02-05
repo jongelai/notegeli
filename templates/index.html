@@ -4,13 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Notegeli</title>
-    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
-    <meta name="theme-color" content="#050505" media="(prefers-color-scheme: dark)">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Notegeli">
-
-    <link rel="apple-touch-icon" href="{{ url_for('static', filename='icons/192.png') }}">
     <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='notegeli.css') }}?v=1.2">
@@ -18,6 +11,7 @@
 </head>
 <body>
     <div class="app-container">
+        
         <div id="view-main">
             <div class="header-mini d-flex align-items-center justify-content-between">
                 <div class="d-flex align-items-center gap-2">
@@ -41,16 +35,20 @@
             {% if manana %}
                 <div class="avisos-seccion" style="margin-top: 40px; margin-bottom: 5px;">
                     {% for m in manana %}
-                        <div id="aviso-{{ m.id }}" class="aviso-barra d-flex align-items-center" 
-                             style="background: rgba(0, 255, 204, 0.1); border: 1px solid rgba(0, 255, 204, 0.3); border-radius: 10px; padding: 10px 15px; margin-bottom: 8px;">
+                        <div id="aviso-{{ loop.index }}" class="aviso-barra d-flex align-items-center" 
+                             style="background: rgba(0, 255, 204, 0.1); border: 1px solid rgba(0, 255, 204, 0.3); border-radius: 10px; padding: 10px 15px; margin-bottom: 8px; transition: all 0.4s ease;">
+                            
                             <div class="calendar-icon-container" style="margin-right: 12px;">
                                 <i class="bi bi-calendar3 pulse-icon" style="color: #00b38f; font-size: 1.1rem;"></i>
                             </div>
+
                             <div class="flex-grow-1" style="overflow: hidden;">
-                                <small style="color: #00b38f; font-weight: bold; font-size: 0.7rem;">Mañana</small>
-                                <span style="color: var(--text-nota); display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ m.contenido }}</span>
+                                <small style="color: #00b38f; font-weight: bold; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; display: block;">Mañana</small>
+                                <span style="color: #ffffff !important; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block;">{{ m.contenido }}</span>
                             </div>
-                            <button onclick="borrarAvisoDirecto('/borrar/{{ m.id }}', 'aviso-{{ m.id }}')" style="background:none; border:none; color:#ff4444">
+
+                            <button onclick="borrarAvisoDirecto('/borrar/{{ m.id }}', 'aviso-{{ loop.index }}')" 
+                                    style="background: none; border: none; color: #ff4444; padding: 5px; cursor: pointer;">
                                 <i class="bi bi-trash3-fill"></i>
                             </button>
                         </div>
@@ -70,47 +68,140 @@
 
             <div class="notes-scroll mt-3">
                 {% for n in notas %}
-                    <div class="nota-fila {% if n.color %}tinted{% endif %}" id="nota-{{ n.id }}" style="{% if n.color %}--color-base: {{ n.color }};{% endif %}">
-                        <div class="nota-link flex-fill">
-                            <span class="nota-texto">{{ n.contenido }}</span>
-                        </div>
-                        <a href="/borrar/{{ n.id }}" class="btn-delete"><i class="bi bi-trash3"></i></a>
+                <div class="nota-fila {% if n.color %}tinted{% endif %}" id="nota-{{ n.id }}" style="{% if n.color %}--color-base: {{ n.color }}; border-left: 5px solid {{ n.color }};{% endif %}">
+                    <div onclick="abrirEditor('{{ n.id }}', `{{ n.contenido }}`, '{{ n.color }}', '{{ n.fecha_recordatorio }}')" class="nota-link flex-fill" style="cursor:pointer">
+                        <span class="nota-texto">{{ n.contenido }}</span>
                     </div>
-                {% else %}
-                    <div class="skeleton-container">
-                        <div class="nota-fila ghost-note"><div class="nota-link">No hay notas todavía...</div></div>
-                    </div>
+                    <a href="/borrar/{{ n.id }}" class="btn-delete"><i class="bi bi-trash3"></i></a>
+                </div>
                 {% endfor %}
             </div>
         </div>
+
+        <div id="view-edit" style="display: none; flex-direction: column; padding: 20px;">
+            <div class="header-mini d-flex align-items-center mb-3">
+                <button onclick="cerrarEditor()" class="btn btn-link p-0 me-3" style="color:inherit; font-size:1.5rem">
+                    <i class="bi bi-arrow-left"></i>
+                </button>
+                <h4 class="m-0 fw-bold">Editar Nota</h4>
+            </div>
+            
+            <form id="form-edit" method="POST" action="/editar_guardar" class="h-100 d-flex flex-column">
+                <input type="hidden" name="id" id="edit-id">
+                <input type="hidden" name="color" id="edit-color-input">
+                
+                <div class="color-picker-row d-flex gap-2 mb-3">
+                    <div class="color-dot" data-color="#ffd966" style="background:#ffd966; width:25px; height:25px; border-radius:50%; cursor:pointer"></div>
+                    <div class="color-dot" data-color="#c3e88d" style="background:#c3e88d; width:25px; height:25px; border-radius:50%; cursor:pointer"></div>
+                    <div class="color-dot" data-color="#82aaff" style="background:#82aaff; width:25px; height:25px; border-radius:50%; cursor:pointer"></div>
+                    <div class="color-dot" data-color="#f07178" style="background:#f07178; width:25px; height:25px; border-radius:50%; cursor:pointer"></div>
+                    <div class="color-dot" data-color="" style="background:transparent; border:1px solid #ddd; width:25px; height:25px; border-radius:50%; cursor:pointer"></div>
+                </div>
+
+                <textarea name="texto" id="edit-textarea" class="textarea flex-grow-1" style="min-height: 300px; padding: 15px;"></textarea>
+                
+                <div class="d-flex align-items-center gap-2 mt-3">
+                    <div class="d-flex align-items-center" style="background: rgba(255,255,255,0.05); padding: 8px 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
+                        <button type="button" class="btn-cal-pick-edit btn p-0">
+                            <i class="bi bi-calendar3" style="color: #00ffcc; font-size: 1.4rem;"></i>
+                        </button>
+                        <input type="date" name="nueva_fecha" id="edit-fecha-input" class="d-none">
+                        <span id="edit-fecha-preview" style="font-size: 0.75rem; color: #00ffcc; margin-left: 8px; font-weight: bold;"></span>
+                    </div>
+                    <button type="submit" class="btn-amber flex-grow-1 py-3">Guardar</button>
+                </div>
+            </form>
+        </div>
+
     </div>
 
     <script>
         const toggleSwitch = document.querySelector('#checkbox');
-        
+        const viewMain = document.getElementById('view-main');
+        const viewEdit = document.getElementById('view-edit');
+
+        // BORRADO SIN VENTANA EMERGENTE
         async function borrarAvisoDirecto(url, elementoId) {
             const elemento = document.getElementById(elementoId);
-            elemento.style.opacity = "0";
             elemento.style.transform = "scale(0.9)";
-            const response = await fetch(url);
-            if (response.ok) setTimeout(() => elemento.remove(), 300);
+            elemento.style.opacity = "0";
+            try {
+                const response = await fetch(url);
+                if (response.ok) {
+                    setTimeout(() => {
+                        elemento.remove();
+                        if (document.querySelectorAll('.aviso-barra').length === 0) {
+                            const seccion = document.querySelector('.avisos-seccion');
+                            if(seccion) seccion.remove();
+                        }
+                    }, 300);
+                }
+            } catch (err) {
+                elemento.style.opacity = "1";
+                elemento.style.transform = "scale(1)";
+            }
         }
 
+        // TEMAS
         toggleSwitch.addEventListener('change', (e) => {
             const theme = e.target.checked ? 'dark' : 'light';
             document.documentElement.setAttribute('data-theme', theme);
             localStorage.setItem('theme', theme);
         });
-
         if (localStorage.getItem('theme') === 'dark') {
             document.documentElement.setAttribute('data-theme', 'dark');
             toggleSwitch.checked = true;
         }
 
-        document.querySelector(".btn-cal-pick").addEventListener("click", () => document.querySelector(".input-fecha-hidden").showPicker());
-        document.querySelector(".input-fecha-hidden").addEventListener("change", (e) => document.querySelector(".fecha-preview").textContent = e.target.value);
-    </script>
+        // EDITOR
+        function abrirEditor(id, contenido, color, fecha) {
+            viewMain.style.display = 'none';
+            viewEdit.style.display = 'flex';
+            document.getElementById('edit-id').value = id;
+            document.getElementById('edit-textarea').value = contenido;
+            document.getElementById('edit-color-input').value = color || "";
+            document.getElementById('edit-fecha-preview').textContent = fecha || "";
+            
+            const txt = document.getElementById('edit-textarea');
+            if(color) {
+                txt.style.backgroundColor = color + "22";
+                txt.style.borderLeft = "6px solid " + color;
+            } else {
+                txt.style.backgroundColor = "";
+                txt.style.borderLeft = "";
+            }
+        }
 
+        function cerrarEditor() {
+            viewEdit.style.display = 'none';
+            viewMain.style.display = 'flex';
+        }
+
+        // LÓGICA DE COLORES QUE SÍ SE VE
+        document.querySelectorAll('#view-edit .color-dot').forEach(dot => {
+            dot.addEventListener('click', () => {
+                const col = dot.dataset.color;
+                const txt = document.getElementById('edit-textarea');
+                document.getElementById('edit-color-input').value = col;
+                
+                if(col) {
+                    txt.style.backgroundColor = col + "22"; // 22 es transparencia baja
+                    txt.style.borderLeft = "6px solid " + col;
+                } else {
+                    txt.style.backgroundColor = "rgba(255,255,255,0.05)";
+                    txt.style.borderLeft = "1px solid rgba(255,255,255,0.1)";
+                }
+            });
+        });
+
+        // CALENDARIOS
+        document.querySelector(".btn-cal-pick").onclick = () => document.querySelector(".input-fecha-hidden").showPicker();
+        document.querySelector(".input-fecha-hidden").onchange = (e) => document.querySelector(".fecha-preview").textContent = e.target.value;
+        document.querySelector(".btn-cal-pick-edit").onclick = () => document.querySelector("#edit-fecha-input").showPicker();
+        document.querySelector("#edit-fecha-input").onchange = (e) => document.getElementById("edit-fecha-preview").textContent = e.target.value;
+
+    </script>
+    
     <script>
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {

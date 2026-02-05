@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template, request, redirect, url_for, session, send_from_directory,flash #
+from flask import Flask, render_template, request, redirect, url_for, session, send_from_directory, flash
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, timedelta
@@ -33,12 +33,6 @@ with app.app_context():
 
 meses = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"]
 
-@app.route("/quien-hay")
-def lista_usuarios():
-    # Solo deja entrar si tú estás logueado (opcional)
-    users = Usuario.query.all()
-    lista = "<br>".join([f"ID: {u.id} | Nombre: {u.username}" for u in users])
-    return f"<h1>Usuarios registrados:</h1>{lista}"
 @app.route("/", methods=["GET", "POST"])
 def index():
     if "user_id" not in session:
@@ -50,9 +44,8 @@ def index():
     if request.method == "POST":
         texto = request.form.get("texto")
         fecha = request.form.get("fecha")
-        color = request.form.get("color")
         if texto:
-            nueva = Nota(contenido=texto, fecha_recordatorio=fecha, color=color, usuario_id=session["user_id"])
+            nueva = Nota(contenido=texto, fecha_recordatorio=fecha, usuario_id=session["user_id"])
             db.session.add(nueva)
             db.session.commit()
         return redirect(url_for("index"))
@@ -63,19 +56,25 @@ def index():
 
     return render_template("index.html", notas=notas_db, manana=avisos_manana, fecha_larga=fecha_larga)
 
+@app.route("/editar_guardar", methods=["POST"])
+def editar_guardar():
+    if "user_id" not in session: return redirect(url_for("login"))
+    nota = Nota.query.get(request.form.get("id"))
+    if nota and nota.usuario_id == session["user_id"]:
+        nota.contenido = request.form.get("texto")
+        nota.color = request.form.get("color")
+        nota.fecha_recordatorio = request.form.get("nueva_fecha")
+        db.session.commit()
+    return redirect(url_for("index"))
+
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        u = request.form.get("usuario")
-        p = request.form.get("password")
-        user = Usuario.query.filter_by(username=u).first()
-        
-        if user and check_password_hash(user.password, p):
+        user = Usuario.query.filter_by(username=request.form.get("usuario")).first()
+        if user and check_password_hash(user.password, request.form.get("password")):
             session["user_id"] = user.id
             return redirect(url_for("index"))
-        else:
-            flash("Usuario o contraseña incorrectos", "danger") # <--- Mensaje de error
-            
+        flash("Usuario o contraseña incorrectos", "danger")
     return render_template("login.html")
 
 @app.route("/registro", methods=["GET", "POST"])
@@ -87,8 +86,9 @@ def registro():
             try:
                 db.session.add(nuevo)
                 db.session.commit()
-                return redirect(url_for("login"))
-            except: return "El usuario ya existe."
+                session["user_id"] = nuevo.id
+                return redirect(url_for("index"))
+            except: flash("El usuario ya existe", "danger")
     return render_template("registro.html")
 
 @app.route("/borrar/<int:id>")
