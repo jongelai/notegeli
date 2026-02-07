@@ -7,10 +7,23 @@ from datetime import datetime, timedelta
 app = Flask(__name__)
 app.secret_key = "notegeli_pro_2026"
 
-# Configuración de Base de Datos SQLite
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///notegeli.db'
+# --- CONFIGURACIÓN DE BASE DE DATOS INTELIGENTE ---
+# Railway te da una 'DATABASE_URL' automáticamente cuando creas una base de datos Postgres
+DATABASE_URL = os.getenv('DATABASE_URL')
+
+if DATABASE_URL:
+    # Si estamos en Railway, usamos PostgreSQL (No se borra al hacer git push)
+    if DATABASE_URL.startswith("postgres://"):
+        DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+    app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
+else:
+    # Si estamos en tu PC, usamos SQLite (el archivo notegeli.db local)
+    basedir = os.path.abspath(os.path.dirname(__file__))
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'notegeli.db')
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
+# --------------------------------------------------
 
 # --- MODELOS ---
 class Usuario(db.Model):

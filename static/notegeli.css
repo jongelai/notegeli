@@ -243,21 +243,46 @@ margin-bottom: 4px;
 
 .color-picker-row {
     display: flex;
-    gap: 12px;
+    gap: 15px;
     justify-content: center;
-    padding: 10px 0;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.5); /* Un fondo sutil */
+    border-radius: 20px;
 }
 
 .color-dot {
-    width: 30px;
-    height: 30px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
     cursor: pointer;
-    border: 2px solid rgba(0,0,0,0.2);
-    transition: transform 0.2s;
+    border: 3px solid white; /* Borde interno blanco para que resalte */
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1); /* Sombra pro */
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
 }
 
-.color-dot:active { transform: scale(0.9); }
+/* Efecto Hover: se agranda un poco */
+.color-dot:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+/* Clase para el color seleccionado */
+.color-dot.selected {
+    transform: scale(1.2);
+    box-shadow: 0 0 0 2px #333; /* Anillo exterior de selección */
+}
+
+/* Checkmark interno (opcional) */
+.color-dot.selected::after {
+    content: '✓';
+    color: rgba(0,0,0,0.5);
+    font-size: 14px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
 
 /* SWITCH THEME */
 .theme-switch-wrapper { display: flex; align-items: center; }
