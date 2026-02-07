@@ -8,16 +8,22 @@ app = Flask(__name__)
 app.secret_key = "notegeli_pro_2026"
 
 # --- CONFIGURACIÓN DE BASE DE DATOS INTELIGENTE ---
-# Railway te da una 'DATABASE_URL' automáticamente cuando creas una base de datos Postgres
 DATABASE_URL = os.getenv('DATABASE_URL')
 
 if DATABASE_URL:
-    # Si estamos en Railway, usamos PostgreSQL (No se borra al hacer git push)
+    # Si estamos en Railway (PostgreSQL)
     if DATABASE_URL.startswith("postgres://"):
         DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+    
+    # Forzar modo SSL para evitar errores de conexión en la nube
+    if "?" not in DATABASE_URL:
+        DATABASE_URL += "?sslmode=require"
+    elif "sslmode" not in DATABASE_URL:
+        DATABASE_URL += "&sslmode=require"
+        
     app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
 else:
-    # Si estamos en tu PC, usamos SQLite (el archivo notegeli.db local)
+    # Si estamos en Local (SQLite)
     basedir = os.path.abspath(os.path.dirname(__file__))
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'notegeli.db')
 
@@ -40,7 +46,7 @@ class Nota(db.Model):
     fecha_creacion = db.Column(db.DateTime, default=datetime.now)
     usuario_id = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
 
-# Crear base de datos
+# Crear base de datos automáticamente al arrancar
 with app.app_context():
     db.create_all()
 
@@ -125,4 +131,4 @@ def manifest(): return send_from_directory('static', 'manifest.json')
 def service_worker(): return send_from_directory('static', 'service-worker.js')
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5000)
