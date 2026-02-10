@@ -8,6 +8,28 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='notegeli.css') }}?v=1.2">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        .nota-fecha-tag {
+            font-size: 0.7rem; color: #00ffcc; opacity: 0.8; display: flex;
+            align-items: center; gap: 5px; background: rgba(0, 255, 204, 0.1);
+            padding: 2px 8px; border-radius: 4px; width: fit-content;
+        }
+        .img-garabato {
+            width: 100%; height: 70px; object-fit: contain;
+            background: white; border-radius: 6px; padding: 5px; margin-top: 5px;
+        }
+        #canvas-dibujo { max-width: 100%; touch-action: none; cursor: crosshair; }
+        .nota-fila { align-items: center !important; }
+
+        /* Herramientas de dibujo */
+        .tool-btn {
+            border: 1px solid rgba(255,255,255,0.2); background: #333;
+            color: white; border-radius: 8px; padding: 5px 12px; transition: all 0.2s;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .tool-btn.active { background: #00ffcc; color: #000; border-color: #00ffcc; }
+        .size-dot { display: inline-block; background: white; border-radius: 50%; }
+    </style>
 </head>
 <body>
     <div class="app-container">
@@ -37,20 +59,12 @@
                     {% for m in manana %}
                         <div id="aviso-{{ loop.index }}" class="aviso-barra d-flex align-items-center" 
                              style="background: rgba(0, 255, 204, 0.1); border: 1px solid rgba(0, 255, 204, 0.3); border-radius: 10px; padding: 10px 15px; margin-bottom: 8px; transition: all 0.4s ease;">
-                            
-                            <div class="calendar-icon-container" style="margin-right: 12px;">
-                                <i class="bi bi-calendar3 pulse-icon" style="color: #00b38f; font-size: 1.1rem;"></i>
-                            </div>
-
+                            <div class="calendar-icon-container" style="margin-right: 12px;"><i class="bi bi-calendar3 pulse-icon" style="color: #00b38f; font-size: 1.1rem;"></i></div>
                             <div class="flex-grow-1" style="overflow: hidden;">
                                 <small style="color: #00b38f; font-weight: bold; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; display: block;">Mañana</small>
                                 <span style="color: #ffffff !important; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block;">{{ m.contenido }}</span>
                             </div>
-
-                            <button onclick="borrarAvisoDirecto('/borrar/{{ m.id }}', 'aviso-{{ loop.index }}')" 
-                                    style="background: none; border: none; color: #ff4444; padding: 5px; cursor: pointer;">
-                                <i class="bi bi-trash3-fill"></i>
-                            </button>
+                            <button onclick="borrarAvisoDirecto('/borrar/{{ m.id }}', 'aviso-{{ loop.index }}')" style="background: none; border: none; color: #ff4444; padding: 5px;"><i class="bi bi-trash3-fill"></i></button>
                         </div>
                     {% endfor %}
                 </div>
@@ -60,6 +74,7 @@
                 <textarea name="texto" class="textarea" placeholder="Escribir nota..."></textarea>
                 <div class="add-row d-flex gap-2 mt-2 align-items-center">
                     <button type="button" class="btn-cal-pick btn"><i class="bi bi-calendar3"></i></button>
+                    <button type="button" class="btn btn-outline-info rounded-circle" onclick="abrirLienzo()" style="width:40px; height:40px; padding:0;"><i class="bi bi-pencil-fill"></i></button>
                     <span class="fecha-preview flex-grow-1"></span>
                     <input type="date" name="fecha" class="input-fecha-hidden d-none">
                     <button type="submit" class="btn-amber">+ Añadir</button>
@@ -69,8 +84,19 @@
             <div class="notes-scroll mt-3">
                 {% for n in notas %}
                 <div class="nota-fila {% if n.color %}tinted{% endif %}" id="nota-{{ n.id }}" style="{% if n.color %}--color-base: {{ n.color }}; border-left: 5px solid {{ n.color }};{% endif %}">
-                    <div onclick="abrirEditor('{{ n.id }}', `{{ n.contenido }}`, '{{ n.color }}', '{{ n.fecha_recordatorio }}')" class="nota-link flex-fill" style="cursor:pointer">
-                        <span class="nota-texto">{{ n.contenido }}</span>
+                    <div class="nota-link flex-fill d-flex flex-column" style="cursor:pointer"
+                         {% if n.contenido.startswith('data:image/') %} onclick="verImagenEntera('{{ n.contenido }}')" 
+                         {% else %} onclick="abrirEditor('{{ n.id }}', `{{ n.contenido }}`, '{{ n.color }}', '{{ n.fecha_recordatorio }}')" {% endif %}>
+                        
+                        {% if n.contenido.startswith('data:image/') %}
+                            <img src="{{ n.contenido }}" class="img-garabato">
+                        {% else %}
+                            <span class="nota-texto">{{ n.contenido }}</span>
+                        {% endif %}
+                        
+                        {% if n.fecha_recordatorio %}
+                        <div class="nota-fecha-tag mt-1"><i class="bi bi-calendar3"></i><span>{{ n.fecha_recordatorio }}</span></div>
+                        {% endif %}
                     </div>
                     <a href="/borrar/{{ n.id }}" class="btn-delete"><i class="bi bi-trash3"></i></a>
                 </div>
@@ -80,16 +106,11 @@
 
         <div id="view-edit" style="display: none; flex-direction: column; padding: 20px;">
             <div class="header-mini d-flex align-items-center mb-3">
-                <button onclick="cerrarEditor()" class="btn btn-link p-0 me-3" style="color:inherit; font-size:1.5rem">
-                    <i class="bi bi-arrow-left"></i>
-                </button>
+                <button onclick="cerrarEditor()" class="btn btn-link p-0 me-3" style="color:inherit; font-size:1.5rem"><i class="bi bi-arrow-left"></i></button>
                 <h4 class="m-0 fw-bold">Editar Nota</h4>
             </div>
-            
             <form id="form-edit" method="POST" action="/editar_guardar" class="h-100 d-flex flex-column">
-                <input type="hidden" name="id" id="edit-id">
-                <input type="hidden" name="color" id="edit-color-input">
-                
+                <input type="hidden" name="id" id="edit-id"><input type="hidden" name="color" id="edit-color-input">
                 <div class="color-picker-row d-flex gap-2 mb-3">
                     <div class="color-dot" data-color="#ffd966" style="background:#ffd966; width:25px; height:25px; border-radius:50%; cursor:pointer"></div>
                     <div class="color-dot" data-color="#c3e88d" style="background:#c3e88d; width:25px; height:25px; border-radius:50%; cursor:pointer"></div>
@@ -97,20 +118,53 @@
                     <div class="color-dot" data-color="#f07178" style="background:#f07178; width:25px; height:25px; border-radius:50%; cursor:pointer"></div>
                     <div class="color-dot" data-color="" style="background:transparent; border:1px solid #ddd; width:25px; height:25px; border-radius:50%; cursor:pointer"></div>
                 </div>
-
                 <textarea name="texto" id="edit-textarea" class="textarea flex-grow-1" style="min-height: 300px; padding: 15px;"></textarea>
-                
                 <div class="d-flex align-items-center gap-2 mt-3">
                     <div class="d-flex align-items-center" style="background: rgba(255,255,255,0.05); padding: 8px 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
-                        <button type="button" class="btn-cal-pick-edit btn p-0">
-                            <i class="bi bi-calendar3" style="color: #00ffcc; font-size: 1.4rem;"></i>
-                        </button>
+                        <button type="button" class="btn-cal-pick-edit btn p-0"><i class="bi bi-calendar3" style="color: #00ffcc; font-size: 1.4rem;"></i></button>
                         <input type="date" name="nueva_fecha" id="edit-fecha-input" class="d-none">
                         <span id="edit-fecha-preview" style="font-size: 0.75rem; color: #00ffcc; margin-left: 8px; font-weight: bold;"></span>
                     </div>
                     <button type="submit" class="btn-amber flex-grow-1 py-3">Guardar</button>
                 </div>
             </form>
+        </div>
+
+        <div id="view-canvas" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #1a1a1a; z-index: 3000; flex-direction: column;">
+            <div class="header-mini d-flex justify-content-between align-items-center p-3" style="background: #222;">
+                <button onclick="cerrarLienzo()" class="btn btn-link text-white p-0"><i class="bi bi-x-lg" style="font-size: 1.5rem;"></i></button>
+                <h4 class="m-0 text-white fw-bold">GARABATEAR</h4>
+                <button onclick="guardarLienzo()" class="btn btn-success fw-bold">LISTO</button>
+            </div>
+            
+            <div class="flex-grow-1 d-flex align-items-center justify-content-center" style="background: #333; overflow: hidden;">
+                <canvas id="canvas-dibujo" style="background: white; border-radius: 10px;"></canvas>
+            </div>
+
+            <div class="controles-dibujo d-flex flex-wrap justify-content-center gap-2 p-3" style="background: #222;">
+                <input type="color" id="color-pincel" value="#000000" style="width:40px; height:40px; border:none; border-radius:50%;">
+                
+                <button type="button" class="tool-btn" onclick="activarGoma(this)" id="btn-goma">
+                    <i class="bi bi-eraser-fill"></i>
+                </button>
+
+                <button type="button" class="tool-btn active" onclick="cambiarGrosor(3, this)">
+                    <span class="size-dot" style="width:4px; height:4px;"></span>
+                </button>
+                <button type="button" class="tool-btn" onclick="cambiarGrosor(8, this)">
+                    <span class="size-dot" style="width:8px; height:8px;"></span>
+                </button>
+                <button type="button" class="tool-btn" onclick="cambiarGrosor(15, this)">
+                    <span class="size-dot" style="width:12px; height:12px;"></span>
+                </button>
+
+                <button onclick="limpiarCanvas()" class="btn btn-outline-danger btn-sm ms-auto">Limpiar</button>
+            </div>
+        </div>
+
+        <div id="visor-imagen" onclick="this.style.display='none'" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:4000; align-items:center; justify-content:center; padding:20px;">
+            <img id="img-full" style="max-width:100%; max-height:100%; border-radius:10px; background:white;">
+            <p style="position:absolute; top:20px; color:white; font-size:0.8rem;">Toca para cerrar</p>
         </div>
 
     </div>
@@ -120,94 +174,124 @@
         const viewMain = document.getElementById('view-main');
         const viewEdit = document.getElementById('view-edit');
 
-        // BORRADO SIN VENTANA EMERGENTE
+        // --- FUNCIONES GENERALES ---
         async function borrarAvisoDirecto(url, elementoId) {
             const elemento = document.getElementById(elementoId);
-            elemento.style.transform = "scale(0.9)";
-            elemento.style.opacity = "0";
+            elemento.style.transform = "scale(0.9)"; elemento.style.opacity = "0";
             try {
                 const response = await fetch(url);
-                if (response.ok) {
-                    setTimeout(() => {
-                        elemento.remove();
-                        if (document.querySelectorAll('.aviso-barra').length === 0) {
-                            const seccion = document.querySelector('.avisos-seccion');
-                            if(seccion) seccion.remove();
-                        }
-                    }, 300);
-                }
-            } catch (err) {
-                elemento.style.opacity = "1";
-                elemento.style.transform = "scale(1)";
-            }
+                if (response.ok) { setTimeout(() => { elemento.remove(); if (document.querySelectorAll('.aviso-barra').length === 0) { const seccion = document.querySelector('.avisos-seccion'); if(seccion) seccion.remove(); } }, 300); }
+            } catch (err) { elemento.style.opacity = "1"; elemento.style.transform = "scale(1)"; }
         }
 
-        // TEMAS
         toggleSwitch.addEventListener('change', (e) => {
             const theme = e.target.checked ? 'dark' : 'light';
-            document.documentElement.setAttribute('data-theme', theme);
-            localStorage.setItem('theme', theme);
+            document.documentElement.setAttribute('data-theme', theme); localStorage.setItem('theme', theme);
         });
-        if (localStorage.getItem('theme') === 'dark') {
-            document.documentElement.setAttribute('data-theme', 'dark');
-            toggleSwitch.checked = true;
-        }
+        if (localStorage.getItem('theme') === 'dark') { document.documentElement.setAttribute('data-theme', 'dark'); toggleSwitch.checked = true; }
 
-        // EDITOR
         function abrirEditor(id, contenido, color, fecha) {
-            viewMain.style.display = 'none';
-            viewEdit.style.display = 'flex';
-            document.getElementById('edit-id').value = id;
-            document.getElementById('edit-textarea').value = contenido;
-            document.getElementById('edit-color-input').value = color || "";
-            document.getElementById('edit-fecha-preview').textContent = fecha || "";
-            
+            viewMain.style.display = 'none'; viewEdit.style.display = 'flex';
+            document.getElementById('edit-id').value = id; document.getElementById('edit-textarea').value = contenido;
+            document.getElementById('edit-color-input').value = color || ""; document.getElementById('edit-fecha-preview').textContent = fecha || "";
             const txt = document.getElementById('edit-textarea');
-            if(color) {
-                txt.style.backgroundColor = color + "22";
-                txt.style.borderLeft = "6px solid " + color;
-            } else {
-                txt.style.backgroundColor = "";
-                txt.style.borderLeft = "";
-            }
+            if(color) { txt.style.backgroundColor = color + "22"; txt.style.borderLeft = "6px solid " + color; } 
+            else { txt.style.backgroundColor = ""; txt.style.borderLeft = ""; }
         }
 
-        function cerrarEditor() {
-            viewEdit.style.display = 'none';
-            viewMain.style.display = 'flex';
-        }
+        function cerrarEditor() { viewEdit.style.display = 'none'; viewMain.style.display = 'flex'; }
 
-        // LÓGICA DE COLORES QUE SÍ SE VE
         document.querySelectorAll('#view-edit .color-dot').forEach(dot => {
             dot.addEventListener('click', () => {
-                const col = dot.dataset.color;
-                const txt = document.getElementById('edit-textarea');
+                const col = dot.dataset.color; const txt = document.getElementById('edit-textarea');
                 document.getElementById('edit-color-input').value = col;
-                
-                if(col) {
-                    txt.style.backgroundColor = col + "22"; // 22 es transparencia baja
-                    txt.style.borderLeft = "6px solid " + col;
-                } else {
-                    txt.style.backgroundColor = "rgba(255,255,255,0.05)";
-                    txt.style.borderLeft = "1px solid rgba(255,255,255,0.1)";
-                }
+                if(col) { txt.style.backgroundColor = col + "22"; txt.style.borderLeft = "6px solid " + col; } 
+                else { txt.style.backgroundColor = "rgba(255,255,255,0.05)"; txt.style.borderLeft = "1px solid rgba(255,255,255,0.1)"; }
             });
         });
 
-        // CALENDARIOS
         document.querySelector(".btn-cal-pick").onclick = () => document.querySelector(".input-fecha-hidden").showPicker();
         document.querySelector(".input-fecha-hidden").onchange = (e) => document.querySelector(".fecha-preview").textContent = e.target.value;
         document.querySelector(".btn-cal-pick-edit").onclick = () => document.querySelector("#edit-fecha-input").showPicker();
         document.querySelector("#edit-fecha-input").onchange = (e) => document.getElementById("edit-fecha-preview").textContent = e.target.value;
 
+        // --- LÓGICA LIENZO (CANVAS) ---
+        let canvas = document.getElementById('canvas-dibujo'); 
+        let ctx = canvas.getContext('2d'); 
+        let dibujando = false;
+        let grosorActual = 3;
+        let esGoma = false;
+
+        function abrirLienzo() {
+            document.getElementById('view-canvas').style.display = 'flex';
+            canvas.width = window.innerWidth * 0.95; 
+            canvas.height = window.innerHeight * 0.65;
+            ctx.lineCap = 'round'; 
+            ctx.lineJoin = 'round';
+        }
+
+        function cambiarGrosor(n, btn) {
+            grosorActual = n;
+            document.querySelectorAll('.tool-btn').forEach(b => { if(b.id !== 'btn-goma') b.classList.remove('active'); });
+            btn.classList.add('active');
+        }
+
+        function activarGoma(btn) {
+            esGoma = !esGoma;
+            btn.classList.toggle('active', esGoma);
+        }
+
+        function cerrarLienzo() { document.getElementById('view-canvas').style.display = 'none'; }
+        function limpiarCanvas() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
+        
+        function obtenerPos(e) {
+            let rect = canvas.getBoundingClientRect();
+            let clientX = e.clientX || (e.touches && e.touches[0].clientX);
+            let clientY = e.clientY || (e.touches && e.touches[0].clientY);
+            return { x: clientX - rect.left, y: clientY - rect.top };
+        }
+
+        function iniciar(e) { 
+            dibujando = true; 
+            let p = obtenerPos(e); 
+            ctx.beginPath(); 
+            ctx.moveTo(p.x, p.y); 
+            if(e.type === 'touchstart') e.preventDefault(); 
+        }
+
+        function mover(e) { 
+            if (!dibujando) return; 
+            let p = obtenerPos(e); 
+            ctx.lineWidth = grosorActual;
+            ctx.strokeStyle = esGoma ? "#ffffff" : document.getElementById('color-pincel').value;
+            ctx.lineTo(p.x, p.y); 
+            ctx.stroke(); 
+            if(e.type === 'touchmove') e.preventDefault(); 
+        }
+
+        function detener() { dibujando = false; }
+
+        canvas.addEventListener('mousedown', iniciar); canvas.addEventListener('mousemove', mover); window.addEventListener('mouseup', detener);
+        canvas.addEventListener('touchstart', iniciar, {passive: false}); canvas.addEventListener('touchmove', mover, {passive: false}); canvas.addEventListener('touchend', detener);
+
+        function guardarLienzo() {
+            const dataURL = canvas.toDataURL();
+            const form = document.querySelector(".nuevo-form");
+            form.querySelector(".textarea").value = dataURL;
+            cerrarLienzo();
+            form.submit();
+        }
+
+        function verImagenEntera(src) {
+            document.getElementById('img-full').src = src;
+            document.getElementById('visor-imagen').style.display = 'flex';
+        }
     </script>
     
     <script>
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-            navigator.serviceWorker.register('/service-worker.js')
-                .then(reg => console.log('PWA lista'))
-                .catch(err => console.log('Error PWA', err));
+            navigator.serviceWorker.register('/service-worker.js').then(reg => console.log('PWA lista')).catch(err => console.log('Error PWA', err));
         });
     }
     </script>
