@@ -4,7 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, timedelta
 
-
+print("APP VERSION 2 - SIN DOTENV")
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY", "notegeli_pro_2026")
 
@@ -139,6 +139,6 @@ def manifest():
 @app.route('/service-worker.js')
 def service_worker(): 
     return send_from_directory('static', 'service-worker.js')
-app.debug =True
+
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)
