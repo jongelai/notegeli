@@ -50,8 +50,8 @@ class Nota(db.Model):
     usuario_id = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
 
 # Crear tablas automáticamente si no existen
-with app.app_context():
-    db.create_all()
+#with app.app_context():
+ #   db.create_all()
 
 meses = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"]
 
