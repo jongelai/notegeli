@@ -1,11 +1,5 @@
-# Ignorar archivo de configuración privada
 .env
-
-# Ignorar base de datos local (si existe)
-*.db
-
-# Ignorar carpetas de Python
+node_modules/
+supabase/.temp/
 __pycache__/
-*.pyc
-venv/
-.venv/
+*.db

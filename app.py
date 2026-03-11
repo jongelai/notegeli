@@ -143,5 +143,6 @@ def service_worker():
     return send_from_directory('static', 'service-worker.js')
 
 if __name__ == "__main__":
-    # Importante para que el Port Forwarding de VS Code funcione correctamente
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    import os
+    port = int(os.environ.get("PORT", 8000))
+    app.run(host='0.0.0.0', port=port)
