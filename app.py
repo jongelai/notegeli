@@ -143,6 +143,4 @@ def service_worker():
     return send_from_directory('static', 'service-worker.js')
 
 if __name__ == "__main__":
-    import os
-    port = int(os.environ.get("PORT", 8000))
-    app.run(host='0.0.0.0', port=port)
+    app.run()
