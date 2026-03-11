@@ -4,3 +4,5 @@ supabase/.temp/
 __pycache__/
 *.db
 deploy.bat
+.vercel
+.env*.local
