@@ -1,0 +1,11 @@
+# Ignorar archivo de configuración privada
+.env
+
+# Ignorar base de datos local (si existe)
+*.db
+
+# Ignorar carpetas de Python
+__pycache__/
+*.pyc
+venv/
+.venv/

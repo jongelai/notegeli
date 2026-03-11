@@ -3,33 +3,38 @@ from flask import Flask, render_template, request, redirect, url_for, session, s
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, timedelta
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = "notegeli_pro_2026"
+app.secret_key = os.getenv("SECRET_KEY", "notegeli_pro_2026")
 
-# --- CONFIGURACIÓN DE BASE DE DATOS INTELIGENTE ---
-DATABASE_URL = os.getenv('DATABASE_URL')
+# --- CONFIGURACIÓN DE BASE DE DATOS ---
+uri = os.getenv('DATABASE_URL')
 
-if DATABASE_URL:
-    # Si estamos en Railway (PostgreSQL)
-    if DATABASE_URL.startswith("postgres://"):
-        DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+if uri:
+    # Si por casualidad copiaste postgres:// lo arreglamos a postgresql://
+    if uri.startswith("postgres://"):
+        uri = uri.replace("postgres://", "postgresql://", 1)
     
-    # Forzar modo SSL para evitar errores de conexión en la nube
-    if "?" not in DATABASE_URL:
-        DATABASE_URL += "?sslmode=require"
-    elif "sslmode" not in DATABASE_URL:
-        DATABASE_URL += "&sslmode=require"
-        
-    app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
+    app.config['SQLALCHEMY_DATABASE_URI'] = uri
 else:
-    # Si estamos en Local (SQLite)
+    # Fallback local por si el .env falla
     basedir = os.path.abspath(os.path.dirname(__file__))
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'notegeli.db')
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+# Ajuste vital para conexiones de larga distancia (Cloud)
+app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
+    "pool_pre_ping": True,
+    "pool_recycle": 300,
+}
+
 db = SQLAlchemy(app)
-# --------------------------------------------------
+# --- EL RESTO DE TU CÓDIGO SIGUE IGUAL ABAJO ---
+# ------------------------------------------------------------------
 
 # --- MODELOS ---
 class Usuario(db.Model):
@@ -46,11 +51,13 @@ class Nota(db.Model):
     fecha_creacion = db.Column(db.DateTime, default=datetime.now)
     usuario_id = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
 
-# Crear base de datos automáticamente al arrancar
+# Crear tablas automáticamente si no existen
 with app.app_context():
     db.create_all()
 
 meses = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"]
+
+# --- RUTAS DE LA APLICACIÓN ---
 
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -69,6 +76,7 @@ def index():
             db.session.commit()
         return redirect(url_for("index"))
 
+    # Consultar notas del usuario actual
     notas_db = Nota.query.filter_by(usuario_id=session["user_id"]).order_by(Nota.fecha_creacion.desc()).all()
     manana_str = (hoy + timedelta(days=1)).strftime('%Y-%m-%d')
     avisos_manana = [n for n in notas_db if n.fecha_recordatorio == manana_str]
@@ -107,7 +115,8 @@ def registro():
                 db.session.commit()
                 session["user_id"] = nuevo.id
                 return redirect(url_for("index"))
-            except: flash("El usuario ya existe", "danger")
+            except: 
+                flash("El usuario ya existe", "danger")
     return render_template("registro.html")
 
 @app.route("/borrar/<int:id>")
@@ -124,11 +133,15 @@ def logout():
     session.clear()
     return redirect(url_for("login"))
 
+# --- RUTAS PWA ---
 @app.route('/manifest.json')
-def manifest(): return send_from_directory('static', 'manifest.json')
+def manifest(): 
+    return send_from_directory('static', 'manifest.json')
 
 @app.route('/service-worker.js')
-def service_worker(): return send_from_directory('static', 'service-worker.js')
+def service_worker(): 
+    return send_from_directory('static', 'service-worker.js')
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=5000)
+    # Importante para que el Port Forwarding de VS Code funcione correctamente
+    app.run(host='0.0.0.0', port=5000, debug=True)
