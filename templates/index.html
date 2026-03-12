@@ -279,7 +279,7 @@
             const form = document.querySelector(".nuevo-form");
             form.querySelector(".textarea").value = dataURL;
             cerrarLienzo();
-            form.submit();
+            crearNotaAjax();
         }
 
         function verImagenEntera(src) {
@@ -295,5 +295,8 @@
         });
     }
     </script>
+    
+    <!-- Optimización de fluidez AJAX -->
+    <script src="{{ url_for('static', filename='optimize.js') }}"></script>
 </body>
 </html>
