@@ -86,8 +86,6 @@ async function crearNotaAjax() {
 }
 
 async function borrarNotaAjax(notaId, elemento) {
-    if (!confirm('¿Seguro que quieres borrar?')) return;
-
     const notaDiv = elemento.closest('.nota-fila');
     
     try {

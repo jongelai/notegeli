@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template, request, redirect, url_for, session, send_from_directory, flash, jsonify
+from flask import Flask, render_template, request, redirect, url_for, session, send_from_directory, flash
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, timedelta
@@ -72,10 +72,6 @@ def index():
             nueva = Nota(contenido=texto, fecha_recordatorio=fecha, usuario_id=session["user_id"])
             db.session.add(nueva)
             db.session.commit()
-            
-            # Si es AJAX, retorna JSON
-            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-                return jsonify({'success': True, 'nota_id': nueva.id})
         return redirect(url_for("index"))
 
     # Consultar notas del usuario actual
@@ -94,10 +90,6 @@ def editar_guardar():
         nota.color = request.form.get("color")
         nota.fecha_recordatorio = request.form.get("nueva_fecha")
         db.session.commit()
-        
-        # Si es AJAX, retorna JSON
-        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-            return jsonify({'success': True, 'nota_id': nota.id})
     return redirect(url_for("index"))
 
 @app.route("/login", methods=["GET", "POST"])
@@ -132,10 +124,6 @@ def borrar(id):
     if nota and nota.usuario_id == session["user_id"]:
         db.session.delete(nota)
         db.session.commit()
-        
-        # Si es AJAX, retorna JSON
-        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-            return jsonify({'success': True})
     return redirect(url_for("index"))
 
 @app.route("/logout")
