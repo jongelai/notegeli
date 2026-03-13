@@ -1,10 +1,10 @@
 import os
-from flask import Flask, render_template, request, redirect, url_for, session, send_from_directory, flash
+from flask import Flask, render_template, request, redirect, url_for, session, send_from_directory, flash, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, timedelta
 
-print("APP VERSION 2 - SIN DOTENV")
+print("APP VERSION 3 - OPTIMISTIC UI")
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY", "notegeli_pro_2026")
 
@@ -12,27 +12,20 @@ app.secret_key = os.getenv("SECRET_KEY", "notegeli_pro_2026")
 uri = os.getenv('DATABASE_URL')
 
 if uri:
-    # Si por casualidad copiaste postgres:// lo arreglamos a postgresql://
     if uri.startswith("postgres://"):
         uri = uri.replace("postgres://", "postgresql://", 1)
-    
     app.config['SQLALCHEMY_DATABASE_URI'] = uri
 else:
-    # Fallback local por si el .env falla
     basedir = os.path.abspath(os.path.dirname(__file__))
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'notegeli.db')
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-# Ajuste vital para conexiones de larga distancia (Cloud)
 app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
     "pool_pre_ping": True,
     "pool_recycle": 300,
 }
 
 db = SQLAlchemy(app)
-# --- EL RESTO DE TU CÓDIGO SIGUE IGUAL ABAJO ---
-# ------------------------------------------------------------------
 
 # --- MODELOS ---
 class Usuario(db.Model):
@@ -44,18 +37,14 @@ class Usuario(db.Model):
 class Nota(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     contenido = db.Column(db.Text, nullable=False)
-    fecha_recordatorio = db.Column(db.String(10)) 
+    fecha_recordatorio = db.Column(db.String(10))
     color = db.Column(db.String(20))
     fecha_creacion = db.Column(db.DateTime, default=datetime.now)
     usuario_id = db.Column(db.Integer, db.ForeignKey('usuario.id'), nullable=False)
 
-# Crear tablas automáticamente si no existen
-#with app.app_context():
- #   db.create_all()
-
 meses = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"]
 
-# --- RUTAS DE LA APLICACIÓN ---
+# --- RUTAS ---
 
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -64,7 +53,7 @@ def index():
 
     hoy = datetime.now()
     fecha_larga = f"{hoy.day} {meses[hoy.month - 1]} {hoy.year}"
-    
+
     if request.method == "POST":
         texto = request.form.get("texto")
         fecha = request.form.get("fecha")
@@ -74,7 +63,6 @@ def index():
             db.session.commit()
         return redirect(url_for("index"))
 
-    # Consultar notas del usuario actual
     notas_db = Nota.query.filter_by(usuario_id=session["user_id"]).order_by(Nota.fecha_creacion.desc()).all()
     manana_str = (hoy + timedelta(days=1)).strftime('%Y-%m-%d')
     avisos_manana = [n for n in notas_db if n.fecha_recordatorio == manana_str]
@@ -83,14 +71,15 @@ def index():
 
 @app.route("/editar_guardar", methods=["POST"])
 def editar_guardar():
-    if "user_id" not in session: return redirect(url_for("login"))
-    nota = Nota.query.get(request.form.get("id"))
+    if "user_id" not in session:
+        return jsonify({"ok": False}), 401
+    nota = db.session.get(Nota, request.form.get("id"))
     if nota and nota.usuario_id == session["user_id"]:
         nota.contenido = request.form.get("texto")
         nota.color = request.form.get("color")
         nota.fecha_recordatorio = request.form.get("nueva_fecha")
         db.session.commit()
-    return redirect(url_for("index"))
+    return jsonify({"ok": True})
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -113,18 +102,20 @@ def registro():
                 db.session.commit()
                 session["user_id"] = nuevo.id
                 return redirect(url_for("index"))
-            except: 
+            except Exception:
+                db.session.rollback()
                 flash("El usuario ya existe", "danger")
     return render_template("registro.html")
 
 @app.route("/borrar/<int:id>")
 def borrar(id):
-    if "user_id" not in session: return redirect(url_for("login"))
-    nota = Nota.query.get(id)
+    if "user_id" not in session:
+        return jsonify({"ok": False}), 401
+    nota = db.session.get(Nota, id)
     if nota and nota.usuario_id == session["user_id"]:
         db.session.delete(nota)
         db.session.commit()
-    return redirect(url_for("index"))
+    return jsonify({"ok": True})
 
 @app.route("/logout")
 def logout():
@@ -133,11 +124,11 @@ def logout():
 
 # --- RUTAS PWA ---
 @app.route('/manifest.json')
-def manifest(): 
+def manifest():
     return send_from_directory('static', 'manifest.json')
 
 @app.route('/service-worker.js')
-def service_worker(): 
+def service_worker():
     return send_from_directory('static', 'service-worker.js')
 
 if __name__ == "__main__":
