@@ -32,6 +32,6 @@ for /f "tokens=1-3 delims=:, " %%a in ("%time%") do (
 
 git commit -m "deploy !d! !t!"
 git push
-
+vercel --prod
 echo OK
 pause
