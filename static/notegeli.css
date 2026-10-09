@@ -1,456 +1,137 @@
 /* =========================================
-   1. RESET Y VARIABLES (SISTEMA DE TEMAS)
+   1. VARIABLES DE ENTORNO Y TEMAS
    ========================================= */
-body {
-    padding-top: env(safe-area-inset-top, 20px);
-    padding-bottom: env(safe-area-inset-bottom, 20px);
-    background-color: var(--bg-color);
-    color: var(--text-color);
-    /* Estas líneas aseguran que el contenido no quede tapado por el notch */
-    padding-top: env(safe-area-inset-top);
-    padding-bottom: env(safe-area-inset-bottom);
-    min-height: 100vh;
-    
-}
-
-.app-container {
-    /* Ajustamos el contenedor para que respete las áreas seguras */
-    padding-left: env(safe-area-inset-left);
-    padding-right: env(safe-area-inset-right);
-}
 :root {
     --bg-app: #f8f9fa;
     --bg-nota: #ffffff;
     --text-nota: #212529;
     --border-nota: #dee2e6;
-    --bg-textarea: #FFFBEB;
+    --bg-textarea: #fffbeb;
     --accent: #ffcc66;
     --accent-dark: #9b6b00;
 }
 
 [data-theme="dark"] {
-    --bg-app: #050505;
+    --bg-app: #0a0a0a;
     --bg-nota: #1a1a1a;
     --text-nota: #e0e0e0;
     --border-nota: #333333;
     --bg-textarea: #151515;
-    --border-neon: #00ffcc;
-    --shadow-neon: rgba(0, 255, 204, 0.3);
-}
-
-body, html {
-    margin: 0; padding: 0;
-    height: 100vh; width: 100%;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    background: var(--bg-app);
-    transition: background-color 0.3s ease;
+    --accent: #00ffcc;
+    --accent-dark: #000000;
 }
 
 /* =========================================
-   2. CONTENEDORES Y VISTAS
+   2. REGLAS GENERALES Y CONTENEDOR
    ========================================= */
-.app-container {
+body, html {
+    margin: 0;
+    padding: 0;
     min-height: 100vh;
     width: 100%;
-    padding: 10px;
-    display: flex;
-    flex-direction: column;
-    background: var(--bg-app) !important;
-    overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background-color: var(--bg-app);
+    color: var(--text-nota);
     box-sizing: border-box;
 }
 
-#view-main, #view-edit {
+.app-container {
     width: 100%;
-    height: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 15px;
+    padding-top: env(safe-area-inset-top, 15px);
+    padding-bottom: env(safe-area-inset-bottom, 15px);
     display: flex;
     flex-direction: column;
 }
 
 /* =========================================
-   3. FORMULARIOS Y TEXTAREA
+   3. CAMPOS DE TEXTO Y FORMULARIO
    ========================================= */
 .textarea {
     width: 100%;
-    font-size: 1.3rem;
-    background: var(--bg-textarea);
-    border: 1px solid var(--accent);
+    min-height: 100px;
+    font-size: 1.1rem;
+    background-color: var(--bg-textarea);
+    border: 2px solid var(--accent);
     border-radius: 12px;
     padding: 12px;
     color: var(--text-nota);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    box-sizing: border-box;
     outline: none;
+    resize: none;
+    box-sizing: border-box;
 }
 
-[data-theme="dark"] .textarea {
-    border-color: var(--border-neon) !important;
-    box-shadow: 0 0 10px var(--shadow-neon);
-}
-.avisos-seccion {
-    margin-top: 40px !important; /* Aumenta esto para alejarlo más del título superior */
-    padding: 0 5px;
-}
-
-.aviso-barra {
-    transition: opacity 0.3s;
-}
-
-.aviso-barra:hover {
-    background: rgba(255,255,255,0.1) !important;
-    @keyframes pulse-neon {
-    0% { transform: scale(1); filter: drop-shadow(0 0 2px #00ffcc); }
-    50% { transform: scale(1.1); filter: drop-shadow(0 0 8px #00ffcc); }
-    100% { transform: scale(1); filter: drop-shadow(0 0 2px #00ffcc); }
-}}
-
-.pulse-icon {
-    animation: pulse-neon 2s infinite ease-in-out;
-    display: inline-block;
-}
-
-/* Ajuste de contraste para el texto del aviso en modo claro */
-[data-theme="light"] .aviso-barra span {
-    color: #1a1a1a !important; /* Negro fuerte para leer bien */
-}
-[data-theme="light"] .aviso-barra small {
-    color: #008f72 !important; /* Verde más oscuro para contraste */
+.nuevo-form {
+    background-color: var(--bg-nota);
+    padding: 12px;
+    border-radius: 14px;
+    border: 1px solid var(--border-nota);
 }
 
 /* =========================================
-   4. LISTA DE NOTAS (SCROLL)
+   4. LISTA DE NOTAS Y FILAS
    ========================================= */
 .notes-scroll {
-    flex: 1;
-    overflow-y: auto;
     display: flex;
     flex-direction: column;
     gap: 12px;
-    padding: 10px 4px;
+    margin-top: 15px;
 }
 
 .nota-fila {
     display: flex;
     align-items: center;
-    padding: 12px;
+    justify-content: space-between;
+    padding: 14px;
     border-radius: 12px;
-    background: var(--bg-nota);
+    background-color: var(--bg-nota);
     border: 1px solid var(--border-nota);
-    max-width: 100%;
     box-sizing: border-box;
-    transition: transform 0.1s ease, box-shadow 0.2s ease;
-margin-bottom: 4px;
+}
+
+/* Soporte para notas de colores (Tinted) */
+.nota-fila.tinted {
+    border-left: 6px solid var(--color-base) !important;
 }
 
 .nota-texto {
+    font-size: 1.1rem;
     color: var(--text-nota);
-    font-size: 1.3rem;
-    flex-grow: 1;
-    /* ARREGLO PARA TEXTO LARGO */
     white-space: pre-wrap;
     overflow-wrap: break-word;
     word-break: break-word;
-    max-width: 75vw;
-    display: -webkit-box;
-    -webkit-line-clamp: 3; /* Número de líneas exactas */
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-.img-garabato {
-    width: 100%;
-    max-height: 60px; /* Tamaño máximo para que no ocupe toda la pantalla */
-    object-fit: contain; /* Mantiene la proporción del dibujo */
-    border-radius: 8px;
-    background: white; /* Fondo blanco para que resalte el dibujo negro */
-    margin: 5px 0;
-}
-.tool-btn {
-    border: 1px solid rgba(255,255,255,0.2);
-    background: #333;
-    color: white;
-    border-radius: 8px;
-    padding: 5px 10px;
-    transition: all 0.2s;
-}
-.tool-btn.active {
-    background: #00ffcc;
-    color: #000;
-    border-color: #00ffcc;
-}
-.size-dot {
-    display: inline-block;
-    background: white;
-    border-radius: 50%;
-}
-/* =========================================
-   5. SISTEMA DE COLORES (TINTED) - FIX INICIO
-   ========================================= */
-
-/* Estilo por defecto (Modo Claro con Difuminado) */
-.nota-fila.tinted {
-    /* Gradiente suave de inicio */
-    background: linear-gradient(90deg, var(--color-base) 0%, rgba(255,255,255,1) 40%) !important;
-    border-color: rgba(0,0,0,0.05) !important;
-    border-left: 6px solid var(--color-base) !important;
-    position: relative;
-    overflow: hidden; /* Importante para el difuminado */
-}
-
-/* Capa de suavizado que siempre debe estar presente en claro */
-.nota-fila.tinted::before {
-    content: "";
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(255, 255, 255, 0.6); 
-    pointer-events: none;
-    z-index: 0;
-}
-
-/* Asegurar que el contenido se vea sobre el difuminado */
-.nota-fila.tinted .nota-link,
-.nota-fila.tinted .btn-delete {
-    position: relative;
-    z-index: 1;
-}
-
-/* Modo Oscuro: Sobrescribe el difuminado para volver al estilo Cyber */
-[data-theme="dark"] .nota-fila.tinted {
-    background: linear-gradient(145deg, #151515, #0a0a0a) !important;
-    border: 1px solid var(--color-base) !important;
-    border-left: 6px solid var(--color-base) !important;
-    box-shadow: 0 0 12px var(--color-base)55;
-}
-
-/* Quitamos la capa blanca en modo oscuro */
-[data-theme="dark"] .nota-fila.tinted::before {
-    display: none;
-}
-
-[data-theme="dark"] .nota-fila:not(.tinted) {
-    box-shadow: 4px 3px 0px var(--border-neon);
+    flex-grow: 1;
+    padding-right: 10px;
 }
 
 /* =========================================
-   6. COMPONENTES: BOTONES, SWITCH, DOTS
+   5. BOTONES Y COMPONENTES
    ========================================= */
 .btn-amber {
-    background: var(--accent);
+    background-color: var(--accent);
     color: var(--accent-dark);
     font-weight: 700;
-    border: 1px solid var(--accent-dark);
+    border: none;
     border-radius: 8px;
     padding: 8px 16px;
     cursor: pointer;
+    transition: transform 0.1s ease;
 }
-[data-theme="light"] .btn-amber {
-    background: #00c2cb !important; /* Turquesa Pro */
-    color: white !important;
-    border: none !important;
-    font-weight: 700 !important;
-    border-radius: 10px !important;
-    padding: 10px 22px !important;
-    box-shadow: 0 4px 12px rgba(0, 194, 203, 0.25);
-    transition: all 0.2s ease;
-    text-transform: none; /* Menos agresivo */
-}
-[data-theme="light"] .btn-amber:active {
-    background: #00a8af !important;
+
+.btn-amber:active {
     transform: scale(0.96);
-    box-shadow: 0 2px 6px rgba(0, 194, 203, 0.2);
-}
-[data-theme="dark"] .btn-amber {
-    background: transparent;
-    color: var(--border-neon);
-    border-color: var(--border-neon);
-    box-shadow: 0 0 8px var(--shadow-neon);
 }
 
-.color-picker-row {
-    display: flex;
-    gap: 15px;
-    justify-content: center;
-    padding: 15px;
-    background: rgba(255, 255, 255, 0.5); /* Un fondo sutil */
-    border-radius: 20px;
-}
-
-.color-dot {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    cursor: pointer;
-    border: 3px solid white; /* Borde interno blanco para que resalte */
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1); /* Sombra pro */
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    position: relative;
-}
-
-/* Efecto Hover: se agranda un poco */
-.color-dot:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
-}
-
-/* Clase para el color seleccionado */
-.color-dot.selected {
-    transform: scale(1.2);
-    box-shadow: 0 0 0 2px #333; /* Anillo exterior de selección */
-}
-
-/* Checkmark interno (opcional) */
-.color-dot.selected::after {
-    content: '✓';
-    color: rgba(0,0,0,0.5);
-    font-size: 14px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-
-/* SWITCH THEME */
-.theme-switch-wrapper { display: flex; align-items: center; }
-.theme-switch { position: relative; width: 50px; height: 26px; }
-.theme-switch input { display:none; }
-.slider {
-    position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
-    background-color: #ccc; transition: .4s; border-radius: 34px;
-    display: flex; align-items: center; justify-content: space-around; padding: 0 5px;
-}
-.slider:before {
-    position: absolute; content: ""; height: 19px; width: 19px; left: 4px; bottom: 4px;
-    background-color: white; transition: .4s; border-radius: 50%;
-}
-input:checked + .slider { background-color: var(--border-neon); }
-input:checked + .slider:before { transform: translateX(24px); }
-
-.btn-delete {
-    color: #ff4444;
-    padding: 8px;
-    font-size: 1.3rem;
-    text-decoration: none;
-}
-/* --- MODO OSCURO (Cyber Neon) --- */
-[data-theme="dark"] .header-mini h4 {
-    background: linear-gradient(90deg, #00f2fe 0%, #7000ff 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    font-size: 1.4rem !important; /* Título grande */
-    font-weight: 800;
-    letter-spacing: 1px;
-    filter: drop-shadow(0 0 10px rgba(112, 0, 255, 0.4));
-    text-transform: uppercase;
-    display: flex;
-    align-items: baseline;
-}
-
-[data-theme="dark"] .fecha-mini {
-    font-size: 0.8rem !important; /* Fecha mucho más pequeña */
-    color: #00f2fe !important;
-    text-shadow: 0 0 5px rgba(0, 242, 254, 0.6);
-    font-weight: 400;
-    margin-left: 10px;
-    -webkit-text-fill-color: #00f2fe; /* Color sólido para legibilidad */
-    text-transform: none;
-}
-
-/* --- MODO CLARO (Minimalista) --- */
-[data-theme="light"] .header-mini h4 {
-    color: #1a1a1a;
-    font-size: 1.3rem !important; /* Título estándar */
-    font-weight: 700;
-    background: none;
-    -webkit-text-fill-color: initial;
-    filter: none;
-    display: flex;
-    align-items: baseline;
-}
-
-[data-theme="light"] .fecha-mini {
-    font-size: 0.8rem !important; /* Misma escala pequeña que en dark */
-    color: #888 !important; /* Gris suave */
-    font-weight: 400;
-    margin-left: 10px;
-    -webkit-text-fill-color: #888;
-    text-transform: none;
-}
-/* Icono calendario en el formulario principal */
-.btn-cal-pick i {
-    font-size: 1.6rem !important; /* Más grande y fácil de pulsar */
-    color: var(--border-neon);
-}
-/* Estilo base para el botón del calendario */
-.btn-cal-pick {
-    background: rgba(0, 255, 204, 0.1) !important;
-    border: 2px solid var(--border-neon) !important;
-    border-radius: 12px !important;
-    padding: 10px 15px !important;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    /* El brillo principal */
-    box-shadow: 0 0 15px rgba(0, 255, 204, 0.3);
-}
-
-.btn-cal-pick i {
-    font-size: 1.2rem !important;
-    color: var(--border-neon);
-    filter: drop-shadow(0 0 5px var(--border-neon));
-}
-
-/* Ajustes específicos según el modo */
-[data-theme="dark"] .btn-cal-pick {
-    box-shadow: 0 0 20px rgba(0, 255, 204, 0.4);
-}
-
-[data-theme="light"] .btn-cal-pick {
-    background: #ffffff !important;
-    border-color: #00b38f !important;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-[data-theme="light"] .btn-cal-pick i {
-    color: #00b38f;
-    filter: none; /* En modo claro es mejor sin brillo para que sea legible */
-}
-
-/* Efecto al pulsar (feedback táctil) */
-.btn-cal-pick:active {
-    transform: scale(0.9);
-    box-shadow: 0 0 5px var(--border-neon);
-}
-/* Icono calendario dentro del editor (el que pusimos abajo a la izquierda) */
-.btn-cal-pick-edit i {
-    font-size: 1.3rem !important; /* Un poco más grande para el pulgar */
-    color: var(--border-neon);
-    display: block;
-}
-
-/* Ajuste del contenedor del calendario en el editor para que no se vea apretado */
-.edit-date-container {
-    padding: 10px 15px !important; /* Más espacio interno */
-    min-width: 60px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-.nota-fecha-tag {
-    font-size: 0.8rem;
-    color: #00ffcc; /* Color turquesa similar a tus avisos */
-    opacity: 0.8;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
-.nota-fecha-tag i {
+.fecha-mini {
     font-size: 0.9rem;
+    opacity: 0.6;
+    font-weight: normal;
 }
 
-/* Opcional: ajustar el contenedor de la nota para que los elementos se apilen verticalmente */
-.nota-link {
-    display: flex;
-    flex-direction: column;
+.avisos-seccion {
+    margin-top: 15px;
+    padding: 8px;
+    border-radius: 10px;
 }
