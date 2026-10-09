@@ -18,29 +18,44 @@
 </head>
 <footer style="position: fixed; bottom: 8px; left: 0; width: 100%; text-align: center; font-size: 0.75rem; color: #888888; pointer-events: none; z-index: 10;">
     NoteGeli <span style="font-weight: 600; color: #d97706;">2026</span>
+    <span style="margin: 0 4px;">•</span>
+    <i class="bi bi-clock" style="color: #d97706; margin-right: 2px;"></i><span id="hora-footer"></span>
 </footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <body>
     <div class="app-container">
 
         <!-- VISTA PRINCIPAL -->
         <div id="view-main">
             
-            <div class="header-mini d-flex align-items-center justify-content-between mb-4 p-2 rounded-3" style="background: rgba(255, 193, 7, 0.08); border-bottom: 2px solid rgba(255, 193, 7, 0.3);">
-                <div class="d-flex align-items-center gap-2">
-                    <img src="{{ url_for('static', filename='icons/512.png') }}"
-                        class="logo-mini"
-                        style="height: 28px; width: 28px; object-fit: contain;">
+<div class="header-mini d-flex align-items-center justify-content-between mb-4 p-2 rounded-3" style="background: rgba(255, 193, 7, 0.08); border-bottom: 2px solid rgba(255, 193, 7, 0.3);">
+    <div class="d-flex align-items-center gap-2">
+        <img src="{{ url_for('static', filename='icons/512.png') }}" class="logo-mini" style="height: 28px; width: 28px; object-fit: contain;">
+        <h4 class="m-0 fw-bold" style="font-size: 1.25rem; letter-spacing: 0.5px; color: #222;">
+            AGENDA <span style="color: #d97706;">NOTAS</span>
+        </h4>
+    </div>
 
-                    <h4 class="m-0 fw-bold" style="font-size: 1.25rem; letter-spacing: 0.5px; color: #222;">
-                        AGENDA <span style="color: #d97706;">NOTAS</span>
-                    </h4>
-                </div>
+    <div class="d-flex align-items-center gap-2">
+        <!-- Selector discreto de tamaño de texto -->
+        <div class="dropdown">
+            <button class="btn btn-sm btn-light border-0 text-secondary p-1 px-2 rounded-circle" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="Tamaño de texto">
+                <i class="bi bi-eye text-warning" style="font-size: 1rem;"></i>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0" style="min-width: 130px; font-size: 0.85rem;">
+                <li><button class="dropdown-item py-1" onclick="cambiarTamanoFuente('normal')">Normal</button></li>
+                <li><button class="dropdown-item py-1 fw-medium" onclick="cambiarTamanoFuente('grande')">Grande</button></li>
+                <li><button class="dropdown-item py-1 fw-bold" onclick="cambiarTamanoFuente('muy-grande')">Muy Grande</button></li>
+            </ul>
+        </div>
 
-                <div class="d-flex align-items-center gap-1 bg-white px-2 py-1 rounded-pill shadow-sm border">
-                    <i class="bi bi-calendar-event text-warning" style="font-size: 0.85rem;"></i>
-                    <span class="fecha-mini text-secondary fw-semibold" id="fecha-actual-txt" style="font-size: 0.8rem; text-transform: capitalize;"></span>
-                </div>
-            </div>
+        <!-- Fecha en cápsula -->
+        <div class="d-flex align-items-center gap-1 bg-white px-2 py-1 rounded-pill shadow-sm border">
+            <i class="bi bi-calendar-event text-warning" style="font-size: 0.85rem;"></i>
+            <span class="fecha-mini text-secondary fw-semibold" id="fecha-actual-txt" style="font-size: 0.8rem; text-transform: capitalize;"></span>
+        </div>
+    </div>
+</div>
             <!-- Sección de Avisos de Mañana -->
             <div id="avisos-container" class="avisos-seccion" style="margin-top: 40px; margin-bottom: 5px; display: none;"></div>
 
@@ -84,6 +99,38 @@
 
         <!-- MOTOR DE MEMORIA LOCAL COMPLETADO -->
     <script>
+        function actualizarRelojFooter() {
+            var ahora = new Date();
+            var horas = String(ahora.getHours()).padStart(2, '0');
+            var minutos = String(ahora.getMinutes()).padStart(2, '0');
+            var segundos = String(ahora.getSeconds()).padStart(2, '0');
+            
+            var relojElem = document.getElementById("hora-footer");
+            if (relojElem) {
+                relojElem.innerText = horas + ":" + minutos + ":" + segundos;
+            }
+        }
+
+        // Iniciar el reloj al cargar y actualizarlo cada segundo
+        document.addEventListener("DOMContentLoaded", function() {
+            actualizarRelojFooter();
+            setInterval(actualizarRelojFooter, 1000);
+        });
+        // Cargar la preferencia al iniciar
+        document.addEventListener("DOMContentLoaded", function() {
+            var tamanoGuardado = localStorage.getItem("notegeli_font_size") || "normal";
+            aplicarTamanoFuente(tamanoGuardado);
+        });
+
+        function cambiarTamanoFuente(tamano) {
+            localStorage.setItem("notegeli_font_size", tamano);
+            aplicarTamanoFuente(tamano);
+        }
+
+        function aplicarTamanoFuente(tamano) {
+            document.body.classList.remove("font-normal", "font-grande", "font-muy-grande");
+            document.body.classList.add("font-" + tamano);
+        }        
         var meses = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
         
         document.addEventListener("DOMContentLoaded", function() {
@@ -250,7 +297,6 @@
             document.getElementById("edit-fecha-preview").innerText = fecha;
         }
 
-        function abrirLienzo() { alert("Lienzo local listo"); }
-    </script>
+        </script>
 </body>
 </html>

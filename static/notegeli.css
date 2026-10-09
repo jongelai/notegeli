@@ -176,3 +176,34 @@ body, html {
     font-weight: normal;
     white-space: nowrap;
 }
+/* Tamaño por defecto / Normal */
+body.font-normal {
+    --text-scale: 1rem;
+    --textarea-scale: 1rem;
+}
+
+/* Tamaño Grande (+25%) */
+body.font-grande {
+    --text-scale: 1.25rem;
+    --textarea-scale: 1.2rem;
+}
+
+/* Tamaño Muy Grande (+50%) */
+body.font-muy-grande {
+    --text-scale: 1.5rem;
+    --textarea-scale: 1.4rem;
+}
+
+/* Aplicación dinámica a los elementos principales */
+.nota-texto {
+    font-size: var(--text-scale, 1rem) !important;
+    line-height: 1.4;
+}
+
+.textarea {
+    font-size: var(--textarea-scale, 1rem) !important;
+}
+
+.textarea::placeholder {
+    font-size: var(--textarea-scale, 1rem) !important;
+}
