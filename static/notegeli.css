@@ -135,3 +135,44 @@ body, html {
     padding: 8px;
     border-radius: 10px;
 }
+/* =========================================
+   6. CABECERA: LOGO, TÍTULO Y FECHA
+   ========================================= */
+
+.header-mini {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    width: 100%;
+    margin-bottom: 12px;
+}
+
+.header-mini > .d-flex {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+}
+
+.logo-mini {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+.header-mini h4 {
+    margin: 0;
+    font-size: 1.1rem;
+    line-height: 1.2;
+    white-space: nowrap;
+}
+
+.fecha-mini {
+    font-size: 0.9rem;
+    opacity: 0.6;
+    font-weight: normal;
+    white-space: nowrap;
+}
