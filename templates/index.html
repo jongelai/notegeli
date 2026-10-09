@@ -6,21 +6,13 @@
     <title>Notegeli</title>
     <!-- Manifest de tu PWA -->
     <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
-    <!-- Servidor oficial espejo de Bootstrap v5.3 (Carga garantizada en cualquier conexión) -->
-    <link href="https://cloudflare.com" rel="stylesheet">
-    <!-- Tu archivo de estilos con truco de refresco de caché v=9.9 -->
+    <!-- Bootstrap v5.3 Oficial (Enlaces corregidos y completos) -->
+    <link href="https://jsdelivr.net" rel="stylesheet">
+    <!-- Tu archivo de estilos propio -->
     <link rel="stylesheet" href="{{ url_for('static', filename='notegeli.css') }}?v=9.9">
-    <!-- Iconos de Bootstrap oficiales -->
-    <link href="https://cloudflare.com" rel="stylesheet">
+    <!-- Iconos oficiales de Bootstrap -->
+    <link href="https://jsdelivr.net" rel="stylesheet">
 </head>
-
-
-
-
-
-
-
-
 <body>
     <div class="app-container">
 
@@ -47,7 +39,7 @@
             <!-- Sección de Avisos de Mañana -->
             <div id="avisos-container" class="avisos-seccion" style="margin-top: 40px; margin-bottom: 5px; display: none;"></div>
 
-            <!-- Formulario para añadir nota -->
+            <!-- Formulario para añadir nota (Botones restaurados en su sitio) -->
             <form id="form-nueva-nota" onsubmit="crearNota(event)" class="nuevo-form mt-2">
                 <textarea id="nueva-nota-texto" class="textarea" placeholder="Escribir nota..." required></textarea>
                 <div class="add-row d-flex gap-2 mt-2 align-items-center">
@@ -94,9 +86,8 @@
     </div>
 
 
-    </div>
-    <!-- MOTOR DE MEMORIA LOCAL -->
-    <!-- MOTOR DE MEMORIA LOCAL CORREGIDO -->
+
+        <!-- MOTOR DE MEMORIA LOCAL COMPLETADO -->
     <script>
         var meses = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
         
@@ -146,7 +137,7 @@
                             '<small style="color: #00b38f; font-weight: bold; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; display: block;">Mañana</small>' +
                             '<span style="color: #ffffff !important; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block;">' + n.contenido + '</span>' +
                         '</div>' +
-                        '<button onclick="eliminarNota(' + n.id + ')" style="background: none; border: none; color: #ff4444; padding: 5px;"><i class="bi bi-trash3-fill"></i></button>' +
+                        '<button onclick="eliminarNota(' + n.id + ')" style="background: none; border: none; color: #ff4444; padding: 5px; font-weight: bold;">Borrar</button>' +
                     '</div>';
                     containerAvisos.innerHTML += avisoHTML;
                 }
@@ -162,8 +153,8 @@
                     '<div class="nota-link flex-fill d-flex flex-column" style="cursor:pointer" onclick="clickNota(' + n.id + ', ' + esImagen + ')">' +
                         cuerpoNota + tagFecha +
                     '</div>' +
-                    '<button onclick="eliminarNota(' + n.id + ')" class="btn-delete" style="background:none; border:none; padding:0;">' +
-                        '<i class="bi bi-trash3"></i>' +
+                    '<button onclick="eliminarNota(' + n.id + ')" class="btn-delete" style="background:none; border:none; padding:0 8px; color:#ff4444; font-weight:bold; font-size:0.95rem;">' +
+                        'Borrar' +
                     '</button>' +
                 '</div>';
                 
@@ -176,7 +167,7 @@
         function clickNota(id, esImagen) {
             var ArrayNotas = obtenerNotasDeMemoria();
             var encontrada = ArrayNotas.find(function(item) { return item.id === id; });
-            if (!enenzada && !encontrada) return;
+            if (!encontrada) return;
 
             if (esImagen) {
                 alert("Visualizando garabato local");
