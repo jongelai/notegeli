@@ -4,169 +4,234 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Notegeli</title>
-    <!-- Manifest de tu PWA -->
+
     <link rel="manifest" href="manifest.json">
-    
-    <!-- CSS de Bootstrap 5.3 oficial -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    
-    <!-- Iconos oficiales de Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-    
-    <!-- Tu archivo de estilos propio -->
     <link rel="stylesheet" href="notegeli.css?v=9.9">
 </head>
 <body>
     <div class="app-container">
 
-        <!-- VISTA PRINCIPAL -->
         <div id="view-main">
-            
-            <div class="header-mini d-flex align-items-center justify-content-between mb-4 p-2 rounded-3" style="background: rgba(255, 193, 7, 0.08); border-bottom: 2px solid rgba(255, 193, 7, 0.3);">
+            <div class="header-mini d-flex align-items-center justify-content-between mb-4 p-2 rounded-3"
+                 style="background: rgba(255, 193, 7, 0.08); border-bottom: 2px solid rgba(255, 193, 7, 0.3);">
+
                 <div class="d-flex align-items-center gap-2">
-                    <img src="icons/512.png" class="logo-mini" style="height: 28px; width: 28px; object-fit: contain;">
-                    <h4 class="m-0 fw-bold" style="font-size: 1.25rem; letter-spacing: 0.5px; color: #222;">
-                        AGENDA <span style="color: #d97706;">NOTAS</span>
+                    <img src="icons/512.png"
+                         class="logo-mini"
+                         alt="Notegeli"
+                         style="height: 28px; width: 28px; object-fit: contain;">
+
+                    <h4 class="m-0 fw-bold"
+                        style="font-size: 1.75rem; letter-spacing: 0.5px; color: #222;">
+                        <span style="color: #d97706;">NOTAS</span>
                     </h4>
                 </div>
 
                 <div class="d-flex align-items-center gap-2">
-                    <!-- Selector discreto de tamaño de texto -->
                     <div class="dropdown">
-                        <button class="btn btn-sm btn-light border-0 text-secondary p-1 px-2 rounded-circle" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="Tamaño de texto">
+                        <button class="btn btn-sm btn-light border-0 text-secondary p-1 px-2 rounded-circle"
+                                type="button"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false"
+                                title="Tamaño de texto">
                             <i class="bi bi-eye text-warning" style="font-size: 1rem;"></i>
                         </button>
-                        <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0" style="min-width: 130px; font-size: 0.85rem;">
-                            <li><button class="dropdown-item py-1" onclick="cambiarTamanoFuente('normal')">Normal</button></li>
-                            <li><button class="dropdown-item py-1 fw-medium" onclick="cambiarTamanoFuente('grande')">Grande</button></li>
-                            <li><button class="dropdown-item py-1 fw-bold" onclick="cambiarTamanoFuente('muy-grande')">Muy Grande</button></li>
+
+                        <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0"
+                            style="min-width: 130px; font-size: 0.85rem;">
+                            <li>
+                                <button class="dropdown-item py-1"
+                                        onclick="cambiarTamanoFuente('normal')">
+                                    Normal
+                                </button>
+                            </li>
+                            <li>
+                                <button class="dropdown-item py-1 fw-medium"
+                                        onclick="cambiarTamanoFuente('grande')">
+                                    Grande
+                                </button>
+                            </li>
+                            <li>
+                                <button class="dropdown-item py-1 fw-bold"
+                                        onclick="cambiarTamanoFuente('muy-grande')">
+                                    Muy Grande
+                                </button>
+                            </li>
                         </ul>
                     </div>
 
-                    <!-- Fecha en cápsula -->
                     <div class="d-flex align-items-center gap-1 bg-white px-2 py-1 rounded-pill shadow-sm border">
                         <i class="bi bi-calendar-event text-warning" style="font-size: 0.85rem;"></i>
-                        <span class="fecha-mini text-secondary fw-semibold" id="fecha-actual-txt" style="font-size: 0.8rem; text-transform: capitalize;"></span>
+                        <span id="fecha-actual-txt"
+                              class="fecha-mini text-secondary fw-semibold"
+                              style="font-size: 0.8rem; text-transform: capitalize;"></span>
                     </div>
                 </div>
             </div>
 
-    
-
-            <!-- Sección de Avisos de Mañana -->
-            <div id="avisos-container" class="avisos-seccion" style="margin-top: 40px; margin-bottom: 5px; display: none;"></div>
-
-            
-            
-            
+            <div id="avisos-container"
+                 class="avisos-seccion"
+                 style="margin-top: 10px; margin-bottom: 0; display: none;"></div>
         </div>
 
-        <!-- Formulario para añadir nota -->
-            <form id="form-nueva-nota" onsubmit="crearNota(event)" class="nuevo-form mt-2">
-                <textarea id="nueva-nota-texto" class="textarea" placeholder="Escribir nota..." required></textarea>
-                
-                <!-- Fila inferior con herramientas y botón añadir -->
-                <div class="add-row d-flex justify-content-between align-items-center mt-2">
-                    <!-- Iconos de herramientas rápidas -->
-                    <div class="d-flex align-items-center gap-2">
-                        <!-- Botón Calendario -->
-                        <button type="button" class="btn btn-sm btn-light border text-secondary rounded-circle p-1 px-2" onclick="document.getElementById('nueva-nota-fecha').showPicker()" title="Añadir fecha de recordatorio">
-                            <i class="bi bi-calendar3 text-warning"></i>
-                        </button>
-                        
-                        <!-- Botón Calculadora -->
-                        <button type="button" class="btn btn-sm btn-light border text-secondary rounded-circle p-1 px-2" onclick="abrirCalculadoraModal()" title="Calculadora rápida">
-                            <i class="bi bi-calculator text-warning"></i>
-                        </button>
+        <form id="form-nueva-nota" onsubmit="crearNota(event)" class="nuevo-form mt-0">
+            <textarea id="nueva-nota-texto"
+                      class="textarea"
+                      placeholder="Crear nota..."
+                      required></textarea>
 
-                        <!-- Texto o vista previa de la fecha seleccionada -->
-                        <span id="nueva-fecha-preview" class="fecha-preview text-muted small" style="font-size: 0.8rem;"></span>
-                        <input type="date" id="nueva-nota-fecha" class="input-fecha-hidden d-none" onchange="actualizarFechaPreview()">
-                    </div>
+            <div class="add-row d-flex justify-content-between align-items-center mt-2">
+                <div class="d-flex align-items-center gap-3">
+                    <button type="button"
+                            class="btn-tool"
+                            onclick="document.getElementById('nueva-nota-fecha').showPicker()"
+                            title="Añadir fecha de recordatorio">
+                        <i class="bi bi-calendar3"></i>
+                    </button>
 
-                    <button type="submit" class="btn-amber">+ Añadir</button>
+                    <button type="button"
+                            class="btn-tool"
+                            onclick="abrirCalculadoraModal()"
+                            title="Calculadora rápida">
+                        <i class="bi bi-calculator"></i>
+                    </button>
+
+                    <span id="nueva-fecha-preview"
+                          class="fecha-preview text-muted small"
+                          style="font-size: 0.85rem;"></span>
+
+                    <input type="date"
+                           id="nueva-nota-fecha"
+                           class="input-fecha-hidden d-none"
+                           onchange="actualizarFechaPreview()">
                 </div>
-            <div id="notes-scroll-container" class="notes-scroll mt-3"></div>    
-            </form>
-        <!-- MODAL CALCULADORA RÁPIDA -->
-        <div id="view-calc" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 9999; align-items: center; justify-content: center; padding: 15px;">
-            <div class="nuevo-form p-3 shadow" style="width: 100%; max-width: 280px; margin: 0 auto; background: #fff;">
+
+                <button type="submit" class="btn-amber">+ Añadir</button>
+            </div>
+        </form>
+
+        <div id="notes-scroll-container" class="notes-scroll mt-3"></div>
+
+        <div id="view-calc"
+             style="display: none; position: fixed; inset: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 9999; align-items: center; justify-content: center; padding: 15px;">
+
+            <div class="nuevo-form p-3 shadow"
+                 style="width: 100%; max-width: 280px; margin: 0 auto; background: #fff;">
+
                 <div class="d-flex justify-content-between align-items-center mb-2">
-                    <h6 class="fw-bold m-0 text-secondary"><i class="bi bi-calculator text-warning me-1"></i> Calculadora</h6>
-                    <button type="button" class="btn-close btn-sm" onclick="cerrarCalculadoraModal()"></button>
+                    <h6 class="fw-bold m-0 text-secondary">
+                        <i class="bi bi-calculator text-warning me-1"></i>
+                        Calculadora
+                    </h6>
+
+                    <button type="button"
+                            class="btn-close btn-sm"
+                            onclick="cerrarCalculadoraModal()"
+                            aria-label="Cerrar"></button>
                 </div>
-                <input type="text" id="calc-display" class="form-control text-end mb-2 fw-bold fs-5" readonly value="0" style="background: #f8f9fa;">
+
+                <input type="text"
+                       id="calc-display"
+                       class="form-control text-end mb-2 fw-bold fs-5"
+                       readonly
+                       value="0"
+                       style="background: #f8f9fa;">
+
                 <div class="row g-1">
                     <div class="col-3"><button type="button" class="btn btn-light w-100 border" onclick="calcAppend('7')">7</button></div>
                     <div class="col-3"><button type="button" class="btn btn-light w-100 border" onclick="calcAppend('8')">8</button></div>
                     <div class="col-3"><button type="button" class="btn btn-light w-100 border" onclick="calcAppend('9')">9</button></div>
                     <div class="col-3"><button type="button" class="btn btn-warning w-100 text-white" onclick="calcAppend('/')">÷</button></div>
-                    
+
                     <div class="col-3"><button type="button" class="btn btn-light w-100 border" onclick="calcAppend('4')">4</button></div>
                     <div class="col-3"><button type="button" class="btn btn-light w-100 border" onclick="calcAppend('5')">5</button></div>
                     <div class="col-3"><button type="button" class="btn btn-light w-100 border" onclick="calcAppend('6')">6</button></div>
                     <div class="col-3"><button type="button" class="btn btn-warning w-100 text-white" onclick="calcAppend('*')">×</button></div>
-                    
+
                     <div class="col-3"><button type="button" class="btn btn-light w-100 border" onclick="calcAppend('1')">1</button></div>
                     <div class="col-3"><button type="button" class="btn btn-light w-100 border" onclick="calcAppend('2')">2</button></div>
                     <div class="col-3"><button type="button" class="btn btn-light w-100 border" onclick="calcAppend('3')">3</button></div>
                     <div class="col-3"><button type="button" class="btn btn-warning w-100 text-white" onclick="calcAppend('-')">-</button></div>
-                    
+
                     <div class="col-3"><button type="button" class="btn btn-light w-100 border" onclick="calcAppend('0')">0</button></div>
                     <div class="col-3"><button type="button" class="btn btn-light w-100 border" onclick="calcAppend('.')">.</button></div>
                     <div class="col-3"><button type="button" class="btn btn-secondary w-100" onclick="calcClear()">C</button></div>
                     <div class="col-3"><button type="button" class="btn btn-warning w-100 text-white" onclick="calcAppend('+')">+</button></div>
-                    
+
                     <div class="col-12 mt-1">
-                        <button type="button" class="btn btn-success w-100 btn-sm" onclick="calcCalculate()">= Calcular / Copiar</button>
+                        <button type="button"
+                                class="btn btn-success w-100 btn-sm"
+                                onclick="calcCalculate()">
+                            = Calcular / Copiar
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- VISTA EDICIÓN INTEGRADA -->
-        <div id="view-edit" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); z-index: 9999; align-items: center; justify-content: center; padding: 15px;">
+
+        <div id="view-edit"
+             style="display: none; position: fixed; inset: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); z-index: 9999; align-items: center; justify-content: center; padding: 15px;">
+
             <div class="nuevo-form" style="width: 100%; max-width: 500px; margin: 0 auto;">
                 <h5 class="fw-bold mb-3" style="color: #333;">Editar Nota</h5>
+
                 <form onsubmit="guardarEdicion(event)">
                     <input type="hidden" id="edit-id">
                     <input type="hidden" id="edit-color-input">
-                    
-                    <textarea id="edit-textarea" class="textarea mb-2" rows="4" placeholder="Escribir nota..." required></textarea>
-                    
-                    <!-- Selector de colores -->
+
+                    <textarea id="edit-textarea"
+                              class="textarea mb-2"
+                              rows="4"
+                              placeholder="Escribir nota..."
+                              required></textarea>
+
                     <div class="d-flex align-items-center gap-2 my-2">
                         <small class="text-secondary fw-semibold">Color:</small>
+
                         <div class="d-flex gap-2">
-                            <button type="button" class="btn-color-dot" style="background:#ffffff; border:1px solid #ccc; width:24px; height:24px; border-radius:50%;" onclick="seleccionarColor(this, '')"></button>
-                            <button type="button" class="btn-color-dot" style="background:#ffadad; border:none; width:24px; height:24px; border-radius:50%;" onclick="seleccionarColor(this, '#ffadad')"></button>
-                            <button type="button" class="btn-color-dot" style="background:#ffd6a5; border:none; width:24px; height:24px; border-radius:50%;" onclick="seleccionarColor(this, '#ffd6a5')"></button>
-                            <button type="button" class="btn-color-dot" style="background:#fdffb6; border:none; width:24px; height:24px; border-radius:50%;" onclick="seleccionarColor(this, '#fdffb6')"></button>
-                            <button type="button" class="btn-color-dot" style="background:#caffbf; border:none; width:24px; height:24px; border-radius:50%;" onclick="seleccionarColor(this, '#caffbf')"></button>
-                            <button type="button" class="btn-color-dot" style="background:#9bf6ff; border:none; width:24px; height:24px; border-radius:50%;" onclick="seleccionarColor(this, '#9bf6ff')"></button>
+                            <button type="button" class="btn-color-dot" style="background: #fff; border: 1px solid #ccc; width: 24px; height: 24px; border-radius: 50%;" onclick="seleccionarColor(this, '')" aria-label="Blanco"></button>
+                            <button type="button" class="btn-color-dot" style="background: #ffadad; border: none; width: 24px; height: 24px; border-radius: 50%;" onclick="seleccionarColor(this, '#ffadad')" aria-label="Rojo claro"></button>
+                            <button type="button" class="btn-color-dot" style="background: #ffd6a5; border: none; width: 24px; height: 24px; border-radius: 50%;" onclick="seleccionarColor(this, '#ffd6a5')" aria-label="Naranja claro"></button>
+                            <button type="button" class="btn-color-dot" style="background: #fdffb6; border: none; width: 24px; height: 24px; border-radius: 50%;" onclick="seleccionarColor(this, '#fdffb6')" aria-label="Amarillo claro"></button>
+                            <button type="button" class="btn-color-dot" style="background: #caffbf; border: none; width: 24px; height: 24px; border-radius: 50%;" onclick="seleccionarColor(this, '#caffbf')" aria-label="Verde claro"></button>
+                            <button type="button" class="btn-color-dot" style="background: #9bf6ff; border: none; width: 24px; height: 24px; border-radius: 50%;" onclick="seleccionarColor(this, '#9bf6ff')" aria-label="Azul claro"></button>
                         </div>
                     </div>
 
                     <div class="add-row d-flex gap-2 mt-2 align-items-center">
-                        <span id="edit-fecha-preview" class="fecha-preview flex-grow-1" onclick="document.getElementById('edit-fecha-input').showPicker()" style="cursor: pointer;"></span>
-                        <input type="date" id="edit-fecha-input" class="input-fecha-hidden d-none" onchange="actualizarFechaEditPreview()">
-                        
-                        <button type="button" class="btn btn-link text-secondary text-decoration-none px-2" onclick="cerrarEditor()">Cancelar</button>
+                        <span id="edit-fecha-preview"
+                              class="fecha-preview flex-grow-1"
+                              onclick="document.getElementById('edit-fecha-input').showPicker()"
+                              style="cursor: pointer;"></span>
+
+                        <input type="date"
+                               id="edit-fecha-input"
+                               class="input-fecha-hidden d-none"
+                               onchange="actualizarFechaEditPreview()">
+
+                        <button type="button"
+                                class="btn btn-link text-secondary text-decoration-none px-2"
+                                onclick="cerrarEditor()">
+                            Cancelar
+                        </button>
+
                         <button type="submit" class="btn-amber">Guardar</button>
                     </div>
                 </form>
             </div>
         </div>
-
     </div>
 
-    <!-- PIE DE PÁGINA FIJO CON RELOJ -->
-    <footer style="position: fixed; bottom: 8px; left: 0; width: 100%; text-align: center; font-size: 0.75rem; color: #888888; pointer-events: none; z-index: 10;">
-        NoteGeli <span style="font-weight: 600; color: #d97706;">2026</span>
+    <footer style="position: fixed; bottom: 8px; left: 0; width: 100%; text-align: center; font-size: 0.75rem; color: #888; pointer-events: none; z-index: 10;">
+        NoteGeli
+        <span style="font-weight: 600; color: #d97706;">2026</span>
         <span style="margin: 0 4px;">•</span>
-        <i class="bi bi-clock" style="color: #d97706; margin-right: 2px;"></i><span id="hora-footer"></span>
+        <i class="bi bi-clock" style="color: #d97706; margin-right: 2px;"></i>
+        <span id="hora-footer"></span>
     </footer>
 
-    <!-- SCRIPTS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="app.js"></script>
 </body>
