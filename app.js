@@ -1,5 +1,8 @@
 var meses = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
 
+var sesionPrivadaDesbloqueada = false;
+var creandoNotaPrivada = false;
+
 // Inicialización unificada al cargar el DOM
 document.addEventListener("DOMContentLoaded", function() {
     mostrarFechaDeHoy();
@@ -51,7 +54,16 @@ function guardarNotasEnMemoria(notas) {
     cargarNotasYAlertas();
 }
 
-function cargarNotasYAlertas() {
+// Función para formatear fechas tipo "2026-10-15" a formato legible en español
+function formatearFechaLegible(fechaStr) {
+    if (!fechaStr) return '';
+    const partes = fechaStr.split('-');
+    const fecha = new Date(partes[0], partes[1] - 1, partes[2]);
+    const opciones = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+    return fecha.toLocaleDateString('es-ES', opciones);
+}
+
+function cargarNotasYAlertas(filtro = "") {
     var notas = obtenerNotasDeMemoria();
     var containerNotas = document.getElementById("notes-scroll-container");
     var containerAvisos = document.getElementById("avisos-container");
@@ -69,6 +81,11 @@ function cargarNotasYAlertas() {
     var tieneAvisos = false;
 
     notas.forEach(function(n) {
+        // Si la nota es privada y la sesión no está desbloqueada, no se muestra en avisos ni en el feed principal
+        if (n.privada && !sesionPrivadaDesbloqueada) {
+            return; 
+        }
+
         if (n.fecha_recordatorio === mañanaStr && !n.contenido.startsWith('data:image/')) {
             tieneAvisos = true;
             var avisoHTML = '<div id="aviso-' + n.id + '" class="aviso-barra d-flex align-items-center" style="background: rgba(0, 255, 204, 0.1); border: 1px solid rgba(0, 255, 204, 0.3); border-radius: 10px; padding: 10px 15px; margin-bottom: 8px;">' +
@@ -83,11 +100,31 @@ function cargarNotasYAlertas() {
         }
 
         var esImagen = n.contenido.startsWith('data:image/');
+
+        // --- FILTRO DE BÚSQUEDA ---
+        if (filtro && !esImagen) {
+            var textoNota = (n.contenido || "").toLowerCase();
+            if (!textoNota.includes(filtro)) {
+                return; // Si no coincide con la búsqueda, se omite de la lista
+            }
+        }
+        // -------------------------
+
         var estiloColor = n.color ? 'background-color: ' + n.color + ' !important; border-color: transparent;' : '';
         var claseTinted = n.color ? 'tinted' : '';
+        
+        // Distintivo visual si la nota es privada
+        if (n.privada) {
+            estiloColor += ' border-left: 4px solid #d97706 !important;';
+        }
 
-        var cuerpoNota = esImagen ? '<img src="' + n.contenido + '" class="img-garabato">' : '<span class="nota-texto">' + n.contenido + '</span>';
-        var tagFecha = n.fecha_recordatorio ? '<div class="nota-fecha-tag mt-1"><i class="bi bi-calendar3"></i><span>' + n.fecha_recordatorio + '</span></div>' : '';
+        // Vista previa colapsada para notas largas (máximo 3 líneas)
+        var cuerpoNota = esImagen ? 
+            '<img src="' + n.contenido + '" class="img-garabato">' : 
+            '<div class="nota-texto-preview">' + n.contenido + '</div>';
+        
+        var fechaFormateada = formatearFechaLegible(n.fecha_recordatorio);
+        var tagFecha = n.fecha_recordatorio ? '<div class="nota-fecha-badge mt-2"><i class="bi bi-calendar3"></i><span>' + fechaFormateada + '</span></div>' : '';
 
         var notaHTML = '<div class="nota-fila ' + claseTinted + '" id="nota-' + n.id + '" style="' + estiloColor + '">' +
             '<div class="nota-link flex-fill d-flex flex-column" style="cursor:pointer" onclick="clickNota(' + n.id + ', ' + esImagen + ')">' +
@@ -120,6 +157,7 @@ function crearNota(event) {
     event.preventDefault();
     var textoInput = document.getElementById("nueva-nota-texto");
     var fechaInput = document.getElementById("nueva-nota-fecha");
+    var privadaInput = document.getElementById("nueva-nota-privada");
     
     if (!textoInput.value.trim()) return;
 
@@ -129,6 +167,7 @@ function crearNota(event) {
         contenido: textoInput.value,
         fecha_recordatorio: fechaInput.value || null,
         color: "",
+        privada: privadaInput.value === "true",
         fecha_creacion: new Date().toISOString()
     };
 
@@ -138,6 +177,11 @@ function crearNota(event) {
     textoInput.value = "";
     fechaInput.value = "";
     document.getElementById("nueva-fecha-preview").innerText = "";
+    
+    // Resetear estado del botón privado tras crear
+    if (creandoNotaPrivada) {
+        toggleModoPrivadaCreacion();
+    }
 }
 
 function eliminarNota(id) {
@@ -164,8 +208,6 @@ function cerrarEditor() {
 
 function seleccionarColor(elemento, color) {
     document.getElementById("edit-color-input").value = color;
-    
-    // Quitar el borde activo a todos los botones de colores y ponérselo al pulsado
     var botones = document.querySelectorAll('.btn-color-dot');
     botones.forEach(function(b) { b.style.outline = "none"; });
     if(color !== "") {
@@ -177,10 +219,7 @@ function guardarEdicion(event) {
     event.preventDefault();
     var id = parseInt(document.getElementById("edit-id").value);
     var texto = document.getElementById("edit-textarea").value;
-    
-    // AQUÍ ESTABA EL FALLO: leemos directamente del input oculto correcto
     var color = document.getElementById("edit-color-input").value;
-    
     var fecha = document.getElementById("edit-fecha-input").value;
 
     var lista = obtenerNotasDeMemoria();
@@ -204,6 +243,7 @@ function actualizarFechaEditPreview() {
     var fecha = document.getElementById("edit-fecha-input").value;
     document.getElementById("edit-fecha-preview").innerText = fecha;
 }
+
 // --- FUNCIONES DE LA CALCULADORA ---
 function abrirCalculadoraModal() {
     document.getElementById("view-calc").style.display = "flex";
@@ -229,14 +269,108 @@ function calcClear() {
 function calcCalculate() {
     var display = document.getElementById("calc-display");
     try {
-        // Evaluamos de forma segura la operación matemática básica
         var resultado = eval(display.value.replace(/×/g, '*').replace(/÷/g, '/'));
         display.value = resultado;
-        
-        // Opcional: si quieres pasar el resultado directamente a la nota al calcular:
         var textoNota = document.getElementById("nueva-nota-texto");
         textoNota.value += (textoNota.value ? " " : "") + "= " + resultado;
     } catch (e) {
         display.value = "Error";
+    }
+}
+
+// --- FUNCIONES DE BÚSQUEDA ---
+function toggleBarraBusqueda() {
+    var contenedor = document.getElementById("container-buscador-desplegable");
+    if (contenedor.style.display === "none") {
+        contenedor.style.display = "block";
+        document.getElementById("input-buscar").focus();
+    } else {
+        contenedor.style.display = "none";
+        limpiarBusqueda();
+    }
+}
+
+function filtrarNotas() {
+    var input = document.getElementById("input-buscar");
+    var query = input.value.toLowerCase().trim();
+    var btnClear = document.getElementById("clear-search");
+    
+    if (btnClear) {
+        btnClear.style.display = query.length > 0 ? "block" : "none";
+    }
+
+    cargarNotasYAlertas(query);
+}
+
+function limpiarBusqueda() {
+    var input = document.getElementById("input-buscar");
+    input.value = "";
+    document.getElementById("clear-search").style.display = "none";
+    cargarNotasYAlertas();
+}
+
+// --- FUNCIONES DE NOTAS PRIVADAS (LLAVE) ---
+function toggleModoPrivadaCreacion() {
+    creandoNotaPrivada = !creandoNotaPrivada;
+    var btn = document.getElementById("btn-toggle-privada");
+    var inputPrivada = document.getElementById("nueva-nota-privada");
+    
+    inputPrivada.value = creandoNotaPrivada;
+    if (creandoNotaPrivada) {
+        btn.innerHTML = '<i class="bi bi-lock-fill" style="color: #d97706;"></i>';
+        btn.style.background = '#fef3c7';
+    } else {
+        btn.innerHTML = '<i class="bi bi-unlock"></i>';
+        btn.style.background = '#f8fafc';
+    }
+}
+
+function intentarAbrirPrivadas() {
+    var passGuardada = localStorage.getItem("notegeli_lock_pass");
+    
+    if (!passGuardada) {
+        var nuevaPass = prompt("Configura tu contraseña de acceso para notas privadas:");
+        if (nuevaPass && nuevaPass.trim() !== "") {
+            localStorage.setItem("notegeli_lock_pass", nuevaPass.trim());
+            alert("¡Contraseña configurada con éxito! Vuelve a pulsar la llave para desbloquear.");
+        }
+        return;
+    }
+
+    if (sesionPrivadaDesbloqueada) {
+        sesionPrivadaDesbloqueada = false;
+        document.getElementById("btn-icono-llave").style.background = "#f8fafc";
+        document.getElementById("btn-icono-llave").style.color = "#d97706";
+        alert("Sesión privada bloqueada de nuevo.");
+        cargarNotasYAlertas();
+    } else {
+        document.getElementById("view-lock").style.display = "flex";
+        document.getElementById("input-lock-pass").value = "";
+        document.getElementById("input-lock-pass").focus();
+    }
+}
+
+function cerrarModalLock() {
+    document.getElementById("view-lock").style.display = "none";
+}
+
+function verificarPasswordLock() {
+    var passIngresada = document.getElementById("input-lock-pass").value;
+    var passGuardada = localStorage.getItem("notegeli_lock_pass");
+
+    if (passIngresada === passGuardada) {
+        sesionPrivadaDesbloqueada = true;
+        cerrarModalLock();
+        
+        // Cambiar estética de la llave para indicar que está desbloqueado
+        var btnLlave = document.getElementById("btn-icono-llave");
+        btnLlave.style.background = '#fef3c7';
+        btnLlave.style.color = '#d97706';
+
+        cargarNotasYAlertas();
+        alert("¡Acceso concedido! Mostrando notas privadas.");
+    } else {
+        alert("Contraseña incorrecta.");
+        document.getElementById("input-lock-pass").value = "";
     }
 }

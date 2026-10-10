@@ -77,43 +77,63 @@
         </div>
 
         <form id="form-nueva-nota" onsubmit="crearNota(event)" class="nuevo-form mt-0">
-            <textarea id="nueva-nota-texto"
-                      class="textarea"
-                      placeholder="Crear nota..."
-                      required></textarea>
-
+            <textarea id="nueva-nota-texto" class="textarea" placeholder="Crear nota..." required></textarea>
+            
+            <!-- Fila inferior con herramientas unificadas -->
             <div class="add-row d-flex justify-content-between align-items-center mt-2">
-                <div class="d-flex align-items-center gap-3">
-                    <button type="button"
-                            class="btn-tool"
-                            onclick="document.getElementById('nueva-nota-fecha').showPicker()"
-                            title="Añadir fecha de recordatorio">
+                
+                <div class="d-flex align-items-center gap-2">
+                    <!-- Botón Calendario -->
+                    <button type="button" class="btn-tool" onclick="document.getElementById('nueva-nota-fecha').showPicker()" title="Añadir fecha de recordatorio">
                         <i class="bi bi-calendar3"></i>
                     </button>
-
-                    <button type="button"
-                            class="btn-tool"
-                            onclick="abrirCalculadoraModal()"
-                            title="Calculadora rápida">
+                    
+                    <!-- Botón Calculadora -->
+                    <button type="button" class="btn-tool" onclick="abrirCalculadoraModal()" title="Calculadora rápida">
                         <i class="bi bi-calculator"></i>
                     </button>
 
-                    <span id="nueva-fecha-preview"
-                          class="fecha-preview text-muted small"
-                          style="font-size: 0.85rem;"></span>
+                    <!-- Botón Lupa / Búsqueda rápida -->
+                    <button type="button" class="btn-tool" onclick="toggleBarraBusqueda()" title="Buscar en notas">
+                        <i class="bi bi-search"></i>
+                    </button>
 
-                    <input type="date"
-                           id="nueva-nota-fecha"
-                           class="input-fecha-hidden d-none"
-                           onchange="actualizarFechaPreview()">
+                    <!-- Botón Llave (Notas Privadas) -->
+                    <button type="button" class="btn-tool" id="btn-icono-llave" onclick="intentarAbrirPrivadas()" title="Notas privadas">
+                        <i class="bi bi-key"></i>
+                    </button>
+
+                    <!-- Botón Toggle Privada para la nota actual -->
+                    <button type="button" class="btn-tool" id="btn-toggle-privada" onclick="toggleModoPrivadaCreacion()" title="Hacer nota privada">
+                        <i class="bi bi-unlock"></i>
+                    </button>
+                    <input type="hidden" id="nueva-nota-privada" value="false">
+
+                    <!-- Vista previa de fecha -->
+                    <span id="nueva-fecha-preview" class="fecha-preview text-muted small" style="font-size: 0.85rem;"></span>
+                    <input type="date" id="nueva-nota-fecha" class="input-fecha-hidden d-none" onchange="actualizarFechaPreview()">
                 </div>
 
                 <button type="submit" class="btn-amber">+ Añadir</button>
             </div>
         </form>
 
+        <!-- Input de búsqueda rápido -->
+        <div id="container-buscador-desplegable" class="search-box mt-2" style="display: none;">
+            <div class="input-group rounded-pill border bg-white shadow-sm overflow-hidden px-3 py-1">
+                <span class="input-group-text bg-transparent border-0 text-warning ps-0">
+                    <i class="bi bi-search" style="font-size: 0.85rem;"></i>
+                </span>
+                <input type="text" id="input-buscar" class="form-control border-0 shadow-none bg-transparent ps-2" placeholder="Escribe para buscar..." oninput="filtrarNotas()" style="font-size: 0.85rem;">
+                <button class="btn btn-link text-muted p-0 text-decoration-none" type="button" id="clear-search" onclick="limpiarBusqueda()" style="display: none;">
+                    <i class="bi bi-x-circle-fill"></i>
+                </button>
+            </div>
+        </div>
+
         <div id="notes-scroll-container" class="notes-scroll mt-3"></div>
 
+        <!-- Modal de Calculadora -->
         <div id="view-calc"
              style="display: none; position: fixed; inset: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 9999; align-items: center; justify-content: center; padding: 15px;">
 
@@ -171,6 +191,20 @@
             </div>
         </div>
 
+        <!-- Modal de Acceso Privado (PIN / Password) -->
+        <div id="view-lock" style="display: none; position: fixed; inset: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(5px); z-index: 1050; align-items: center; justify-content: center; padding: 15px;">
+            <div class="card p-4 shadow-lg border-0" style="width: 100%; max-width: 360px; border-radius: 20px;">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="fw-bold m-0 text-dark"><i class="bi bi-shield-lock text-warning me-2"></i>Notas Privadas</h5>
+                    <button type="button" class="btn-close shadow-none" onclick="cerrarModalLock()"></button>
+                </div>
+                <p class="text-muted small mb-3">Introduce tu contraseña para acceder al contenido oculto.</p>
+                <input type="password" id="input-lock-pass" class="form-control form-control-lg text-center mb-3 rounded-pill bg-light border-0" placeholder="••••" maxlength="10" style="letter-spacing: 4px;">
+                <button type="button" class="btn btn-amber w-100 py-2 rounded-pill fw-bold" onclick="verificarPasswordLock()">Desbloquear</button>
+            </div>
+        </div>
+
+        <!-- Modal de Editor -->
         <div id="view-edit"
              style="display: none; position: fixed; inset: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); z-index: 9999; align-items: center; justify-content: center; padding: 15px;">
 
