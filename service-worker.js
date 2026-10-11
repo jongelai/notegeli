@@ -1,13 +1,15 @@
-const CACHE = "notegeli-v1";
+const CACHE = "letrasgeli-v1";
 
 self.addEventListener("install", (e) => {
   e.waitUntil(
     caches.open(CACHE).then(cache => {
       return cache.addAll([
-        "/",
-        "/static/notegeli.css",
-        "/static/icons/192.png",
-        "/static/icons/512.png"
+        "./",
+        "./index.html",
+        "./script.js",
+        "./letras.css",
+        "./icons/192.png",
+        "./icons/512.png"
       ]);
     })
   );
