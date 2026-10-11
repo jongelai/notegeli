@@ -3,7 +3,7 @@ const ctx = canvas.getContext('2d');
 
 let W, H, scale, activo = false;
 let pActual = "", cola = [], letras = [], casillas = [];
-let rX = 0, rVel = 0.5, pts = 0, letraArrastrada = null;
+let rX = 0, rVel = 0.6, pts = 0, letraArrastrada = null;
 
 const TEMAS = { 
     "ANIMALES": ["LOBO", "TIGRE", "MONO", "CEBRA", "PANDA", "LEON"], 
@@ -42,7 +42,7 @@ function empezarPartida() {
         esComodin: false
     }));
 
-    letras = Array.from({length: 22}, () => new Letra());
+    letras = Array.from({length: 35}, () => new Letra());
     activo = true;
     lanzarPalabra();
     requestAnimationFrame(loop);
@@ -97,7 +97,7 @@ class Letra {
 
         this.x = 50 + Math.random() * (W - 100);
         this.y = -50;
-        this.v = (0.4 + Math.random() * 0.6) * scale;
+        this.v = (1 + Math.random() * 1) * scale;
         this.dragging = false;
     }
 }
@@ -161,6 +161,21 @@ ctx.restore();
         return;
     }
 
+
+    // 4. Lluvia de Letras
+    letras.forEach(l => {
+        if (!l.dragging) l.y += l.v;
+        if (l.y > H + 50) l.reset();
+        
+        if ((l.y > 160 && l.y < H * 0.78) || l.dragging) {
+            ctx.save();
+            ctx.fillStyle = l.esComodin ? "#f1c40f" : (l.dragging ? "#00d4ff" : "white");
+            ctx.font = `bold ${40 * scale}px Arial`;
+            ctx.textAlign = "center";
+            ctx.fillText(l.char, l.x, l.y);
+            ctx.restore();
+        }
+    });
     // 3. Casillas
     casillas.forEach(c => {
         ctx.save();
@@ -176,21 +191,6 @@ ctx.restore();
             ctx.fillText(c.char, c.x + c.w/2, c.y + c.h/2 + 12);
         }
         ctx.restore();
-    });
-
-    // 4. Lluvia de Letras
-    letras.forEach(l => {
-        if (!l.dragging) l.y += l.v;
-        if (l.y > H + 50) l.reset();
-        
-        if (l.y > 160 || l.dragging) {
-            ctx.save();
-            ctx.fillStyle = l.esComodin ? "#f1c40f" : (l.dragging ? "#00d4ff" : "white");
-            ctx.font = `bold ${40 * scale}px Arial`;
-            ctx.textAlign = "center";
-            ctx.fillText(l.char, l.x, l.y);
-            ctx.restore();
-        }
     });
 
     if (letraArrastrada) {
@@ -284,7 +284,7 @@ function verificar() {
 
     if (matchGlobal) {
         pts += 100;
-        rVel += 0.05;
+        rVel = Math.min(rVel + 0.06, 1.2);
         casillas.forEach(c => { c.char = ""; c.esComodin = false; });
         lanzarPalabra();
     }
