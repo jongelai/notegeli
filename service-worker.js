@@ -1,44 +1,45 @@
-const CACHE = "letrasgeli-v1";
+const CACHE_NAME = "letrasgeli-v1";
 
+// Archivos esenciales para guardar en caché
+const ASSETS = [
+  "./",
+  "./index.html",
+  "./script.js",
+  "./letras.css",
+  "./icons/192.png",
+  "./icons/512.png"
+];
+
+// Instalación: Guardar archivos en caché
 self.addEventListener("install", (e) => {
   e.waitUntil(
-    caches.open(CACHE).then(cache => {
-      return cache.addAll([
-        "./",
-        "./index.html",
-        "./script.js",
-        "./letras.css",
-        "./icons/192.png",
-        "./icons/512.png"
-      ]);
+    caches.open(CACHE_NAME).then((cache) => {
+      return cache.addAll(ASSETS);
     })
   );
   self.skipWaiting();
 });
 
+// Activación: Limpiar cachés antiguas si las hubiera
 self.addEventListener("activate", (e) => {
+  e.waitUntil(
+    caches.keys().then((keys) => {
+      return Promise.all(
+        keys.map((key) => {
+          if (key !== CACHE_NAME) {
+            return caches.delete(key);
+          }
+        })
+      );
+    })
+  );
   self.clients.claim();
 });
 
-// NETWORK FIRST para que Flask siempre maneje datos
+// Interceptar peticiones (Network First con respaldo en Caché)
 self.addEventListener("fetch", (e) => {
-  const req = e.request;
-
-  // No tocar POST (guardar notas)
-  if (req.method === "POST") return;
-
-  // No tocar estos endpoints
-  const url = new URL(req.url);
-  if (url.pathname.startsWith("/editar") ||
-      url.pathname.startsWith("/borrar") ||
-      url.pathname.startsWith("/login")  ||
-      url.pathname.startsWith("/logout")  ||
-      url.pathname.startsWith("/archivos")
-  ) {
-    return;
-  }
-
   e.respondWith(
-    fetch(req).catch(() => caches.match(req))
+    fetch(e.request)
+      .catch(() => caches.match(e.request))
   );
 });
