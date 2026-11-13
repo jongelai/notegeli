@@ -224,8 +224,8 @@ function mostrarToast(titulo, mensaje, tipo = "success") {
     requestAnimationFrame(() => toast.classList.add('visible'));
     setTimeout(() => {
         toast.classList.remove('visible');
-        setTimeout(() => toast.remove(), 300);
-    }, 3000);
+        setTimeout(() => toast.remove(), 150);
+    }, 1000);
 }
 
 function intentarAbrirPrivadas() {
@@ -272,7 +272,7 @@ function verificarPasswordLock() {
             accesoPrivadoConcedido = true;
             
             // CAMBIAR TÍTULO A MODO PRIVADO
-            document.querySelector('.header-mini h4 span').textContent = '🔒 NOTAS';
+            
             document.querySelector('.app-container').classList.add('modo-privado-activo');
             cerrarModalLock();
             const btnLlave = document.getElementById('btn-icono-llave');
@@ -291,7 +291,7 @@ function verificarPasswordLock() {
         accesoPrivadoConcedido = true;
         
         // CAMBIAR TÍTULO A MODO PRIVADO
-        document.querySelector('.header-mini h4 span').textContent = '🔒 NOTAS';
+        
         document.querySelector('.app-container').classList.add('modo-privado-activo');
         cerrarModalLock();
         const btnLlave = document.getElementById('btn-icono-llave');
