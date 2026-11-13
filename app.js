@@ -233,12 +233,13 @@ function intentarAbrirPrivadas() {
         accesoPrivadoConcedido = false;
         
         // VOLVER EL TÍTULO A LA NORMALIDAD
-        document.querySelector('.header-mini h4 span').textContent = 'NOTAS';
+        
         document.querySelector('.app-container').classList.remove('modo-privado-activo');
         const btnLlave = document.getElementById('btn-icono-llave');
         if (btnLlave) btnLlave.classList.remove('text-warning');
         
         cargarNotas();
+        
         mostrarToast("Bloqueado", "Notas privadas ocultas.", "info");
         return;
     } 
