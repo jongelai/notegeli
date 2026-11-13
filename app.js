@@ -229,22 +229,28 @@ function mostrarToast(titulo, mensaje, tipo = "success") {
 }
 
 function intentarAbrirPrivadas() {
+    // 1. Si ya tenemos acceso, el botón sirve para CERRAR el acceso
     if (accesoPrivadoConcedido) {
-        // Si ya estaban abiertas, las bloqueamos de nuevo
         accesoPrivadoConcedido = false;
         const btnLlave = document.getElementById('btn-icono-llave');
         if (btnLlave) btnLlave.classList.remove('text-warning');
         
         cargarNotas();
+        mostrarToast("Bloqueado", "Notas privadas ocultas.", "info");
+        return; // Salimos de la función aquí
+    } 
+
+    // 2. Si NO tenemos acceso, ABRIMOS el modal para pedir la contraseña
+    const modal = document.getElementById('view-lock');
+    if (modal) {
+        modal.style.display = 'flex'; // Mostramos el modal
+        const inputPass = document.getElementById('input-lock-pass');
+        if (inputPass) {
+            inputPass.value = ''; // Limpiamos cualquier intento anterior
+            inputPass.focus();    // Ponemos el cursor para escribir
+        }
     } else {
-        // En lugar de un alert, usamos mostrarToast
-        mostrarToast("Acceso Denegado", "Notas privadas bloqueadas de nuevo.", "warning");
-        
-        // Mostrar modal de contraseña
-        const modal = document.getElementById('view-lock');
-        if (modal) modal.style.display = 'flex';
-        document.getElementById('input-lock-pass').value = '';
-        document.getElementById('input-lock-pass').focus();
+        console.error("No se encontró el modal 'view-lock' en el HTML");
     }
 }
 
@@ -254,11 +260,14 @@ function cerrarModalLock() {
 }
 
 function verificarPasswordLock() {
-    const passInput = document.getElementById('input-lock-pass').value;
+    const inputPass = document.getElementById('input-lock-pass');
+    if (!inputPass) return;
+
+    const passInput = inputPass.value;
     let passwordGuardada = localStorage.getItem('notegeli_pass');
 
+    // CASO A: No hay contraseña configurada (Primera vez)
     if (!passwordGuardada) {
-        // Si no hay contraseña establecida, configuramos una nueva
         if (passInput.trim().length > 0) {
             localStorage.setItem('notegeli_pass', passInput);
             accesoPrivadoConcedido = true;
@@ -266,30 +275,36 @@ function verificarPasswordLock() {
             
             const btnLlave = document.getElementById('btn-icono-llave');
             if (btnLlave) btnLlave.classList.add('text-warning');
-            
-            // REEMPLAZO DE ALERT: Éxito
-            mostrarToast("¡Todo listo!", "Contraseña establecida y notas privadas desbloqueadas.", "success");
-            
+
+            mostrarToast("¡Todo listo!", "Contraseña establecida y notas desbloqueadas.", "success");
             cargarNotas();
         } else {
-            // REEMPLAZO DE ALERT: Advertencia
+            inputPass.value = ''; 
+            inputPass.focus();
             mostrarToast("Atención", "Introduce una contraseña válida.", "warning");
         }
+        return; 
+    } 
+
+    // CASO B: Ya hay una contraseña guardada (Tu caso actual)
+    if (passInput === passwordGuardada) {
+        accesoPrivadoConcedido = true;
+        cerrarModalLock();
+        
+        const btnLlave = document.getElementById('btn-icono-llave');
+        if (btnLlave) btnLlave.classList.add('text-warning');
+        
+        cargarNotas();
+        mostrarToast("Acceso concedido", "Notas privadas desbloqueadas.", "success");
     } else {
-        if (passInput === passwordGuardada) {
-            accesoPrivadoConcedido = true;
-            cerrarModalLock();
-            
-            const btnLlave = document.getElementById('btn-icono-llave');
-            if (btnLlave) btnLlave.classList.add('text-warning');
-            
-            cargarNotas();
-        } else {
-            // REEMPLAZO DE ALERT: Error
-            mostrarToast("Acceso denegado", "La contraseña es incorrecta. Inténtalo de nuevo.", "error");
-        }
+        // AQUÍ es donde caía tu error. He añadido el borrado aquí:
+        inputPass.value = ''; // <--- ESTO BORRA EL TEXTO
+        inputPass.focus();    // <--- ESTO PONE EL CURSOR LISTO
+        
+        mostrarToast("Acceso denegado", "La contraseña es incorrecta.", "error");
     }
 }
+
 
 // ==========================================
 // CALCULADORA
