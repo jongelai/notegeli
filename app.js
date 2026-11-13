@@ -229,28 +229,28 @@ function mostrarToast(titulo, mensaje, tipo = "success") {
 }
 
 function intentarAbrirPrivadas() {
-    // 1. Si ya tenemos acceso, el botón sirve para CERRAR el acceso
     if (accesoPrivadoConcedido) {
         accesoPrivadoConcedido = false;
+        
+        // VOLVER EL TÍTULO A LA NORMALIDAD
+        document.querySelector('.header-mini h4 span').textContent = 'NOTAS';
+        document.querySelector('.app-container').classList.remove('modo-privado-activo');
         const btnLlave = document.getElementById('btn-icono-llave');
         if (btnLlave) btnLlave.classList.remove('text-warning');
         
         cargarNotas();
         mostrarToast("Bloqueado", "Notas privadas ocultas.", "info");
-        return; // Salimos de la función aquí
+        return;
     } 
 
-    // 2. Si NO tenemos acceso, ABRIMOS el modal para pedir la contraseña
     const modal = document.getElementById('view-lock');
     if (modal) {
-        modal.style.display = 'flex'; // Mostramos el modal
+        modal.style.display = 'flex';
         const inputPass = document.getElementById('input-lock-pass');
         if (inputPass) {
-            inputPass.value = ''; // Limpiamos cualquier intento anterior
-            inputPass.focus();    // Ponemos el cursor para escribir
+            inputPass.value = '';
+            inputPass.focus();
         }
-    } else {
-        console.error("No se encontró el modal 'view-lock' en el HTML");
     }
 }
 
@@ -266,45 +266,44 @@ function verificarPasswordLock() {
     const passInput = inputPass.value;
     let passwordGuardada = localStorage.getItem('notegeli_pass');
 
-    // CASO A: No hay contraseña configurada (Primera vez)
     if (!passwordGuardada) {
         if (passInput.trim().length > 0) {
             localStorage.setItem('notegeli_pass', passInput);
             accesoPrivadoConcedido = true;
-            cerrarModalLock();
             
+            // CAMBIAR TÍTULO A MODO PRIVADO
+            document.querySelector('.header-mini h4 span').textContent = '🔒 NOTAS';
+            document.querySelector('.app-container').classList.add('modo-privado-activo');
+            cerrarModalLock();
             const btnLlave = document.getElementById('btn-icono-llave');
             if (btnLlave) btnLlave.classList.add('text-warning');
-
-            mostrarToast("¡Todo listo!", "Contraseña establecida y notas desbloqueadas.", "success");
+            mostrarToast("¡Todo listo!", "Contraseña establecida.", "success");
             cargarNotas();
         } else {
             inputPass.value = ''; 
             inputPass.focus();
-            mostrarToast("Atención", "Introduce una contraseña válida.", "warning");
+            mostrarToast("Atención", "Introduce una contraseña.", "warning");
         }
         return; 
     } 
 
-    // CASO B: Ya hay una contraseña guardada (Tu caso actual)
     if (passInput === passwordGuardada) {
         accesoPrivadoConcedido = true;
-        cerrarModalLock();
         
+        // CAMBIAR TÍTULO A MODO PRIVADO
+        document.querySelector('.header-mini h4 span').textContent = '🔒 NOTAS';
+        document.querySelector('.app-container').classList.add('modo-privado-activo');
+        cerrarModalLock();
         const btnLlave = document.getElementById('btn-icono-llave');
         if (btnLlave) btnLlave.classList.add('text-warning');
-        
         cargarNotas();
         mostrarToast("Acceso concedido", "Notas privadas desbloqueadas.", "success");
     } else {
-        // AQUÍ es donde caía tu error. He añadido el borrado aquí:
-        inputPass.value = ''; // <--- ESTO BORRA EL TEXTO
-        inputPass.focus();    // <--- ESTO PONE EL CURSOR LISTO
-        
+        inputPass.value = ''; 
+        inputPass.focus();
         mostrarToast("Acceso denegado", "La contraseña es incorrecta.", "error");
     }
 }
-
 
 // ==========================================
 // CALCULADORA

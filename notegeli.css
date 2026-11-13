@@ -438,7 +438,37 @@ body.font-muy-grande {
 .toast-content { display: flex; flex-direction: column; }
 .toast-content strong { font-size: 0.9rem; }
 .toast-content span { font-size: 0.8rem; color: #666; }
+/* Asegúrate de que el header tenga posición relativa */
+.header-mini {
+    position: relative; /* Necesario para posicionar el badge */
+}
 
+/* Ajustes visuales para el modo privado */
+.app-container.modo-privado-activo {
+    background-color: rgba(255, 193, 7, 0.05);
+    border: 2px solid #d97706;
+    box-shadow: inset 0 0 20px rgba(217, 119, 6, 0.1);
+}
 
+.modo-privado-activo .header-mini {
+    background: rgba(217, 119, 6, 0.15) !important;
+    border-bottom: 3px solid #d97706 !important;
+}
 
-
+/* Badge para el modo privado */
+.modo-privado-activo .header-mini::after {
+    content: "🔒 Privado";
+    font-size: 0.75rem; /* Ajusta el tamaño del texto */
+    background: #020202;
+    color: white;
+    padding: 4px 10px; /* Ajusta el padding para más espacio */
+    border-radius: 12px; /* Mejora el aspecto del badge */
+    position: absolute;
+    top: 140%; /* Centrado verticalmente */
+    right: 10px; /* Ajusta la posición horizontal */
+    transform: translateY(-50%); /* Centra verticalmente */
+    font-weight: bold;
+    z-index: 10;
+    pointer-events: none; /* Para que no interfiera con clics */
+    white-space: nowrap;
+}
