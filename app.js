@@ -239,7 +239,7 @@ function intentarAbrirPrivadas() {
         if (btnLlave) btnLlave.classList.remove('text-warning');
         
         cargarNotas();
-        
+
         mostrarToast("Bloqueado", "Notas privadas ocultas.", "info");
         return;
     } 
@@ -338,13 +338,36 @@ function calcClear() {
 function calcCalculate() {
     const display = document.getElementById('calc-display');
     if (!display) return;
+
     try {
-        // Reemplazar símbolos visuales por operadores de JS seguros
+        // 1. Limpiar la expresión (cambiar símbolos visuales por operadores de JS)
         let expresion = display.value.replace(/×/g, '*').replace(/÷/g, '/');
+        
+        // 2. Calcular el resultado
         let resultado = eval(expresion);
+
+        // 3. Evitar que los decimales sean infinitos (ej: 0.1 + 0.2)
+        if (resultado.toString().includes('.')) {
+            resultado = parseFloat(resultado.toFixed(8)); 
+        }
+
+        // 4. Mostrar el resultado en la pantalla
         display.value = resultado;
-    } catch {
+
+        // --- AQUÍ ESTÁ LA MAGIA DEL COPIADO ---
+        // 5. Copiar el resultado al portapapeles
+        navigator.clipboard.writeText(resultado).then(() => {
+            // 6. Avisar al usuario que se ha copiado
+            mostrarToast("¡Copiado!", "El resultado se ha copiado al portapapeles.", "success");
+        }).catch(err => {
+            console.error("Error al copiar: ", err);
+        });
+        // --------------------------------------
+
+    } catch (e) {
         display.value = 'Error';
+        mostrarToast("Error", "Cálculo no válido", "error");
+        setTimeout(() => calcClear(), 1500);
     }
 }
 

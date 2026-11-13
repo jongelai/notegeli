@@ -472,3 +472,21 @@ body.font-muy-grande {
     pointer-events: none; /* Para que no interfiera con clics */
     white-space: nowrap;
 }
+.app-container input, 
+.app-container textarea {
+    font-size: inherit !important;
+}
+/* Estilo para que los botones de la calculadora sean más grandes y táctiles */
+#view-calc .btn {
+    height: 70px; /* Altura fija para que sean fáciles de tocar */
+    font-size: 1.4rem; /* Letra más grande */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Ajuste para el botón de Calcular que es más ancho */
+#view-calc .btn-success {
+    height: 80px;
+    font-size: 1.6rem;
+}
