@@ -119,11 +119,12 @@ function cargarNotas(filtro = '') {
 }
 
 function eliminarNota(id) {
-    if (confirm('¿Seguro que deseas eliminar esta nota?')) {
-        notas = notas.filter(n => n.id !== id);
-        guardarEnLocalStorage();
-        cargarNotas();
-    }
+    notas = notas.filter(n => n.id !== id);
+    guardarEnLocalStorage();
+    cargarNotas();
+    
+    // Avisamos que se ha eliminado
+    mostrarToast("Nota eliminada", "La nota ha sido borrada correctamente.", "success");
 }
 
 // ==========================================
@@ -195,6 +196,37 @@ function toggleModoPrivadaCreacion() {
         }
     }
 }
+function mostrarToast(titulo, mensaje, tipo = "success") {
+    const anterior = document.querySelector('.toast-notegeli');
+    if (anterior) anterior.remove();
+
+    const iconos = { success: "✓", error: "✕", warning: "⚠" };
+    const toast = document.createElement('div');
+    toast.className = `toast-notegeli ${tipo}`;
+
+    const icono = document.createElement('div');
+    icono.className = 'toast-icon';
+    icono.textContent = iconos[tipo] || "ℹ";
+
+    const contenido = document.createElement('div');
+    contenido.className = 'toast-content';
+
+    const tituloEl = document.createElement('strong');
+    tituloEl.textContent = titulo;
+
+    const mensajeEl = document.createElement('span');
+    mensajeEl.textContent = mensaje;
+
+    contenido.append(tituloEl, mensajeEl);
+    toast.append(icono, contenido);
+    document.body.appendChild(toast);
+
+    requestAnimationFrame(() => toast.classList.add('visible'));
+    setTimeout(() => {
+        toast.classList.remove('visible');
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+}
 
 function intentarAbrirPrivadas() {
     if (accesoPrivadoConcedido) {
@@ -202,9 +234,12 @@ function intentarAbrirPrivadas() {
         accesoPrivadoConcedido = false;
         const btnLlave = document.getElementById('btn-icono-llave');
         if (btnLlave) btnLlave.classList.remove('text-warning');
-        alert("Notas privadas bloqueadas de nuevo.");
+        
         cargarNotas();
     } else {
+        // En lugar de un alert, usamos mostrarToast
+        mostrarToast("Acceso Denegado", "Notas privadas bloqueadas de nuevo.", "warning");
+        
         // Mostrar modal de contraseña
         const modal = document.getElementById('view-lock');
         if (modal) modal.style.display = 'flex';
@@ -228,22 +263,30 @@ function verificarPasswordLock() {
             localStorage.setItem('notegeli_pass', passInput);
             accesoPrivadoConcedido = true;
             cerrarModalLock();
+            
             const btnLlave = document.getElementById('btn-icono-llave');
             if (btnLlave) btnLlave.classList.add('text-warning');
-            alert("¡Contraseña establecida y notas privadas desbloqueadas!");
+            
+            // REEMPLAZO DE ALERT: Éxito
+            mostrarToast("¡Todo listo!", "Contraseña establecida y notas privadas desbloqueadas.", "success");
+            
             cargarNotas();
         } else {
-            alert("Introduce una contraseña válida.");
+            // REEMPLAZO DE ALERT: Advertencia
+            mostrarToast("Atención", "Introduce una contraseña válida.", "warning");
         }
     } else {
         if (passInput === passwordGuardada) {
             accesoPrivadoConcedido = true;
             cerrarModalLock();
+            
             const btnLlave = document.getElementById('btn-icono-llave');
             if (btnLlave) btnLlave.classList.add('text-warning');
+            
             cargarNotas();
         } else {
-            alert("Contraseña incorrecta.");
+            // REEMPLAZO DE ALERT: Error
+            mostrarToast("Acceso denegado", "La contraseña es incorrecta. Inténtalo de nuevo.", "error");
         }
     }
 }
