@@ -293,16 +293,18 @@ function procesarArchivoBackup(event) {
         try {
             const contenido = JSON.parse(e.target.result);
             
-            // Verificamos si el archivo tiene la estructura nueva o es un array directo de notas
-            const listaNotas = Array.isArray(contenido) ? contenido : contenido.notes;
-            const passwordGuardado = Array.isArray(contenido) ? null : contenido.passwordHash;
+            // 1. Coincide con 'notas' (en español, como lo guardas al exportar)
+            const listaNotas = Array.isArray(contenido) ? contenido : contenido.notas;
+            
+            // 2. Coincide con 'passHash'
+            const passwordGuardado = Array.isArray(contenido) ? null : contenido.passHash;
 
             if (listaNotas) {
                 localStorage.setItem('notegeli_notes', JSON.stringify(listaNotas));
                 
-                // Si el backup traía contraseña, la restauramos; si no, respetamos la que ya tuviera el móvil
+                // 3. Guarda usando la clave correcta 'notegeli_pass' que usa tu app
                 if (passwordGuardado) {
-                    localStorage.setItem('notegeli_lock', passwordGuardado);
+                    localStorage.setItem('notegeli_pass', passwordGuardado);
                 }
 
                 alert("¡Copia de seguridad restaurada con éxito!");
