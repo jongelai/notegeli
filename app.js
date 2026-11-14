@@ -455,6 +455,7 @@ function cerrarCalculadoraModal() {
     if (modal) modal.style.display = 'none';
 }
 
+
 function calcAppend(val) {
     const display = document.getElementById('calc-display');
     if (!display) return;
