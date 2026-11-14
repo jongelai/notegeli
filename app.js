@@ -292,23 +292,19 @@ function procesarArchivoBackup(event) {
     lector.onload = function(e) {
         try {
             const contenido = JSON.parse(e.target.result);
-            
-            // 1. Coincide con 'notas' (en español, como lo guardas al exportar)
             const listaNotas = Array.isArray(contenido) ? contenido : contenido.notas;
-            
-            // 2. Coincide con 'passHash'
             const passwordGuardado = Array.isArray(contenido) ? null : contenido.passHash;
 
             if (listaNotas) {
                 localStorage.setItem('notegeli_notes', JSON.stringify(listaNotas));
                 
-                // 3. Guarda usando la clave correcta 'notegeli_pass' que usa tu app
-                if (passwordGuardado) {
-                    localStorage.setItem('notegeli_pass', passwordGuardado);
+                // Forzamos que se guarde estrictamente como un string limpio de texto plano
+                if (passwordGuardado !== null && passwordGuardado !== undefined) {
+                    localStorage.setItem('notegeli_pass', String(passwordGuardado).replace(/["']/g, ""));
                 }
 
                 alert("¡Copia de seguridad restaurada con éxito!");
-                location.reload(); // Recarga la app para aplicar los cambios
+                location.reload(); 
             } else {
                 alert("El archivo no tiene un formato de notas válido.");
             }
@@ -382,8 +378,11 @@ function exportarBackup() {
 
     const a = document.createElement('a');
     a.href = url;
-    const fechaStr = new Date().toISOString().split('T')[0];
-    a.download = `notegeli-backup-${fechaStr}.json`;
+
+    const ahora = new Date();
+    const fechaStr = ahora.toISOString().split('T')[0];
+    const horaStr = ahora.toTimeString().split(' ')[0].replace(/:/g, '-');
+    a.download = `notegeli-backup-${fechaStr}_${horaStr}.json`;
     
     document.body.appendChild(a);
     a.click();
