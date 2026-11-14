@@ -10,7 +10,15 @@
     --accent: #ffcc66;
     --accent-dark: #9b6b00;
 }
-
+:root.dark-mode {
+    --bg-app: #121212;
+    --bg-nota: #1e1e1e;
+    --text-nota: #f8f9fa;
+    --border-nota: #333333;
+    --bg-textarea: #2a2818; /* Un tono amarillo/ámbar oscuro muy suave para mantener la esencia */
+    --accent: #d4a337;
+    --accent-dark: #ffcc66;
+}
 /* =========================================
    2. REGLAS GENERALES Y CONTENEDOR
    ========================================= */
@@ -22,6 +30,8 @@ body, html {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     background-color: var(--bg-app);
     color: var(--text-nota);
+    color: var(--text-nota);
+    transition: background-color 0.2s ease, color 0.2s ease;
     box-sizing: border-box;
 }
 
@@ -45,6 +55,8 @@ body, html {
     font-size: 1.1rem;
     background-color: var(--bg-textarea);
     border: 2px solid var(--accent);
+    color: var(--text-nota);
+    border-color: var(--border-nota);
     border-radius: 12px;
     padding: 12px;
     color: var(--text-nota);
