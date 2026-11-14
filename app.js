@@ -80,6 +80,24 @@ function cargarNotas(filtro = '') {
         return true;
     });
 
+    // --- LÓGICA DE RECORDATORIOS (HOY Y MAÑANA ARRIBA) ---
+    const hoyStr = obtenerFechaLocal(0);
+    const mananaStr = obtenerFechaLocal(1);
+
+    notasFiltradas.sort((a, b) => {
+        const fechaA = a.fechaRecordatorio || '';
+        const fechaB = b.fechaRecordatorio || '';
+        
+        const esUrgenteA = (fechaA === hoyStr || fechaA === mananaStr);
+        const esUrgenteB = (fechaB === hoyStr || fechaB === mananaStr);
+
+        // Las notas con fecha para hoy o mañana van primero
+        if (esUrgenteA && !esUrgenteB) return -1;
+        if (!esUrgenteA && esUrgenteB) return 1;
+        return 0; // Mantiene el orden original para el resto
+    });
+    // ----------------------------------------------------
+
     if (notasFiltradas.length === 0) {
         container.innerHTML = `<p class="text-muted text-center small mt-4">No hay notas para mostrar.</p>`;
         return;
@@ -92,7 +110,17 @@ function cargarNotas(filtro = '') {
 
         let badgeFecha = '';
         if (nota.fechaRecordatorio) {
-            badgeFecha = `<span class="badge bg-light text-dark border mt-2"><i class="bi bi-calendar3 me-1"></i>${nota.fechaRecordatorio}</span>`;
+            if (nota.fechaRecordatorio === hoyStr) {
+                // Aviso destacado para HOY
+                badgeFecha = `<span class="badge bg-danger text-white mt-2 shadow-sm"><i class="bi bi-alarm-fill me-1"></i>¡Para HOY!</span>`;
+                card.classList.add('border-start', 'border-danger', 'border-3'); // Opcional: resalta el borde de la tarjeta
+            } else if (nota.fechaRecordatorio === mananaStr) {
+                // Aviso destacado para MAÑANA
+                badgeFecha = `<span class="badge bg-warning text-dark mt-2"><i class="bi bi-calendar-event me-1"></i>Para Mañana (${nota.fechaRecordatorio})</span>`;
+            } else {
+                // Fecha normal futura o pasada
+                badgeFecha = `<span class="badge bg-light text-dark border mt-2"><i class="bi bi-calendar3 me-1"></i>${nota.fechaRecordatorio}</span>`;
+            }
         }
 
         let iconoPrivada = nota.privada ? '<i class="bi bi-key-fill text-warning me-1" title="Nota privada"></i>' : '';
@@ -122,8 +150,6 @@ function eliminarNota(id) {
     notas = notas.filter(n => n.id !== id);
     guardarEnLocalStorage();
     cargarNotas();
-    
-    // Avisamos que se ha eliminado
     mostrarToast("Nota eliminada", "La nota ha sido borrada correctamente.", "success");
 }
 
@@ -176,8 +202,16 @@ function limpiarFechaPreview() {
 }
 
 // ==========================================
-// NOTAS PRIVADAS & LLAVE / PASSWORD
+// NOTAS PRIVADAS, CIFRADO & PASSWORD
 // ==========================================
+async function encriptarPassword(password) {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(password);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
 function toggleModoPrivadaCreacion() {
     modoPrivadaCreacionActivo = !modoPrivadaCreacionActivo;
     const btn = document.getElementById('btn-toggle-privada');
@@ -196,11 +230,12 @@ function toggleModoPrivadaCreacion() {
         }
     }
 }
+
 function mostrarToast(titulo, mensaje, tipo = "success") {
     const anterior = document.querySelector('.toast-notegeli');
     if (anterior) anterior.remove();
 
-    const iconos = { success: "✓", error: "✕", warning: "⚠" };
+    const iconos = { success: "✓", error: "✕", warning: "⚠", info: "ℹ" };
     const toast = document.createElement('div');
     toast.className = `toast-notegeli ${tipo}`;
 
@@ -231,15 +266,10 @@ function mostrarToast(titulo, mensaje, tipo = "success") {
 function intentarAbrirPrivadas() {
     if (accesoPrivadoConcedido) {
         accesoPrivadoConcedido = false;
-        
-        // VOLVER EL TÍTULO A LA NORMALIDAD
-        
         document.querySelector('.app-container').classList.remove('modo-privado-activo');
         const btnLlave = document.getElementById('btn-icono-llave');
         if (btnLlave) btnLlave.classList.remove('text-warning');
-        
         cargarNotas();
-
         mostrarToast("Bloqueado", "Notas privadas ocultas.", "info");
         return;
     } 
@@ -260,39 +290,35 @@ function cerrarModalLock() {
     if (modal) modal.style.display = 'none';
 }
 
-function verificarPasswordLock() {
+async function verificarPasswordLock() {
     const inputPass = document.getElementById('input-lock-pass');
     if (!inputPass) return;
 
     const passInput = inputPass.value;
+    if (!passInput.trim()) {
+        inputPass.value = ''; 
+        inputPass.focus();
+        mostrarToast("Atención", "Introduce una contraseña.", "warning");
+        return;
+    }
+
+    const passHash = await encriptarPassword(passInput);
     let passwordGuardada = localStorage.getItem('notegeli_pass');
 
     if (!passwordGuardada) {
-        if (passInput.trim().length > 0) {
-            localStorage.setItem('notegeli_pass', passInput);
-            accesoPrivadoConcedido = true;
-            
-            // CAMBIAR TÍTULO A MODO PRIVADO
-            
-            document.querySelector('.app-container').classList.add('modo-privado-activo');
-            cerrarModalLock();
-            const btnLlave = document.getElementById('btn-icono-llave');
-            if (btnLlave) btnLlave.classList.add('text-warning');
-            mostrarToast("¡Todo listo!", "Contraseña establecida.", "success");
-            cargarNotas();
-        } else {
-            inputPass.value = ''; 
-            inputPass.focus();
-            mostrarToast("Atención", "Introduce una contraseña.", "warning");
-        }
-        return; 
+        localStorage.setItem('notegeli_pass', passHash);
+        accesoPrivadoConcedido = true;
+        document.querySelector('.app-container').classList.add('modo-privado-activo');
+        cerrarModalLock();
+        const btnLlave = document.getElementById('btn-icono-llave');
+        if (btnLlave) btnLlave.classList.add('text-warning');
+        mostrarToast("¡Todo listo!", "Contraseña establecida.", "success");
+        cargarNotas();
+        return;
     } 
 
-    if (passInput === passwordGuardada) {
+    if (passHash === passwordGuardada) {
         accesoPrivadoConcedido = true;
-        
-        // CAMBIAR TÍTULO A MODO PRIVADO
-        
         document.querySelector('.app-container').classList.add('modo-privado-activo');
         cerrarModalLock();
         const btnLlave = document.getElementById('btn-icono-llave');
@@ -304,6 +330,82 @@ function verificarPasswordLock() {
         inputPass.focus();
         mostrarToast("Acceso denegado", "La contraseña es incorrecta.", "error");
     }
+}
+
+// ==========================================
+// BACKUP Y RESTAURACIÓN (EXPORTAR / IMPORTAR)
+// ==========================================
+function exportarBackup() {
+    const backupData = {
+        notas: notas,
+        passHash: localStorage.getItem('notegeli_pass') || '',
+        fechaBackup: new Date().toISOString()
+    };
+
+    const jsonString = JSON.stringify(backupData, null, 2);
+    const blob = new Blob([jsonString], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement('a');
+    a.href = url;
+    const fechaStr = new Date().toISOString().split('T')[0];
+    a.download = `notegeli-backup-${fechaStr}.json`;
+    
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    mostrarToast("Backup creado", "El archivo de copia de seguridad se ha descargado.", "success");
+}
+
+// Obtiene la fecha actual o con offset en formato 'YYYY-MM-DD' local
+function obtenerFechaLocal(diasOffset = 0) {
+    const d = new Date();
+    d.setDate(d.getDate() + diasOffset);
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+}
+
+function importarBackup() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.json';
+    
+    input.onchange = e => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            try {
+                const data = JSON.parse(event.target.result);
+                
+                if (!data.notas || !Array.isArray(data.notas)) {
+                    throw new Error("Formato inválido");
+                }
+
+                notas = data.notas;
+                guardarEnLocalStorage();
+
+                if (data.passHash) {
+                    localStorage.setItem('notegeli_pass', data.passHash);
+                }
+
+                cargarNotas();
+                mostrarToast("Restaurado", "Las notas se han recuperado correctamente.", "success");
+
+            } catch (err) {
+                console.error(err);
+                mostrarToast("Error", "El archivo de backup está corrupto o no es válido.", "error");
+            }
+        };
+        reader.readAsText(file);
+    };
+
+    input.click();
 }
 
 // ==========================================
@@ -340,29 +442,20 @@ function calcCalculate() {
     if (!display) return;
 
     try {
-        // 1. Limpiar la expresión (cambiar símbolos visuales por operadores de JS)
         let expresion = display.value.replace(/×/g, '*').replace(/÷/g, '/');
-        
-        // 2. Calcular el resultado
         let resultado = eval(expresion);
 
-        // 3. Evitar que los decimales sean infinitos (ej: 0.1 + 0.2)
         if (resultado.toString().includes('.')) {
             resultado = parseFloat(resultado.toFixed(8)); 
         }
 
-        // 4. Mostrar el resultado en la pantalla
         display.value = resultado;
 
-        // --- AQUÍ ESTÁ LA MAGIA DEL COPIADO ---
-        // 5. Copiar el resultado al portapapeles
         navigator.clipboard.writeText(resultado).then(() => {
-            // 6. Avisar al usuario que se ha copiado
             mostrarToast("¡Copiado!", "El resultado se ha copiado al portapapeles.", "success");
         }).catch(err => {
             console.error("Error al copiar: ", err);
         });
-        // --------------------------------------
 
     } catch (e) {
         display.value = 'Error';
@@ -414,7 +507,6 @@ function guardarEdicion(event) {
 
 function seleccionarColor(btn, colorHex) {
     document.getElementById('edit-color-input').value = colorHex;
-    // Efecto visual de selección en los círculos de colores
     document.querySelectorAll('.btn-color-dot').forEach(b => b.style.border = 'none');
     btn.style.border = '2px solid #333';
 }

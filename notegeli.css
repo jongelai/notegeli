@@ -490,3 +490,75 @@ body.font-muy-grande {
     height: 80px;
     font-size: 1.6rem;
 }
+.avisos-seccion {
+    background: rgba(217, 119, 6, 0.15); /* Fondo ámbar transparente */
+    border-left: 5px solid #d97706;
+    border-radius: 10px;
+    padding: 12px;
+    margin-bottom: 15px;
+    animation: slideDown 0.4s ease-out;
+}
+
+.banner-nota {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.9rem;
+    color: #444;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    padding: 5px 0;
+}
+
+.banner-nota:last-child {
+    border-bottom: none;
+}
+
+.banner-nota i {
+    color: #d97706;
+    font-weight: bold;
+}
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+/* Bloquea la página entera para que no haya scroll global */
+html, body {
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+    background-color: #f8f9fa; /* Color de fondo general de la app */
+}
+
+/* El contenedor principal ocupa exactamente el 100% de la pantalla */
+.app-container, #view-main {
+    display: flex;
+    flex-direction: column;
+    height: 100dvh; 
+    max-height: 100dvh;
+    overflow: hidden;
+    box-sizing: border-box;
+    padding: 8px 12px;
+}
+/* La cabecera y el formulario de crear notas NO se mueven ni se encogen */
+.header-mini, #form-nueva-nota {
+    flex-shrink: 0;
+    margin-bottom: 8px;
+}
+/* SOLO la lista de notas ocupa todo el espacio intermedio y hace scroll interno */
+#notes-scroll-container {
+    flex: 1 1 auto; /* Ocupa exactamente todo el hueco sobrante */
+    overflow-y: auto;
+    overflow-x: hidden;
+    min-height: 0; /* Imprescindible para que Flexbox permita hacer scroll en móviles/PC */
+    padding-bottom: 1rem;
+    -webkit-overflow-scrolling: touch;
+}
+/* El footer se queda anclado de forma natural abajo del todo dentro del flex */
+.footer-fijo {
+    flex-shrink: 0;
+    width: 100%;
+    background-color: #ffffff;
+    padding: 6px 0;
+    margin-top: auto; /* Lo empuja siempre al fondo absoluto */
+}
