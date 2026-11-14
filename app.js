@@ -284,7 +284,39 @@ function intentarAbrirPrivadas() {
         }
     }
 }
+function procesarArchivoBackup(event) {
+    const archivo = event.target.files[0];
+    if (!archivo) return;
 
+    const lector = new FileReader();
+    lector.onload = function(e) {
+        try {
+            const contenido = JSON.parse(e.target.result);
+            
+            // Verificamos si el archivo tiene la estructura nueva o es un array directo de notas
+            const listaNotas = Array.isArray(contenido) ? contenido : contenido.notes;
+            const passwordGuardado = Array.isArray(contenido) ? null : contenido.passwordHash;
+
+            if (listaNotas) {
+                localStorage.setItem('notegeli_notes', JSON.stringify(listaNotas));
+                
+                // Si el backup traía contraseña, la restauramos; si no, respetamos la que ya tuviera el móvil
+                if (passwordGuardado) {
+                    localStorage.setItem('notegeli_lock', passwordGuardado);
+                }
+
+                alert("¡Copia de seguridad restaurada con éxito!");
+                location.reload(); // Recarga la app para aplicar los cambios
+            } else {
+                alert("El archivo no tiene un formato de notas válido.");
+            }
+        } catch (error) {
+            alert("Error al leer el archivo de respaldo.");
+            console.error(error);
+        }
+    };
+    lector.readAsText(archivo);
+}
 function cerrarModalLock() {
     const modal = document.getElementById('view-lock');
     if (modal) modal.style.display = 'none';
