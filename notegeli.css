@@ -7,7 +7,7 @@
     --text-nota: #212529;
     --border-nota: #dee2e6;
     --bg-textarea: #fffbeb;
-    --accent: #ffcc66;
+    --accent: hsl(40, 100%, 70%);
     --accent-dark: #9b6b00;
 }
 
@@ -110,6 +110,7 @@ html, body {
    ========================================================================== */
 .textarea, #nueva-nota-texto {
     width: 100%;
+    font-size: 1.25rem;
     min-height: 90px;
     background: transparent;
     border: none;
@@ -117,7 +118,7 @@ html, body {
     resize: none;
     box-shadow: none;
     color: var(--text-nota);
-    font-size: var(--textarea-scale, 1rem);
+    font-size: var(--textarea-scale, 1.5rem);
     box-sizing: border-box;
     padding: 2px;
 }
@@ -251,7 +252,7 @@ html, body {
 }
 
 .fecha-mini {
-    font-size: 0.9rem;
+    font-size: rem;
     opacity: 0.6;
     font-weight: normal;
     white-space: nowrap;
@@ -263,7 +264,7 @@ html, body {
 .footer-fijo {
     flex-shrink: 0;
     width: 100%;
-    background-color: #ffffff;
+    background-color:#fff8da;
     padding: 2px 0;
     margin-top: auto;
 }

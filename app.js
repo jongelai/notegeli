@@ -555,10 +555,14 @@ function actualizarFechaEditPreview() {
 function cambiarTamanoFuente(tamano) {
     const container = document.querySelector('.app-container');
     if (!container) return;
-    container.classList.remove('font-normal', 'font-grande', 'font-muy-grande');
-    if (tamano === 'grande') container.style.fontSize = '1.1rem';
-    else if (tamano === 'muy-grande') container.style.fontSize = '1.25rem';
-    else container.style.fontSize = '1rem';
+    
+    if (tamano === 'grande') {
+        container.style.fontSize = '1.35rem';
+    } else if (tamano === 'muy-grande') {
+        container.style.fontSize = '1.5rem';
+    } else {
+        container.style.fontSize = '1.25rem'; // Tamaño normal por defecto a 1.25rem
+    }
 }
 
 // Utilidad para prevenir inyecciones HTML en las notas
