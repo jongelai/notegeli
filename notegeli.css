@@ -60,14 +60,14 @@ html, body {
 }
 .header-titulo {
     margin: 0;
-    font-size: 1.5rem;
+    font-size: 1.5rem !important;
     font-weight: 700;
     letter-spacing: 0px;
     color: #d97706;
     white-space: nowrap;
 }
 
- .d-flex {
+.header-mini > .d-flex {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -76,27 +76,18 @@ html, body {
 }
 
 .logo-mini {
-    width: 35px;
-    height: 35px;
+    width: 40px;
+    height: 40px;
     object-fit: contain;
     flex-shrink: 0;
 }
 
-/* Botón de configuración personalizado */
-.btn-configuracion {
-    
-    border: 1px rgba(245, 159, 11, 0.102) !important;
-    
-    padding: 6px 10px !important;
-    border-radius: 50% !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    cursor: pointer !important;
+.header-mini h4 {
+    margin: 0;
+    font-size: 1.1rem;
+    line-height: 1.2;
+    white-space: nowrap;
 }
-
-
-
 
 .nuevo-form {
     background-color: var(--bg-nota);
@@ -155,7 +146,7 @@ html, body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 2px important!;
+    padding: 2px;
     border-radius: 16px;
     background-color: var(--bg-nota);
     border: 1px solid rgba(0, 0, 0, 0.04);

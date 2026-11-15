@@ -4,7 +4,7 @@ echo ==========================================
 echo   Sincronizando con GitHub...
 echo ==========================================
 git add .
-git commit -m "Actualizacion  %date% %time%"
+git commit -m "Actualizacionbuena  %date% %time%"
 git push origin main
 
 if %errorlevel% neq 0 (
