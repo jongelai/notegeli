@@ -133,7 +133,7 @@ function cargarNotas(filtro = '') {
                         <button class="btn btn-sm btn-link text-muted p-0 text-decoration-none" data-bs-toggle="dropdown">
                             <i class="bi bi-three-dots-vertical"></i>
                         </button>
-                        <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0" style="font-size: 0.85rem;">
+                        <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0" style="font-size: 1rem;">
                             <li><button class="dropdown-item py-1" onclick="abrirEditor(${nota.id})"><i class="bi bi-pencil me-2"></i>Editar</button></li>
                             <li><button class="dropdown-item py-1 text-danger" onclick="eliminarNota(${nota.id})"><i class="bi bi-trash me-2"></i>Eliminar</button></li>
                         </ul>

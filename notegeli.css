@@ -1,6 +1,6 @@
-/* =========================================
+/* ==========================================================================
    1. VARIABLES DE ENTORNO Y TEMAS
-   ========================================= */
+   ========================================================================== */
 :root {
     --bg-app: #f8f9fa;
     --bg-nota: #ffffff;
@@ -10,147 +10,64 @@
     --accent: #ffcc66;
     --accent-dark: #9b6b00;
 }
-:root.dark-mode {
-    --bg-app: #121212;
-    --bg-nota: #1e1e1e;
-    --text-nota: #f8f9fa;
-    --border-nota: #333333;
-    --bg-textarea: #2a2818; /* Un tono amarillo/ámbar oscuro muy suave para mantener la esencia */
-    --accent: #d4a337;
-    --accent-dark: #ffcc66;
-}
-/* =========================================
-   2. REGLAS GENERALES Y CONTENEDOR
-   ========================================= */
-body, html {
-    margin: 0px;
-    padding: 0;
-    min-height: 100vh;
-    width: 100%;
+
+/* ==========================================================================
+   2. REGLAS GENERALES, RESET Y LAYOUT (PANTALLA COMPLETA FLEX)
+   ========================================================================== */
+html, body {
+    height: 100%;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     background-color: var(--bg-app);
     color: var(--text-nota);
-    color: var(--text-nota);
+    box-sizing: border-box;
     transition: background-color 0.2s ease, color 0.2s ease;
-    box-sizing: border-box;
 }
 
-.app-container {
-    width: 100%;
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 15px;
-    padding-top: env(safe-area-inset-top, 15px);
-    padding-bottom: env(safe-area-inset-bottom, 15px);
+.app-container, #view-main {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 100dvh;
+    max-height: 100dvh;
+    margin: 0 !important;
+    padding: 4px 2px !important;
     display: flex;
     flex-direction: column;
-}
-
-/* =========================================
-   3. CAMPOS DE TEXTO Y FORMULARIO
-   ========================================= */
-.textarea {
-    width: 100%;
-    min-height: 100px;
-    font-size: 1.1rem;
-    background-color: var(--bg-textarea);
-    border: 2px solid var(--accent);
-    color: var(--text-nota);
-    border-color: var(--border-nota);
-    border-radius: 12px;
-    padding: 12px;
-    color: var(--text-nota);
-    outline: none;
-    resize: none;
+    overflow: hidden;
     box-sizing: border-box;
 }
 
-.nuevo-form {
-    background-color: var(--bg-nota);
-    padding: 12px;
-    border-radius: 14px;
-    border: 1px solid var(--border-nota);
-}
-
-/* =========================================
-   4. LISTA DE NOTAS Y FILAS
-   ========================================= */
-.notes-scroll {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    margin-top: 10px;
-}
-
-.nota-fila {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 14px;
-    border-radius: 12px;
-    background-color: var(--bg-nota);
-    border: 1px solid var(--border-nota);
-    box-sizing: border-box;
-}
-
-/* Soporte para notas de colores (Tinted) */
-.nota-fila.tinted {
-    border-left: 6px solid var(--color-base) !important;
-}
-
-.nota-texto {
-    font-size: 1.1rem;
-    color: var(--text-nota);
-    white-space: pre-wrap;
-    overflow-wrap: break-word;
-    word-break: break-word;
-    flex-grow: 1;
-    padding-right: 10px;
-}
-
-/* =========================================
-   5. BOTONES Y COMPONENTES
-   ========================================= */
-.btn-amber {
-    background-color: var(--accent);
-    color: var(--accent-dark);
-    font-weight: 700;
-    border: none;
-    border-radius: 8px;
-    padding: 8px 16px;
-    cursor: pointer;
-    transition: transform 0.1s ease;
-}
-
-.btn-amber:active {
-    transform: scale(0.96);
-}
-
-.fecha-mini {
-    font-size: 0.9rem;
-    opacity: 0.6;
-    font-weight: normal;
-}
-
-.avisos-seccion {
-    margin-top: 15px;
-    padding: 8px;
-    border-radius: 10px;
-}
-/* =========================================
-   6. CABECERA: LOGO, TÍTULO Y FECHA
-   ========================================= */
-
+/* ==========================================================================
+   3. CABECERA Y FORMULARIO (FIJOS)
+   ========================================================================== */
 .header-mini {
     display: flex;
+    background: rgba(255, 193, 7, 0.08);
+    border-bottom: 2px solid rgba(255, 193, 7, 0.3);
+    padding: 8px;
+    border-radius: 10px;
     align-items: center;
     justify-content: space-between;
     gap: 10px;
     width: 100%;
-    margin-bottom: 12px;
+    margin-bottom: 8px;
+    flex-shrink: 0;
+    position: relative;
+}
+.header-titulo {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: 0px;
+    color: #d97706;
+    white-space: nowrap;
 }
 
-.header-mini > .d-flex {
+ .d-flex {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -159,193 +76,140 @@ body, html {
 }
 
 .logo-mini {
-    width: 28px;
-    height: 28px;
+    width: 35px;
+    height: 35px;
     object-fit: contain;
     flex-shrink: 0;
 }
 
-.header-mini h4 {
-    margin: 0;
-    font-size: 1.1rem;
-    line-height: 1.2;
-    white-space: nowrap;
+/* Botón de configuración personalizado */
+.btn-configuracion {
+    
+    border: 1px rgba(245, 159, 11, 0.102) !important;
+    
+    padding: 6px 10px !important;
+    border-radius: 50% !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
 }
 
-.fecha-mini {
-    font-size: 0.9rem;
-    opacity: 0.6;
-    font-weight: normal;
-    white-space: nowrap;
-}
-/* Tamaño por defecto / Normal */
-body.font-normal {
-    --text-scale: 1rem;
-    --textarea-scale: 1rem;
-}
 
-/* Tamaño Grande (+25%) */
-body.font-grande {
-    --text-scale: 1.25rem;
-    --textarea-scale: 1.2rem;
-}
 
-/* Tamaño Muy Grande (+50%) */
-body.font-muy-grande {
-    --text-scale: 1.5rem;
-    --textarea-scale: 1.4rem;
-}
 
-/* Aplicación dinámica a los elementos principales */
-.nota-texto {
-    font-size: var(--text-scale, 1rem) !important;
-    line-height: 1.4;
-}
-
-.textarea {
-    font-size: var(--textarea-scale, 1rem) !important;
-}
-
-.textarea::placeholder {
-    font-size: var(--textarea-scale, 1rem) !important;
-}
-/* Botones de herramientas con iconos grandes */
-.btn-tool {
-  background: transparent;
-  border: none;
-  color: #d97706; /* Color ámbar / dorado */
-  padding: 6px 10px;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.btn-tool:hover {
-  background-color: rgba(217, 119, 6, 0.15);
-  transform: scale(1.1);
-  color: #b45309;
-}
-
-.btn-tool:active {
-  transform: scale(0.95);
-}
-
-/* Separador vertical elegante */
-.vr-separator {
-  width: 1px;
-  height: 28px;
-  background-color: #e5e7eb;
-}
-
-/* Tamaño de los iconos (FontAwesome o Bootstrap Icons) */
-.btn-tool i {
-  font-size: 1.75rem; /* Iconos más grandes y vistosos */
-}
-/* Reducir espacios entre el formulario y las notas */
 .nuevo-form {
-    margin-bottom: 8px !important;
-}
-
-#notes-scroll-container {
-    margin-top:8px !important;
-    gap: 8px !important;
-}
-
-/* Reducir separación entre notas */
-#notes-scroll-container > * {
-    margin-bottom: 0 !important;
-}
-/* Badge estilizado para la fecha de la nota */
-.nota-fecha-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    margin-top: 10px;
-    padding: 4px 10px;
-    background-color: rgba(0, 0, 0, 0.06); /* Fondo sutil semi-transparente */
-    border-radius: 20px;
-    font-size: 0.82rem;
-    font-weight: 500;
-    color: #374151; /* Texto gris oscuro legibilidad pro */
-    text-transform: lowercase; /* Mantiene todo en minúsculas relajadas */
-}
-
-.nota-fecha-badge i {
-    font-size: 0.85rem;
-    color: #d97706; /* Icono calendario en tono cálido */
-}
-/* Ampliar el contenedor general del modal de la calculadora */
-#view-calc, .calculadora-modal-container {
-    max-width: 420px !important; /* Aumenta el ancho máximo */
-    width: 92% !important;        /* Ocupa mejor la pantalla del móvil */
-    padding: 20px !important;
-}
-
-/* Hacer la pantalla de la calculadora más grande y legible */
-#calc-display {
-    font-size: 2.2rem !important;
-    padding: 12px 15px !important;
-    height: auto !important;
-}
-
-/* Ampliar los botones de la calculadora para que sean más cómodos */
-.calc-btn, .calculadora-grid button {
-    padding: 16px 0 !important;
-    font-size: 1.35rem !important;
-    font-weight: 600 !important;
-}
-
-/* Hacer que el botón inferior de calcular/copiar sea más prominente */
-.calc-btn-action {
-    padding: 14px !important;
-    font-size: 1.15rem !important;
-}
-/* ==========================================
-   ESTILOS PRO: SOMBRAS, PROFUNDIDAD Y UI
-   ========================================== */
-
-/* 1. Contenedor principal de la tarjeta de creación y notas */
-.nuevo-form, 
-.nota-fila, 
-.card {
-    background: #ffffff;
-    border: 1px solid rgba(0, 0, 0, 0.04) !important;
-    border-radius: 16px !important;
-    box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.04), 0 2px 6px -1px rgba(0, 0, 0, 0.02) !important;
+    background-color: var(--bg-nota);
+    padding: 12px;
+    border-radius: 16px;
+    border: 1px solid rgba(0, 0, 0, 0.04);
+    box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.04);
+    flex-shrink: 0;
+    margin-bottom: 8px;
     transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Efecto de elevación al pasar el ratón por las notas */
+.nuevo-form:focus-within {
+    border-color: rgba(245, 158, 11, 0.4);
+    box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.1), 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+}
+
+/* ==========================================================================
+   4. CAMPOS DE TEXTO (TEXTAREA)
+   ========================================================================== */
+.textarea, #nueva-nota-texto {
+    width: 100%;
+    min-height: 90px;
+    background: transparent;
+    border: none;
+    outline: none;
+    resize: none;
+    box-shadow: none;
+    color: var(--text-nota);
+    font-size: var(--textarea-scale, 1rem);
+    box-sizing: border-box;
+    padding: 2px;
+}
+
+.textarea::placeholder {
+    font-size: var(--textarea-scale, 1rem);
+}
+
+/* ==========================================================================
+   5. LISTA DE NOTAS (SCROLL INTERNO)
+   ========================================================================== */
+#notes-scroll-container, .notes-scroll {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    overflow-x: hidden;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    margin-top: 1px;
+    padding-bottom: 1rem;
+    -webkit-overflow-scrolling: touch;
+}
+
+.nota-fila {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 2px important!;
+    border-radius: 16px;
+    background-color: var(--bg-nota);
+    border: 1px solid rgba(0, 0, 0, 0.04);
+    box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.04);
+    box-sizing: border-box;
+    width: 100%;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
 .nota-fila:hover {
     transform: translateY(-2px);
-    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.07), 0 8px 10px -6px rgba(0, 0, 0, 0.04) !important;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.07);
 }
 
-/* 2. Textarea con aspecto limpio y sin bordes toscos */
-.textarea, #nueva-nota-texto, .form-control {
-    border: none !important;
-    background: transparent !important;
-    box-shadow: none !important;
-    resize: none;
-    font-size: 0.95rem;
-    color: #1f2937;
+.nota-fila.tinted {
+    border-left: 6px solid var(--color-base) !important;
 }
 
-.textarea:focus, #nueva-nota-texto:focus {
-    outline: none !important;
-    box-shadow: none !important;
+.nota-texto {
+    font-size: var(--text-scale, 1rem);
+    line-height: 1.4;
+    color: var(--text-nota);
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    flex-grow: 1;
+    padding-right: 10px;
 }
 
-/* Contenedor del formulario al estar activo (Glow sutil ámbar) */
-.nuevo-form:focus-within {
-    border-color: rgba(245, 158, 11, 0.4) !important;
-    box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.1), 0 10px 25px -5px rgba(0, 0, 0, 0.05) !important;
+/* ==========================================================================
+   6. BOTONES Y COMPONENTES UI
+   ========================================================================== */
+.btn-amber {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    border: none;
+    color: white;
+    font-weight: 600;
+    padding: 8px 18px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.35);
+    cursor: pointer;
+    transition: all 0.2s ease;
 }
 
-/* 3. Botones de herramientas Pro con animación de pulsación */
+.btn-amber:hover {
+    filter: brightness(1.05);
+    box-shadow: 0 6px 16px rgba(245, 158, 11, 0.45);
+    transform: translateY(-1px);
+}
+
+.btn-amber:active {
+    transform: scale(0.96);
+}
+
 .btn-tool {
     background: #f8fafc;
     border: 1px solid #e2e8f0;
@@ -353,11 +217,11 @@ body.font-muy-grande {
     padding: 8px 11px;
     border-radius: 12px;
     cursor: pointer;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     display: inline-flex;
     align-items: center;
     justify-content: center;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .btn-tool .bi {
@@ -372,138 +236,49 @@ body.font-muy-grande {
     color: #b45309;
 }
 
-/* Efecto "tactil" al pulsar en móviles */
 .btn-tool:active {
     transform: scale(0.92);
-    background: #fef3c7;
 }
 
-/* 4. Botón principal "+ Añadir" tipo píldora de alta gama */
-.btn-amber {
-    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
-    border: none !important;
-    color: white !important;
-    font-weight: 600;
-    padding: 8px 18px;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.35);
-    transition: all 0.2s ease;
+.vr-separator {
+    width: 1px;
+    height: 28px;
+    background-color: #e5e7eb;
 }
 
-.btn-amber:hover {
-    filter: brightness(1.05);
-    box-shadow: 0 6px 16px rgba(245, 158, 11, 0.45);
-    transform: translateY(-1px);
-}
 
-.btn-amber:active {
-    transform: scale(0.96);
-}
 
-/* 5. Badge de fecha modernizado */
-.nota-fecha-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    margin-top: 10px;
-    padding: 4px 10px;
-    background-color: #f1f5f9;
-    border-radius: 8px;
-    font-size: 0.78rem;
-    font-weight: 500;
-    color: #475569;
-}
-
-.nota-fecha-badge i {
-    color: #d97706;
-    font-size: 0.85rem;
-}
-.toast-notegeli {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    background: white;
-    color: #333;
-    padding: 12px 20px;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+.badge-fecha-cabecera {
     display: flex;
     align-items: center;
-    gap: 12px;
-    z-index: 10000;
-    transition: all 0.3s ease;
-    opacity: 0;
-    transform: translateX(20px);
-    pointer-events: none;
+    gap: 15px;
+    background: #ffffff;
+    padding: 4px 10px;
+    border-radius: 50px;
+    border: 1px solid #b45309;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
 }
 
-.toast-notegeli.visible {
-    opacity: 1;
-    transform: translateX(0);
-}
-
-.toast-notegeli.success { border-left: 5px solid #28a745; }
-.toast-notegeli.error { border-left: 5px solid #dc3545; }
-.toast-notegeli.warning { border-left: 5px solid #ffc107; }
-
-.toast-icon { font-weight: bold; font-size: 1.2rem; }
-.toast-content { display: flex; flex-direction: column; }
-.toast-content strong { font-size: 0.9rem; }
-.toast-content span { font-size: 0.8rem; color: #666; }
-/* Asegúrate de que el header tenga posición relativa */
-.header-mini {
-    position: relative; /* Necesario para posicionar el badge */
-}
-
-/* Ajustes visuales para el modo privado */
-.app-container.modo-privado-activo {
-    background-color: rgba(255, 193, 7, 0.05);
-    border: 2px solid #d97706;
-    box-shadow: inset 0 0 20px rgba(217, 119, 6, 0.1);
-}
-
-.modo-privado-activo .header-mini {
-    background: rgba(217, 119, 6, 0.15) !important;
-    border-bottom: 3px solid #d97706 !important;
-}
-
-/* Badge para el modo privado */
-.modo-privado-activo .header-mini::after {
-    content: "🔒 Privado";
-    font-size: 0.75rem; /* Ajusta el tamaño del texto */
-    background: #020202;
-    color: white;
-    padding: 4px 10px; /* Ajusta el padding para más espacio */
-    border-radius: 12px; /* Mejora el aspecto del badge */
-    position: absolute;
-    top: 140%; /* Centrado verticalmente */
-    right: 10px; /* Ajusta la posición horizontal */
-    transform: translateY(-50%); /* Centra verticalmente */
-    font-weight: bold;
-    z-index: 10;
-    pointer-events: none; /* Para que no interfiera con clics */
+.fecha-mini {
+    font-size: 0.9rem;
+    opacity: 0.6;
+    font-weight: normal;
     white-space: nowrap;
 }
-.app-container input, 
-.app-container textarea {
-    font-size: inherit !important;
-}
-/* Estilo para que los botones de la calculadora sean más grandes y táctiles */
-#view-calc .btn {
-    height: 70px; /* Altura fija para que sean fáciles de tocar */
-    font-size: 1.4rem; /* Letra más grande */
-    display: flex;
-    align-items: center;
-    justify-content: center;
+
+/* ==========================================================================
+   7. FOOTER Y MODALES / AVISOS
+   ========================================================================== */
+.footer-fijo {
+    flex-shrink: 0;
+    width: 100%;
+    background-color: #ffffff;
+    padding: 2px 0;
+    margin-top: auto;
 }
 
-/* Ajuste para el botón de Calcular que es más ancho */
-#view-calc .btn-success {
-    height: 80px;
-    font-size: 1.6rem;
-}
 .avisos-seccion {
-    background: rgba(217, 119, 6, 0.15); /* Fondo ámbar transparente */
+    background: rgba(217, 119, 6, 0.15);
     border-left: 5px solid #d97706;
     border-radius: 10px;
     padding: 12px;
@@ -534,43 +309,110 @@ body.font-muy-grande {
     from { opacity: 0; transform: translateY(-20px); }
     to { opacity: 1; transform: translateY(0); }
 }
-/* Bloquea la página entera para que no haya scroll global */
-html, body {
-    height: 100%;
-    margin: 0;
-    overflow: hidden;
-    background-color: #f8f9fa; /* Color de fondo general de la app */
+
+/* ==========================================================================
+   8. TOASTS Y MODAL CALCULADORA
+   ========================================================================== */
+.toast-notegeli {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: white;
+    color: #333;
+    padding: 12px 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    z-index: 10000;
+    transition: all 0.3s ease;
+    opacity: 0;
+    transform: translateX(20px);
+    pointer-events: none;
 }
 
-/* El contenedor principal ocupa exactamente el 100% de la pantalla */
-.app-container, #view-main {
+.toast-notegeli.visible {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.toast-notegeli.success { border-left: 5px solid #28a745; }
+.toast-notegeli.error { border-left: 5px solid #dc3545; }
+.toast-notegeli.warning { border-left: 5px solid #ffc107; }
+
+/* Calculadora modal */
+#view-calc, .calculadora-modal-container {
+    max-width: 420px !important;
+    width: 92% !important;
+    padding: 20px !important;
+}
+
+#calc-display {
+    font-size: 2.2rem !important;
+    padding: 12px 15px !important;
+    height: auto !important;
+}
+
+.calc-btn, .calculadora-grid button, #view-calc .btn {
+    height: 70px !important;
+    font-size: 1.35rem !important;
+    font-weight: 600 !important;
     display: flex;
-    flex-direction: column;
-    height: 100dvh; 
-    max-height: 100dvh;
-    overflow: hidden;
-    box-sizing: border-box;
-    padding: 8px 12px;
+    align-items: center;
+    justify-content: center;
 }
-/* La cabecera y el formulario de crear notas NO se mueven ni se encogen */
-.header-mini, #form-nueva-nota {
-    flex-shrink: 0;
-    margin-bottom: 8px;
+
+#view-calc .btn-success {
+    height: 80px !important;
+    font-size: 1.6rem !important;
 }
-/* SOLO la lista de notas ocupa todo el espacio intermedio y hace scroll interno */
-#notes-scroll-container {
-    flex: 1 1 auto; /* Ocupa exactamente todo el hueco sobrante */
-    overflow-y: auto;
-    overflow-x: hidden;
-    min-height: 0; /* Imprescindible para que Flexbox permita hacer scroll en móviles/PC */
-    padding-bottom: 1rem;
-    -webkit-overflow-scrolling: touch;
+
+/* ==========================================================================
+   9. MODO PRIVADO
+   ========================================================================== */
+.app-container.modo-privado-activo {
+    background-color: rgba(255, 193, 7, 0.05);
+    border: 2px solid #d97706;
+    box-shadow: inset 0 0 20px rgba(217, 119, 6, 0.1);
 }
-/* El footer se queda anclado de forma natural abajo del todo dentro del flex */
-.footer-fijo {
-    flex-shrink: 0;
-    width: 100%;
-    background-color: #ffffff;
-    padding: 6px 0;
-    margin-top: auto; /* Lo empuja siempre al fondo absoluto */
+
+.modo-privado-activo .header-mini {
+    background: rgba(217, 119, 6, 0.15) !important;
+    border-bottom: 3px solid #d97706 !important;
+}
+
+.modo-privado-activo .header-mini::after {
+    content: "🔒 Privado";
+    font-size: 0.75rem;
+    background: #020202;
+    color: white;
+    padding: 4px 10px;
+    border-radius: 12px;
+    position: absolute;
+    top: 140%;
+    right: 10px;
+    transform: translateY(-50%);
+    font-weight: bold;
+    z-index: 10;
+    pointer-events: none;
+    white-space: nowrap;
+}
+
+/* ==========================================================================
+   10. ESCALADO DE TIPOGRAFÍA (CONFIGURACIÓN)
+   ========================================================================== */
+body.font-normal {
+    --text-scale: 1rem;
+    --textarea-scale: 1rem;
+}
+
+body.font-grande {
+    --text-scale: 1.25rem;
+    --textarea-scale: 1.2rem;
+}
+
+body.font-muy-grande {
+    --text-scale: 1.5rem;
+    --textarea-scale: 1.4rem;
 }
