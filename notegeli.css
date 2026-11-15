@@ -33,12 +33,14 @@ html, body {
     max-width: 100% !important;
     height: 100dvh;
     max-height: 100dvh;
-    margin: 0 !important;
-    padding: 4px 2px !important;
+    
+    padding: 2px 2px !important;
     display: flex;
     flex-direction: column;
     overflow: hidden;
     box-sizing: border-box;
+    margin-top: 0 !important;
+    padding-top: 0 !important;
 }
 
 /* ==========================================================================
@@ -48,13 +50,13 @@ html, body {
     display: flex;
     background: rgba(255, 193, 7, 0.08);
     border-bottom: 2px solid rgba(255, 193, 7, 0.3);
-    padding: 8px;
+    padding: 2px;
     border-radius: 10px;
     align-items: center;
     justify-content: space-between;
-    gap: 10px;
+    gap: 1px;
     width: 100%;
-    margin-bottom: 8px;
+    margin-bottom: 2px;
     flex-shrink: 0;
     position: relative;
 }
@@ -252,7 +254,7 @@ html, body {
 }
 
 .fecha-mini {
-    font-size: rem;
+    font-size: 0.85rem;
     opacity: 0.6;
     font-weight: normal;
     white-space: nowrap;
@@ -334,11 +336,58 @@ html, body {
 .toast-notegeli.warning { border-left: 5px solid #ffc107; }
 
 /* Calculadora modal */
-#view-calc, .calculadora-modal-container {
-    max-width: 420px !important;
-    width: 92% !important;
-    padding: 20px !important;
+
+/* Fondo oscuro: ocupa toda la pantalla */
+#view-calc {
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100vw !important;
+    max-width: none !important;
+    height: 100vh !important;
+    height: 100dvh !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+    z-index: 9999 !important;
+
+    display: none;
+    align-items: center;
+    justify-content: center;
 }
+
+/* Ventana blanca de la calculadora */
+#view-calc > .nuevo-form {
+    width: 92% !important;
+    max-width: 420px !important;
+    padding: 20px !important;
+    margin: 0 auto !important;
+    box-sizing: border-box !important;
+}
+
+/* Pantalla de resultados */
+#calc-display {
+    font-size: 2.2rem !important;
+    padding: 12px 15px !important;
+    height: auto !important;
+}
+
+/* Botones */
+.calc-btn,
+.calculadora-grid button,
+#view-calc .btn {
+    height: 70px !important;
+    font-size: 1.35rem !important;
+    font-weight: 600 !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Botón calcular */
+#view-calc .btn-success {
+    height: 80px !important;
+    font-size: 1.6rem !important;
+}
+
 
 #calc-display {
     font-size: 2.2rem !important;

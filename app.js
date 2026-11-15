@@ -260,7 +260,7 @@ function mostrarToast(titulo, mensaje, tipo = "success") {
     setTimeout(() => {
         toast.classList.remove('visible');
         setTimeout(() => toast.remove(), 150);
-    }, 1000);
+    }, 1500);
 }
 
 function intentarAbrirPrivadas() {
@@ -552,18 +552,34 @@ function actualizarFechaEditPreview() {
     }
 }
 
+
 function cambiarTamanoFuente(tamano) {
     const container = document.querySelector('.app-container');
     if (!container) return;
-    
+
+    let fuente;
+
     if (tamano === 'grande') {
-        container.style.fontSize = '1.35rem';
+        fuente = '1.35rem';
     } else if (tamano === 'muy-grande') {
-        container.style.fontSize = '1.5rem';
+        fuente = '1.5rem';
     } else {
-        container.style.fontSize = '1.25rem'; // Tamaño normal por defecto a 1.25rem
+        fuente = '1.25rem';
     }
+
+    // Cambiar fuente general
+    container.style.fontSize = fuente;
+
+    // Cambiar también los campos de escritura
+    const campos = container.querySelectorAll(
+        'textarea, input, select, [contenteditable="true"]'
+    );
+
+    campos.forEach(campo => {
+        campo.style.fontSize = fuente;
+    });
 }
+
 
 // Utilidad para prevenir inyecciones HTML en las notas
 function escapeHtml(text) {
