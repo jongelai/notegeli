@@ -126,7 +126,7 @@ html, body {
 }
 
 .textarea::placeholder {
-    font-size: var(--textarea-scale, 1rem);
+    font-size: var(--textarea-scale, 1.30rem);
 }
 
 /* ==========================================================================
@@ -386,22 +386,6 @@ html, body {
 #view-calc .btn-success {
     height: 80px !important;
     font-size: 1.6rem !important;
-}
-
-
-#calc-display {
-    font-size: 2.2rem !important;
-    padding: 12px 15px !important;
-    height: auto !important;
-}
-
-.calc-btn, .calculadora-grid button, #view-calc .btn {
-    height: 70px !important;
-    font-size: 1.35rem !important;
-    font-weight: 600 !important;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 #view-calc .btn-success {
