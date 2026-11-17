@@ -16,10 +16,10 @@
    ========================================================================== */
 html, body {
     height: 100%;
-    width: 100% !important;
-    max-width: 100% !important;
-    margin: 0 !important;
-    padding: 0 !important;
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
     overflow: hidden;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     background-color: var(--bg-app);
@@ -29,18 +29,17 @@ html, body {
 }
 
 .app-container, #view-main {
-    width: 100% !important;
-    max-width: 100% !important;
+    width: 100%;
+    max-width: 100%;
     height: 100dvh;
     max-height: 100dvh;
-    
-    padding: 2px 2px !important;
+    padding: 2px;
     display: flex;
     flex-direction: column;
     overflow: hidden;
     box-sizing: border-box;
-    margin-top: 0 !important;
-    padding-top: 0 !important;
+    margin-top: 0;
+    padding-top: 0;
 }
 
 /* ==========================================================================
@@ -50,45 +49,35 @@ html, body {
     display: flex;
     background: rgba(255, 193, 7, 0.08);
     border-bottom: 2px solid rgba(255, 193, 7, 0.3);
-    padding: 2px;
+    padding: 8px 12px;
     border-radius: 10px;
     align-items: center;
     justify-content: space-between;
-    gap: 1px;
+    gap: 8px;
     width: 100%;
     margin-bottom: 2px;
     flex-shrink: 0;
     position: relative;
 }
-.header-titulo {
+
+.app-title {
     margin: 0;
-    font-size: 1.5rem !important;
+    font-size: 1.5rem;
     font-weight: 700;
-    letter-spacing: 0px;
-    color: #d97706;
+    letter-spacing: 0.5px;
+    color: #222;
     white-space: nowrap;
 }
 
-.header-mini > .d-flex {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 8px;
-    min-width: 0;
+.app-title span {
+    color: #d97706;
 }
 
 .logo-mini {
-    width: 40px;
-    height: 40px;
+    width: 28px;
+    height: 28px;
     object-fit: contain;
     flex-shrink: 0;
-}
-
-.header-mini h4 {
-    margin: 0;
-    font-size: 1.1rem;
-    line-height: 1.2;
-    white-space: nowrap;
 }
 
 .nuevo-form {
@@ -112,7 +101,7 @@ html, body {
    ========================================================================== */
 .textarea, #nueva-nota-texto {
     width: 100%;
-    font-size: 1.25rem;
+    font-size: var(--textarea-scale, 1.5rem);
     min-height: 90px;
     background: transparent;
     border: none;
@@ -120,7 +109,6 @@ html, body {
     resize: none;
     box-shadow: none;
     color: var(--text-nota);
-    font-size: var(--textarea-scale, 1.5rem);
     box-sizing: border-box;
     padding: 2px;
 }
@@ -139,7 +127,7 @@ html, body {
     min-height: 0;
     display: flex;
     flex-direction: column;
-    gap: 1px;
+    gap: 4px;
     margin-top: 1px;
     padding-bottom: 1rem;
     -webkit-overflow-scrolling: touch;
@@ -149,7 +137,7 @@ html, body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 2px;
+    padding: 8px 12px;
     border-radius: 16px;
     background-color: var(--bg-nota);
     border: 1px solid rgba(0, 0, 0, 0.04);
@@ -165,7 +153,7 @@ html, body {
 }
 
 .nota-fila.tinted {
-    border-left: 6px solid var(--color-base) !important;
+    border-left: 6px solid var(--color-base);
 }
 
 .nota-texto {
@@ -234,69 +222,59 @@ html, body {
     transform: scale(0.92);
 }
 
-.vr-separator {
-    width: 1px;
-    height: 28px;
-    background-color: #e5e7eb;
-}
-
-
-
-.badge-fecha-cabecera {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    background: #ffffff;
-    padding: 4px 10px;
-    border-radius: 50px;
-    border: 1px solid #b45309;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-}
-
 .fecha-mini {
-    font-size: 0.85rem;
-    opacity: 0.6;
-    font-weight: normal;
-    white-space: nowrap;
+    font-size: 0.8rem;
+    text-transform: capitalize;
 }
+
+/* Puntos de colores para editar notas */
+.btn-color-dot {
+    cursor: pointer;
+    transition: transform 0.15s ease;
+}
+.btn-color-dot:hover {
+    transform: scale(1.15);
+}
+.btn-color-white { background: #fff; border: 1px solid #ccc; width: 24px; height: 24px; border-radius: 50%; }
+.btn-color-red { background: #ffadad; border: none; width: 24px; height: 24px; border-radius: 50%; }
+.btn-color-orange { background: #ffd6a5; border: none; width: 24px; height: 24px; border-radius: 50%; }
+.btn-color-yellow { background: #fdffb6; border: none; width: 24px; height: 24px; border-radius: 50%; }
+.btn-color-green { background: #caffbf; border: none; width: 24px; height: 24px; border-radius: 50%; }
+.btn-color-blue { background: #9bf6ff; border: none; width: 24px; height: 24px; border-radius: 50%; }
 
 /* ==========================================================================
-   7. FOOTER Y MODALES / AVISOS
+   7. FOOTER, AVISOS Y MODALES (ESTRUCTURA GENERAL)
    ========================================================================== */
 .footer-fijo {
     flex-shrink: 0;
     width: 100%;
-    background-color:#fff8da;
-    padding: 2px 0;
+    background: linear-gradient(180deg, #ffffff 0%, #fffbeb 100%); /* Degradado sutil blanco a ámbar clarito */
+    border-top: 1px solid rgba(217, 119, 6, 0.15); /* Línea superior fina y elegante */
+    padding: 8px 12px;
     margin-top: auto;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.02); /* Sombra muy suave hacia arriba */
+}
+.footer-fijo .d-flex {
+    font-weight: 500;
+    color: #78350f !important; /* Tono ámbar/marrón cálido muy legible */
+    letter-spacing: 0.3px;
 }
 
+#hora-footer {
+    background: rgba(217, 119, 6, 0.1);
+    padding: 1px 8px;
+    border-radius: 6px;
+    font-weight: 600;
+    color: #b45309;
+}
 .avisos-seccion {
     background: rgba(217, 119, 6, 0.15);
     border-left: 5px solid #d97706;
     border-radius: 10px;
     padding: 12px;
-    margin-bottom: 15px;
+    margin-bottom: 8px;
+    display: none;
     animation: slideDown 0.4s ease-out;
-}
-
-.banner-nota {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 0.9rem;
-    color: #444;
-    border-bottom: 1px solid rgba(0,0,0,0.05);
-    padding: 5px 0;
-}
-
-.banner-nota:last-child {
-    border-bottom: none;
-}
-
-.banner-nota i {
-    color: #d97706;
-    font-weight: bold;
 }
 
 @keyframes slideDown {
@@ -304,8 +282,69 @@ html, body {
     to { opacity: 1; transform: translateY(0); }
 }
 
+.custom-modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.3);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+    box-sizing: border-box;
+}
+
+.custom-modal-overlay-blur {
+    display: none;
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
+    z-index: 1050;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+    box-sizing: border-box;
+}
+
+.custom-modal-content {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+    background: #fff;
+}
+
+.custom-lock-card {
+    width: 100%;
+    max-width: 360px;
+    border-radius: 20px;
+}
+
+.input-lock-letter-spacing {
+    letter-spacing: 4px;
+}
+
+.custom-edit-container {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+    background: #fff;
+    padding: 16px;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px -2px rgba(0,0,0,0.1);
+}
+
+.text-dark-custom {
+    color: #333;
+}
+
 /* ==========================================================================
-   8. TOASTS Y MODAL CALCULADORA
+   8. TOASTS Y MODAL CALCULADORA ESPECÍFICO
    ========================================================================== */
 .toast-notegeli {
     position: fixed;
@@ -335,62 +374,85 @@ html, body {
 .toast-notegeli.error { border-left: 5px solid #dc3545; }
 .toast-notegeli.warning { border-left: 5px solid #ffc107; }
 
-/* Calculadora modal */
-
-/* Fondo oscuro: ocupa toda la pantalla */
+/* Calculadora modal ajustes específicos */
 #view-calc {
-    position: fixed !important;
-    inset: 0 !important;
-    width: 100vw !important;
-    max-width: none !important;
-    height: 100vh !important;
-    height: 100dvh !important;
-    padding: 0 !important;
-    box-sizing: border-box !important;
-    z-index: 9999 !important;
-
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    max-width: none;
+    height: 100vh;
+    height: 100dvh;
+    padding: 0;
+    box-sizing: border-box;
+    z-index: 9999;
     display: none;
     align-items: center;
     justify-content: center;
+    background: rgba(0,0,0,0.4);
 }
 
-/* Ventana blanca de la calculadora */
 #view-calc > .nuevo-form {
-    width: 92% !important;
-    max-width: 420px !important;
-    padding: 20px !important;
-    margin: 0 auto !important;
-    box-sizing: border-box !important;
+    width: 92%;
+    max-width: 420px;
+    padding: 20px;
+    margin: 0 auto;
+    box-sizing: border-box;
 }
 
-/* Pantalla de resultados */
 #calc-display {
-    font-size: 2.2rem !important;
-    padding: 12px 15px !important;
-    height: auto !important;
+    font-size: 2.2rem;
+    padding: 12px 15px;
+    height: auto;
+    background: #f8f9fa;
 }
 
-/* Botones */
 .calc-btn,
 .calculadora-grid button,
 #view-calc .btn {
-    height: 70px !important;
-    font-size: 1.35rem !important;
-    font-weight: 600 !important;
+    height: 70px;
+    font-size: 1.35rem;
+    font-weight: 600;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-/* Botón calcular */
 #view-calc .btn-success {
-    height: 80px !important;
-    font-size: 1.6rem !important;
+    height: 80px;
+    font-size: 1.6rem;
 }
 
-#view-calc .btn-success {
-    height: 80px !important;
-    font-size: 1.6rem !important;
+/* ==========================================================================
+   BOTÓN DE CONFIGURACIÓN (ENGHANAJE PRO)
+   ========================================================================== */
+.btn-config {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50% !important;
+    background: #ffffff !important;
+    border: 1px solid rgba(0, 0, 0, 0.06) !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-config:hover {
+    background: #fffbeb !important;
+    border-color: #fde68a !important;
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.15);
+    transform: translateY(-1px);
+}
+
+.btn-config:hover .bi-gear {
+    transform: rotate(90deg);
+    color: #d97706 !important;
+}
+
+.btn-config .bi-gear {
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    font-size: 1.05rem !important;
 }
 
 /* ==========================================================================
@@ -402,9 +464,51 @@ html, body {
     box-shadow: inset 0 0 20px rgba(217, 119, 6, 0.1);
 }
 
+/* ==========================================================================
+   CABECERA PRO (LOGO Y TÍTULO NOTAS)
+   ========================================================================== */
+.app-brand {
+    padding-left: 4px;
+}
+
+.logo-mini {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+    border-radius: 8px; /* Un pequeño borde redondeado muy sutil para que no sea un cuadrado plano */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.app-title {
+    font-size: 2rem !important;
+    font-weight: 1200 !important;
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    text-transform: uppercase;
+}
+
+.app-title span {
+    /* Color principal sólido cálido pero elegante con una ligera sombra de relieve */
+    color: #d97706;
+    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.8);
+}
+
+.app-version {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #d97706;
+    background: rgba(217, 119, 6, 0.1);
+    border: 1px solid rgba(217, 119, 6, 0.2);
+    padding: 1px 6px;
+    border-radius: 6px;
+    letter-spacing: 0.2px;
+    text-transform: none; /* Para que la 'v' de v2.0 se quede en minúscula tal cual */
+}
+
 .modo-privado-activo .header-mini {
-    background: rgba(217, 119, 6, 0.15) !important;
-    border-bottom: 3px solid #d97706 !important;
+    background: rgba(217, 119, 6, 0.15);
+    border-bottom: 3px solid #d97706;
 }
 
 .modo-privado-activo .header-mini::after {
@@ -428,16 +532,16 @@ html, body {
    10. ESCALADO DE TIPOGRAFÍA (CONFIGURACIÓN)
    ========================================================================== */
 body.font-normal {
-    --text-scale: 1rem;
-    --textarea-scale: 1rem;
+    --text-scale: 1.3rem;
+    --textarea-scale: 1.3rem;
 }
 
 body.font-grande {
-    --text-scale: 1.25rem;
-    --textarea-scale: 1.2rem;
+    --text-scale: 1.5rem;
+    --textarea-scale: 1.5rem;
 }
 
 body.font-muy-grande {
-    --text-scale: 1.5rem;
-    --textarea-scale: 1.4rem;
+    --text-scale: 2rem;
+    --textarea-scale: 2rem;
 }

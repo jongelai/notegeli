@@ -6,7 +6,9 @@ document.addEventListener('DOMContentLoaded', () => {
     setInterval(actualizarHoraFooter, 1000);
 });
 
-// Reloj y fecha en el header/footer
+// ==========================================
+// RELOJ Y FECHA
+// ==========================================
 function actualizarFechaHeader() {
     const el = document.getElementById('fecha-actual-txt');
     if (!el) return;
@@ -91,12 +93,10 @@ function cargarNotas(filtro = '') {
         const esUrgenteA = (fechaA === hoyStr || fechaA === mananaStr);
         const esUrgenteB = (fechaB === hoyStr || fechaB === mananaStr);
 
-        // Las notas con fecha para hoy o mañana van primero
         if (esUrgenteA && !esUrgenteB) return -1;
         if (!esUrgenteA && esUrgenteB) return 1;
-        return 0; // Mantiene el orden original para el resto
+        return 0;
     });
-    // ----------------------------------------------------
 
     if (notasFiltradas.length === 0) {
         container.innerHTML = `<p class="text-muted text-center small mt-4">No hay notas para mostrar.</p>`;
@@ -111,14 +111,11 @@ function cargarNotas(filtro = '') {
         let badgeFecha = '';
         if (nota.fechaRecordatorio) {
             if (nota.fechaRecordatorio === hoyStr) {
-                // Aviso destacado para HOY
                 badgeFecha = `<span class="badge bg-danger text-white mt-2 shadow-sm"><i class="bi bi-alarm-fill me-1"></i>¡Para HOY!</span>`;
-                card.classList.add('border-start', 'border-danger', 'border-3'); // Opcional: resalta el borde de la tarjeta
+                card.classList.add('border-start', 'border-danger', 'border-3');
             } else if (nota.fechaRecordatorio === mananaStr) {
-                // Aviso destacado para MAÑANA
                 badgeFecha = `<span class="badge bg-warning text-dark mt-2"><i class="bi bi-calendar-event me-1"></i>Para Mañana (${nota.fechaRecordatorio})</span>`;
             } else {
-                // Fecha normal futura o pasada
                 badgeFecha = `<span class="badge bg-light text-dark border mt-2"><i class="bi bi-calendar3 me-1"></i>${nota.fechaRecordatorio}</span>`;
             }
         }
@@ -284,37 +281,7 @@ function intentarAbrirPrivadas() {
         }
     }
 }
-function procesarArchivoBackup(event) {
-    const archivo = event.target.files[0];
-    if (!archivo) return;
 
-    const lector = new FileReader();
-    lector.onload = function(e) {
-        try {
-            const contenido = JSON.parse(e.target.result);
-            const listaNotas = Array.isArray(contenido) ? contenido : contenido.notas;
-            const passwordGuardado = Array.isArray(contenido) ? null : contenido.passHash;
-
-            if (listaNotas) {
-                localStorage.setItem('notegeli_notes', JSON.stringify(listaNotas));
-                
-                // Forzamos que se guarde estrictamente como un string limpio de texto plano
-                if (passwordGuardado !== null && passwordGuardado !== undefined) {
-                    localStorage.setItem('notegeli_pass', String(passwordGuardado).replace(/["']/g, ""));
-                }
-
-                alert("¡Copia de seguridad restaurada con éxito!");
-                location.reload(); 
-            } else {
-                alert("El archivo no tiene un formato de notas válido.");
-            }
-        } catch (error) {
-            alert("Error al leer el archivo de respaldo.");
-            console.error(error);
-        }
-    };
-    lector.readAsText(archivo);
-}
 function cerrarModalLock() {
     const modal = document.getElementById('view-lock');
     if (modal) modal.style.display = 'none';
@@ -353,7 +320,6 @@ async function verificarPasswordLock() {
         cerrarModalLock();
         const btnLlave = document.getElementById('btn-icono-llave');
         if (btnLlave) btnLlave.classList.add('text-warning');
-        cargarNotas();
         mostrarToast("Acceso concedido", "Notas privadas desbloqueadas.", "success");
     } else {
         inputPass.value = ''; 
@@ -392,6 +358,46 @@ function exportarBackup() {
     mostrarToast("Backup creado", "El archivo de copia de seguridad se ha descargado.", "success");
 }
 
+function importarBackup() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.json,application/json';
+    
+    input.onchange = e => {
+        const archivo = e.target.files[0];
+        if (!archivo) return;
+
+        const lector = new FileReader();
+        lector.onload = function(event) {
+            try {
+                const contenido = JSON.parse(event.target.result);
+                const listaNotas = Array.isArray(contenido) ? contenido : contenido.notas;
+                const passwordGuardado = Array.isArray(contenido) ? null : contenido.passHash;
+
+                if (listaNotas) {
+                    notas = listaNotas;
+                    guardarEnLocalStorage();
+                    
+                    if (passwordGuardado !== null && passwordGuardado !== undefined) {
+                        localStorage.setItem('notegeli_pass', String(passwordGuardado).replace(/["']/g, ""));
+                    }
+
+                    cargarNotas();
+                    mostrarToast("Restaurado", "Las notas se han recuperado correctamente.", "success");
+                } else {
+                    mostrarToast("Error", "El archivo no tiene un formato de notas válido.", "error");
+                }
+            } catch (error) {
+                console.error(error);
+                mostrarToast("Error", "Error al leer el archivo de respaldo.", "error");
+            }
+        };
+        lector.readAsText(archivo);
+    };
+
+    input.click();
+}
+
 // Obtiene la fecha actual o con offset en formato 'YYYY-MM-DD' local
 function obtenerFechaLocal(diasOffset = 0) {
     const d = new Date();
@@ -400,45 +406,6 @@ function obtenerFechaLocal(diasOffset = 0) {
     const month = String(d.getMonth() + 1).padStart(2, '0');
     const day = String(d.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
-}
-
-function importarBackup() {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = '.json';
-    
-    input.onchange = e => {
-        const file = e.target.files[0];
-        if (!file) return;
-
-        const reader = new FileReader();
-        reader.onload = function(event) {
-            try {
-                const data = JSON.parse(event.target.result);
-                
-                if (!data.notas || !Array.isArray(data.notas)) {
-                    throw new Error("Formato inválido");
-                }
-
-                notas = data.notas;
-                guardarEnLocalStorage();
-
-                if (data.passHash) {
-                    localStorage.setItem('notegeli_pass', data.passHash);
-                }
-
-                cargarNotas();
-                mostrarToast("Restaurado", "Las notas se han recuperado correctamente.", "success");
-
-            } catch (err) {
-                console.error(err);
-                mostrarToast("Error", "El archivo de backup está corrupto o no es válido.", "error");
-            }
-        };
-        reader.readAsText(file);
-    };
-
-    input.click();
 }
 
 // ==========================================
@@ -552,13 +519,11 @@ function actualizarFechaEditPreview() {
     }
 }
 
-
 function cambiarTamanoFuente(tamano) {
     const container = document.querySelector('.app-container');
     if (!container) return;
 
     let fuente;
-
     if (tamano === 'grande') {
         fuente = '1.35rem';
     } else if (tamano === 'muy-grande') {
@@ -567,10 +532,8 @@ function cambiarTamanoFuente(tamano) {
         fuente = '1.25rem';
     }
 
-    // Cambiar fuente general
     container.style.fontSize = fuente;
 
-    // Cambiar también los campos de escritura
     const campos = container.querySelectorAll(
         'textarea, input, select, [contenteditable="true"]'
     );
@@ -579,7 +542,6 @@ function cambiarTamanoFuente(tamano) {
         campo.style.fontSize = fuente;
     });
 }
-
 
 // Utilidad para prevenir inyecciones HTML en las notas
 function escapeHtml(text) {
