@@ -3,7 +3,12 @@ document.addEventListener('DOMContentLoaded', () => {
     cargarNotas();
     actualizarFechaHeader();
     actualizarHoraFooter();
-    setInterval(actualizarHoraFooter, 1000);
+    setInterval(actualizarHoraFooter, 60000);
+    if (localStorage.getItem('notegeli_dark') === 'true') {
+        document.body.classList.add('dark-mode');
+        const switchElement = document.getElementById('switchDarkMode');
+        if (switchElement) switchElement.checked = true;
+    }
 });
 
 // ==========================================
@@ -22,12 +27,6 @@ function actualizarHoraFooter() {
     const ahora = new Date();
     el.textContent = ahora.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
 }
-
-// Ejecutar al iniciar la app y actualizar cada minuto
-document.addEventListener('DOMContentLoaded', () => {
-    actualizarHoraFooter();
-    setInterval(actualizarHoraFooter, 60000); // Cada 60 segundos es más que suficiente para un reloj de minutos
-});
 
 // ==========================================
 // GESTIÓN DE NOTAS
@@ -610,3 +609,8 @@ function escapeHtml(text) {
     };
     return text.replace(/[&<>"']/g, function(m) { return map[m]; });
 }
+function toggleDarkMode() {
+    const isDark = document.body.classList.toggle('dark-mode');
+    localStorage.setItem('notegeli_dark', isDark);
+}
+

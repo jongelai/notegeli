@@ -60,24 +60,44 @@ html, body {
     position: relative;
 }
 
+.app-brand {
+    padding-left: 4px;
+}
+
+.logo-mini {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
 .app-title {
     margin: 0;
-    font-size: 1.5rem;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    color: #222;
-    white-space: nowrap;
+    font-size: 2rem !important;
+    font-weight: 1200 !important;
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    text-transform: uppercase;
+    
 }
 
 .app-title span {
     color: #d97706;
+    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.8);
 }
 
-.logo-mini {
-    width: 28px;
-    height: 28px;
-    object-fit: contain;
-    flex-shrink: 0;
+.app-version {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #d97706;
+    background: rgba(217, 119, 6, 0.1);
+    border: 1px solid rgba(217, 119, 6, 0.2);
+    padding: 1px 6px;
+    border-radius: 6px;
+    letter-spacing: 0.2px;
+    text-transform: none;
 }
 
 .nuevo-form {
@@ -227,206 +247,24 @@ html, body {
     text-transform: capitalize;
 }
 
-/* Puntos de colores para editar notas */
-.btn-color-dot {
-    cursor: pointer;
-    transition: transform 0.15s ease;
-}
-.btn-color-dot:hover {
-    transform: scale(1.15);
-}
-.btn-color-white { background: #fff; border: 1px solid #ccc; width: 24px; height: 24px; border-radius: 50%; }
-.btn-color-red { background: #ffadad; border: none; width: 24px; height: 24px; border-radius: 50%; }
-.btn-color-orange { background: #ffd6a5; border: none; width: 24px; height: 24px; border-radius: 50%; }
-.btn-color-yellow { background: #fdffb6; border: none; width: 24px; height: 24px; border-radius: 50%; }
-.btn-color-green { background: #caffbf; border: none; width: 24px; height: 24px; border-radius: 50%; }
-.btn-color-blue { background: #9bf6ff; border: none; width: 24px; height: 24px; border-radius: 50%; }
-
-/* ==========================================================================
-   7. FOOTER, AVISOS Y MODALES (ESTRUCTURA GENERAL)
-   ========================================================================== */
-.footer-fijo {
-    flex-shrink: 0;
-    width: 100%;
-    background: linear-gradient(180deg, #ffffff 0%, #fffbeb 100%); /* Degradado sutil blanco a ámbar clarito */
-    border-top: 1px solid rgba(217, 119, 6, 0.15); /* Línea superior fina y elegante */
-    padding: 8px 12px;
-    margin-top: auto;
-    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.02); /* Sombra muy suave hacia arriba */
-}
-.footer-fijo .d-flex {
-    font-weight: 500;
-    color: #78350f !important; /* Tono ámbar/marrón cálido muy legible */
-    letter-spacing: 0.3px;
+/* Estilo pro para los botones de control privado */
+#btn-toggle-privada, #btn-icono-llave {
+    border-radius: 50rem !important;
+    padding-left: 0.85rem !important;
+    padding-right: 0.85rem !important;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    border: 1px solid #dee2e6 !important;
+    background-color: #fff;
 }
 
-#hora-footer {
-    background: rgba(217, 119, 6, 0.1);
-    padding: 1px 8px;
-    border-radius: 6px;
-    font-weight: 600;
-    color: #b45309;
+#btn-toggle-privada.active {
+    background-color: #ffc107 !important;
+    border-color: #ffc107 !important;
+    box-shadow: 0 4px 12px rgba(255, 193, 7, 0.35) !important;
+    transform: scale(1.03);
 }
 
-
-.avisos-seccion {
-    background: rgba(217, 119, 6, 0.15);
-    border-left: 5px solid #d97706;
-    border-radius: 10px;
-    padding: 12px;
-    margin-bottom: 8px;
-    display: none;
-    animation: slideDown 0.4s ease-out;
-}
-
-@keyframes slideDown {
-    from { opacity: 0; transform: translateY(-20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-.custom-modal-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.3);
-    z-index: 9999;
-    align-items: center;
-    justify-content: center;
-    padding: 15px;
-    box-sizing: border-box;
-}
-
-.custom-modal-overlay-blur {
-    display: none;
-    position: fixed;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.5);
-    -webkit-backdrop-filter: blur(5px);
-    backdrop-filter: blur(5px);
-    z-index: 1050;
-    align-items: center;
-    justify-content: center;
-    padding: 15px;
-    box-sizing: border-box;
-}
-
-.custom-modal-content {
-    width: 100%;
-    max-width: 500px;
-    margin: 0 auto;
-    background: #fff;
-}
-
-.custom-lock-card {
-    width: 100%;
-    max-width: 360px;
-    border-radius: 20px;
-}
-
-.input-lock-letter-spacing {
-    letter-spacing: 4px;
-}
-
-.custom-edit-container {
-    width: 100%;
-    max-width: 500px;
-    margin: 0 auto;
-    background: #fff;
-    padding: 16px;
-    border-radius: 16px;
-    box-shadow: 0 4px 20px -2px rgba(0,0,0,0.1);
-}
-
-.text-dark-custom {
-    color: #333;
-}
-
-/* ==========================================================================
-   8. TOASTS Y MODAL CALCULADORA ESPECÍFICO
-   ========================================================================== */
-.toast-notegeli {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    background: white;
-    color: #333;
-    padding: 12px 20px;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    z-index: 10000;
-    transition: all 0.3s ease;
-    opacity: 0;
-    transform: translateX(20px);
-    pointer-events: none;
-}
-
-.toast-notegeli.visible {
-    opacity: 1;
-    transform: translateX(0);
-}
-
-.toast-notegeli.success { border-left: 5px solid #28a745; }
-.toast-notegeli.error { border-left: 5px solid #dc3545; }
-.toast-notegeli.warning { border-left: 5px solid #ffc107; }
-
-/* Calculadora modal ajustes específicos */
-#view-calc {
-    position: fixed;
-    inset: 0;
-    width: 100vw;
-    max-width: none;
-    height: 100vh;
-    height: 100dvh;
-    padding: 0;
-    box-sizing: border-box;
-    z-index: 9999;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    background: rgba(0,0,0,0.4);
-}
-
-#view-calc > .nuevo-form {
-    width: 92%;
-    max-width: 420px;
-    padding: 20px;
-    margin: 0 auto;
-    box-sizing: border-box;
-}
-
-#calc-display {
-    font-size: 2.2rem;
-    padding: 12px 15px;
-    height: auto;
-    background: #f8f9fa;
-}
-
-.calc-btn,
-.calculadora-grid button,
-#view-calc .btn {
-    height: 70px;
-    font-size: 1.35rem;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-#view-calc .btn-success {
-    height: 80px;
-    font-size: 1.6rem;
-}
-
-/* ==========================================================================
-   BOTÓN DE CONFIGURACIÓN (ENGHANAJE PRO)
-   ========================================================================== */
+/* Botón de configuración (Engranaje Pro) */
 .btn-config {
     display: inline-flex !important;
     align-items: center;
@@ -457,55 +295,152 @@ html, body {
     font-size: 1.05rem !important;
 }
 
+/* Puntos de colores para editar notas */
+.btn-color-dot { cursor: pointer; transition: transform 0.15s ease; }
+.btn-color-dot:hover { transform: scale(1.15); }
+.btn-color-white { background: #fff; border: 1px solid #ccc; width: 24px; height: 24px; border-radius: 50%; }
+.btn-color-red { background: #ffadad; border: none; width: 24px; height: 24px; border-radius: 50%; }
+.btn-color-orange { background: #ffd6a5; border: none; width: 24px; height: 24px; border-radius: 50%; }
+.btn-color-yellow { background: #fdffb6; border: none; width: 24px; height: 24px; border-radius: 50%; }
+.btn-color-green { background: #caffbf; border: none; width: 24px; height: 24px; border-radius: 50%; }
+.btn-color-blue { background: #9bf6ff; border: none; width: 24px; height: 24px; border-radius: 50%; }
+
 /* ==========================================================================
-   9. MODO PRIVADO
+   7. FOOTER, AVISOS Y MODALES (ESTRUCTURA GENERAL)
+   ========================================================================== */
+.footer-fijo {
+    flex-shrink: 0;
+    width: 100%;
+    background: linear-gradient(180deg, #ffffff 0%, #fffbeb 100%);
+    border-top: 1px solid rgba(217, 119, 6, 0.15);
+    padding: 8px 12px;
+    margin-top: auto;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.02);
+}
+
+.footer-fijo .d-flex {
+    font-weight: 500;
+    color: #78350f !important;
+    letter-spacing: 0.3px;
+}
+
+#hora-footer {
+    background: rgba(217, 119, 6, 0.1);
+    padding: 1px 8px;
+    border-radius: 6px;
+    font-weight: 600;
+    color: #b45309;
+}
+
+.avisos-seccion {
+    background: rgba(217, 119, 6, 0.15);
+    border-left: 5px solid #d97706;
+    border-radius: 10px;
+    padding: 12px;
+    margin-bottom: 8px;
+    display: none;
+    animation: slideDown 0.4s ease-out;
+}
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.custom-modal-overlay, .custom-modal-overlay-blur {
+    display: none;
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1050;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+    box-sizing: border-box;
+}
+
+.custom-modal-overlay { background: rgba(0,0,0,0.3); z-index: 9999; }
+.custom-modal-overlay-blur { background: rgba(0,0,0,0.5); -webkit-backdrop-filter: blur(5px); backdrop-filter: blur(5px); }
+
+.custom-modal-content { width: 100%; max-width: 500px; margin: 0 auto; background: #fff; }
+.custom-lock-card { width: 100%; max-width: 360px; border-radius: 20px; }
+.input-lock-letter-spacing { letter-spacing: 4px; }
+
+.custom-edit-container {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+    background: #fff;
+    padding: 16px;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px -2px rgba(0,0,0,0.1);
+}
+
+.text-dark-custom { color: #333; }
+
+/* ==========================================================================
+   8. TOASTS Y MODAL CALCULADORA ESPECÍFICO
+   ========================================================================== */
+.toast-notegeli {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: white;
+    color: #333;
+    padding: 12px 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    z-index: 10000;
+    transition: all 0.3s ease;
+    opacity: 0;
+    transform: translateX(20px);
+    pointer-events: none;
+}
+
+.toast-notegeli.visible { opacity: 1; transform: translateX(0); }
+.toast-notegeli.success { border-left: 5px solid #28a745; }
+.toast-notegeli.error { border-left: 5px solid #dc3545; }
+.toast-notegeli.warning { border-left: 5px solid #ffc107; }
+
+#view-calc {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    max-width: none;
+    height: 100vh;
+    height: 100dvh;
+    padding: 0;
+    box-sizing: border-box;
+    z-index: 9999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.4);
+}
+
+#view-calc > .nuevo-form {
+    width: 92%;
+    max-width: 420px;
+    padding: 20px;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+#calc-display { font-size: 2.2rem; padding: 12px 15px; height: auto; background: #f8f9fa; }
+.calc-btn, .calculadora-grid button, #view-calc .btn { height: 70px; font-size: 1.35rem; font-weight: 600; display: flex; align-items: center; justify-content: center; }
+#view-calc .btn-success { height: 80px; font-size: 1.6rem; }
+
+/* ==========================================================================
+   9. MODO PRIVADO (ESTADOS Y DINÁMICA)
    ========================================================================== */
 .app-container.modo-privado-activo {
     background-color: rgba(255, 193, 7, 0.05);
     border: 2px solid #d97706;
     box-shadow: inset 0 0 20px rgba(217, 119, 6, 0.1);
-}
-
-/* ==========================================================================
-   CABECERA PRO (LOGO Y TÍTULO NOTAS)
-   ========================================================================== */
-.app-brand {
-    padding-left: 4px;
-}
-
-.logo-mini {
-    width: 32px;
-    height: 32px;
-    object-fit: contain;
-    border-radius: 8px; /* Un pequeño borde redondeado muy sutil para que no sea un cuadrado plano */
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-.app-title {
-    font-size: 2rem !important;
-    font-weight: 1200 !important;
-    display: flex;
-    align-items: baseline;
-    gap: 8px;
-    text-transform: uppercase;
-}
-
-.app-title span {
-    /* Color principal sólido cálido pero elegante con una ligera sombra de relieve */
-    color: #d97706;
-    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.8);
-}
-
-.app-version {
-    font-size: 0.7rem;
-    font-weight: 700;
-    color: #d97706;
-    background: rgba(217, 119, 6, 0.1);
-    border: 1px solid rgba(217, 119, 6, 0.2);
-    padding: 1px 6px;
-    border-radius: 6px;
-    letter-spacing: 0.2px;
-    text-transform: none; /* Para que la 'v' de v2.0 se quede en minúscula tal cual */
 }
 
 .modo-privado-activo .header-mini {
@@ -533,34 +468,136 @@ html, body {
 /* ==========================================================================
    10. ESCALADO DE TIPOGRAFÍA (CONFIGURACIÓN)
    ========================================================================== */
-body.font-normal {
-    --text-scale: 1.3rem;
-    --textarea-scale: 1.3rem;
+body.font-normal { --text-scale: 1.3rem; --textarea-scale: 1.3rem; }
+body.font-grande { --text-scale: 1.5rem; --textarea-scale: 1.5rem; }
+body.font-muy-grande { --text-scale: 2rem; --textarea-scale: 2rem; }
+
+/* ==========================================================================
+   11. MODO OSCURO UNIFICADO Y OPTIMIZADO (NOTEGELI)
+   ========================================================================== */
+body.dark-mode {
+    background-color: #121214 !important;
+    color: #f8f9fa !important;
 }
 
-body.font-grande {
-    --text-scale: 1.5rem;
-    --textarea-scale: 1.5rem;
+body.dark-mode .card, 
+body.dark-mode .list-group-item,
+body.dark-mode .modal-content,
+body.dark-mode .custom-lock-card,
+body.dark-mode .dropdown-menu,
+body.dark-mode .nuevo-form,
+body.dark-mode div:has(#crear-nota),
+body.dark-mode div:has(textarea),
+body.dark-mode .shadow-lg,
+body.dark-mode footer.footer-fijo,
+body.dark-mode .footer-fijo,
+body.dark-mode #container-buscador-desplegable .bg-white {
+    background-color: #1a1a1e !important;
+    background: #1a1a1e !important;
+    color: #f8f9fa !important;
+    border-color: #2c2c35 !important;
 }
 
-body.font-muy-grande {
-    --text-scale: 2rem;
-    --textarea-scale: 2rem;
-}
-/* Estilo pro para los botones de control privado */
-#btn-toggle-privada, #btn-icono-llave {
-    border-radius: 50rem !important; /* Forma de píldora redonda */
-    padding-left: 0.85rem !important;
-    padding-right: 0.85rem !important;
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
-    border: 1px solid #dee2e6 !important;
-    background-color: #fff;
+body.dark-mode .form-control,
+body.dark-mode input,
+body.dark-mode textarea {
+    background-color: #25252b !important;
+    color: #ffffff !important;
+    border-color: #3f3f46 !important;
 }
 
-/* Efecto cuando el candado está activo (cerrado) */
-#btn-toggle-privada.active {
-    background-color: #ffc107 !important;
+body.dark-mode .form-control:focus,
+body.dark-mode input:focus,
+body.dark-mode textarea:focus {
+    background-color: #2c2c35 !important;
     border-color: #ffc107 !important;
-    box-shadow: 0 4px 12px rgba(255, 193, 7, 0.35) !important;
-    transform: scale(1.03);
+    color: #ffffff !important;
+}
+
+body.dark-mode h1, body.dark-mode h2, body.dark-mode h3, 
+body.dark-mode h4, body.dark-mode h5, body.dark-mode h6,
+body.dark-mode .text-dark,
+body.dark-mode .modal-title,
+body.dark-mode .modal-content span,
+body.dark-mode .modal-content label,
+body.dark-mode .dropdown-menu .dropdown-item,
+body.dark-mode .dropdown-item-text,
+body.dark-mode .modal-body,
+body.dark-mode .modal-header,
+body.dark-mode .modal-footer,
+body.dark-mode .footer-fijo span,
+body.dark-mode .footer-fijo div {
+    color: #f8f9fa !important;
+}
+
+body.dark-mode .dropdown-header,
+body.dark-mode .text-muted,
+body.dark-mode small,
+body.dark-mode span[style*="color"] {
+    color: #9ca3af !important;
+}
+
+body.dark-mode .btn:not(.btn-amber):not(.btn-warning),
+body.dark-mode .btn-tool {
+    background-color: #25252b !important;
+    color: #f8f9fa !important;
+    border-color: #3f3f46 !important;
+}
+
+body.dark-mode .btn:not(.btn-amber):not(.btn-warning):hover,
+body.dark-mode .btn-tool:hover {
+    background-color: #2c2c35 !important;
+    color: #ffc107 !important;
+    border-color: #ffc107 !important;
+}
+
+body.dark-mode header .bg-white,
+body.dark-mode .footer-fijo .bg-white {
+    background-color: #25252b !important;
+    border-color: #3f3f46 !important;
+    color: #f8f9fa !important;
+}
+
+body.dark-mode header span,
+body.dark-mode #fecha-actual-txt,
+body.dark-mode #hora-footer {
+    color: #f8f9fa !important;
+}
+
+body.dark-mode .dropdown-menu .dropdown-item:hover,
+body.dark-mode .dropdown-menu .dropdown-item:focus {
+    background-color: #2c2c35 !important;
+    color: #ffc107 !important;
+}
+
+body.dark-mode .dropdown-divider {
+    border-color: #2c2c35 !important;
+}
+
+body.dark-mode .custom-modal-overlay-blur {
+    background-color: rgba(0, 0, 0, 0.75) !important;
+}
+/* Color específico para NOTAS en modo oscuro */
+body.dark-mode .app-title span {
+    color: #ffc107 !important; /* Cambia este código por el tono que quieras (ej. #ffc107, #f59e0b, #ffffff...) */
+    text-shadow: none !important; /* Opcional: quita el brillo claro de fondo si interfiere */
+}
+/* ==========================================
+   SEPARACIÓN Y BORDES CON TONO ÁMBAR PRO - MODO OSCURO
+   ========================================== */
+
+/* 1. Tarjetas de notas: borde ámbar elegante y sombra con destello cálido */
+body.dark-mode .card,
+body.dark-mode .nota-fila {
+    border: 1px solid rgba(217, 119, 6, 0.4) !important;
+    border-top: 1px solid rgba(245, 158, 11, 0.6) !important; /* Reflejo superior más vivo */
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6), 0 0 12px rgba(217, 119, 6, 0.15) !important;
+}
+
+/* 2. Menú desplegable de configuración: borde ámbar destacado y sombra flotante profunda */
+body.dark-mode .dropdown-menu {
+    background-color: #1a1a1e !important;
+    border: 1px solid rgba(217, 119, 6, 0.6) !important;
+    border-top: 1px solid rgba(245, 158, 11, 0.8) !important;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8), 0 0 20px rgba(217, 119, 6, 0.25) !important;
 }
