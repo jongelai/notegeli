@@ -615,4 +615,11 @@ function toggleDarkMode() {
     localStorage.setItem('notegeli_dark', isDark);
     document.querySelectorAll('.dropdown-menu.show').forEach(menu => menu.classList.remove('show'));
 }
-
+function abrirModalAyuda() {
+    // Cierra cualquier menú desplegable abierto antes de mostrar la ayuda
+    document.querySelectorAll('.dropdown-menu.show').forEach(menu => menu.classList.remove('show'));
+    
+    const modalEl = document.getElementById('modalAyuda');
+    const modal = new bootstrap.Modal(modalEl);
+    modal.show();
+}

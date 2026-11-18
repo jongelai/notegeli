@@ -111,6 +111,15 @@
                                             Restaurar
                                         </button>
                                     </li>
+                                    <li>
+                                        <button
+                                            class="btn btn-sm btn-outline-secondary border-0 p-2 "
+                                            onclick="abrirModalAyuda()"
+                                            title="Guía rápida">
+                                            <i
+                                                class="bi bi-info-circle fs-6"></i> Guia rapida
+                                        </button>
+                                    </li>
                                 </ul>
                             </div>
 
@@ -227,7 +236,96 @@
 
                 </div>
             </div>
+<div class="modal fade" id="modalAyuda" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content border-0 shadow-lg" style="background-color: var(--bs-body-bg); color: var(--bs-body-color);">
+            <div class="modal-header border-bottom border-secondary border-opacity-25 py-3">
+                <h5 class="modal-title fw-bold d-flex align-items-center gap-2">
+                    <i class="bi bi-journal-bookmark-fill text-warning"></i> Guía rápida de NoteGeli
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body p-4" style="font-size: 0.95rem;">
+                <div class="d-flex flex-column gap-3">
+                    
+                    <div class="d-flex align-items-start gap-3">
+                        <div class="p-2 rounded bg-secondary bg-opacity-10 text-warning flex-shrink-0">
+                            <i class="bi bi-search fs-5"></i>
+                        </div>
+                        <div>
+                            <h6 class="fw-bold mb-1">Buscador rápido</h6>
+                            <p class="text-muted mb-0 small">Encuentra cualquier nota al instante usando la lupa para filtrar por palabras clave.</p>
+                        </div>
+                    </div>
 
+                    <div class="d-flex align-items-start gap-3">
+                        <div class="p-2 rounded bg-secondary bg-opacity-10 text-warning flex-shrink-0">
+                            <i class="bi bi-calendar-event fs-5"></i>
+                        </div>
+                        <div>
+                            <h6 class="fw-bold mb-1">Fechas</h6>
+                            <p class="text-muted mb-0 small">Asocia un día a tus notas para tener la agenda al día o revisa el calendario integrado.</p>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-start gap-3">
+                        <div class="p-2 rounded bg-secondary bg-opacity-10 text-warning flex-shrink-0">
+                            <i class="bi bi-shield-lock-fill fs-5"></i>
+                        </div>
+                        <div>
+                            <h6 class="fw-bold mb-1">100% Privado en tu móvil</h6>
+                            <p class="text-muted mb-0 small">Todo se queda en la memoria de tu dispositivo. Cero servidores externos, máxima privacidad para ti.</p>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-start gap-3">
+                        <div class="p-2 rounded bg-secondary bg-opacity-10 text-warning flex-shrink-0">
+                            <i class="bi bi-key-fill fs-5"></i>
+                        </div>
+                        <div>
+                            <h6 class="fw-bold mb-1">Notas con contraseña</h6>
+                            <p class="text-muted mb-0 small">Protege lo importante con cifrado SHA-256. Solo se abren si pones tu clave.</p>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-start gap-3">
+                        <div class="p-2 rounded bg-secondary bg-opacity-10 text-warning flex-shrink-0">
+                            <i class="bi bi-calculator fs-5"></i>
+                        </div>
+                        <div>
+                            <h6 class="fw-bold mb-1">Calculadora integrada</h6>
+                            <p class="text-muted mb-0 small">Realiza cálculos rápidos directamente desde la aplicación.</p>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-start gap-3">
+                        <div class="p-2 rounded bg-secondary bg-opacity-10 text-warning flex-shrink-0">
+                            <i class="bi bi-palette-fill fs-5"></i>
+                        </div>
+                        <div>
+                            <h6 class="fw-bold mb-1">Modo Día / Noche y Fuentes</h6>
+                            <p class="text-muted mb-0 small"> Ajusta el tamaño de la fuente y alterna entre modo claro y oscuro.</p>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-start gap-3">
+                        <div class="p-2 rounded bg-secondary bg-opacity-10 text-warning flex-shrink-0">
+                            <i class="bi bi-cloud-arrow-down-fill fs-5"></i>
+                        </div>
+                        <div>
+                            <h6 class="fw-bold mb-1">Copias de seguridad</h6>
+                            <p class="text-muted mb-0 small">Exporta o importa tus datos cuando quieras para llevártelos donde necesites.</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer border-top border-secondary border-opacity-25 py-2">
+                <button type="button" class="btn btn-sm btn-warning fw-semibold px-4" data-bs-dismiss="modal">¡OK!</button>
+            </div>
+        </div>
+    </div>
+</div>
             <!-- MODALES -->
             <!-- Modal de Calculadora -->
             <div id="view-calc" class="custom-modal-overlay">
