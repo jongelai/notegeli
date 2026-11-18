@@ -23,6 +23,12 @@ function actualizarHoraFooter() {
     el.textContent = ahora.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
 }
 
+// Ejecutar al iniciar la app y actualizar cada minuto
+document.addEventListener('DOMContentLoaded', () => {
+    actualizarHoraFooter();
+    setInterval(actualizarHoraFooter, 60000); // Cada 60 segundos es más que suficiente para un reloj de minutos
+});
+
 // ==========================================
 // GESTIÓN DE NOTAS
 // ==========================================
@@ -53,18 +59,20 @@ function crearNota(event) {
 
     notas.unshift(nuevaNota);
     guardarEnLocalStorage();
+    
+    
+    if (modoPrivadaCreacionActivo) {
+        accesoPrivadoConcedido = false;
+    }
+
     cargarNotas();
 
-    // Resetear formulario
     textoInput.value = '';
     if (fechaInput) fechaInput.value = '';
     limpiarFechaPreview();
     
-    // Desactivar modo privada si estaba activo
-    if (modoPrivadaCreacionActivo) {
-        toggleModoPrivadaCreacion();
     }
-}
+
 
 function cargarNotas(filtro = '') {
     const container = document.getElementById('notes-scroll-container');
@@ -176,10 +184,20 @@ function filtrarNotas() {
 
 function limpiarBusqueda() {
     const input = document.getElementById('input-buscar');
-    if (input) input.value = '';
-    const clearBtn = document.getElementById('clear-search');
-    if (clearBtn) clearBtn.style.display = 'none';
-    cargarNotas();
+    if (input) {
+        input.value = ''; // Borra el texto
+    }
+    
+    // Ejecuta tu función para refrescar las notas y mostrar la lista completa
+    if (typeof filtrarNotas === 'function') {
+        filtrarNotas(); 
+    }
+
+    // Oculta la barra desplegable automáticamente
+    const box = document.getElementById('container-buscador-desplegable');
+    if (box) {
+        box.style.display = 'none';
+    }
 }
 
 // ==========================================
@@ -213,52 +231,57 @@ function toggleModoPrivadaCreacion() {
     modoPrivadaCreacionActivo = !modoPrivadaCreacionActivo;
     const btn = document.getElementById('btn-toggle-privada');
     const inputHidden = document.getElementById('nueva-nota-privada');
+    const textarea = document.getElementById('nueva-nota-texto'); // El campo de texto de la nota
     
     if (btn && inputHidden) {
         inputHidden.value = modoPrivadaCreacionActivo;
+        
+        // Comprobamos si ya existe el aviso flotante en el DOM
+        let avisoPrivado = document.getElementById('aviso-privado-dinamico');
+
         if (modoPrivadaCreacionActivo) {
-            btn.innerHTML = '<i class="bi bi-lock text-warning"></i>';
+            // 1. Candado cerrado: Ponemos el botón ámbar
+            btn.innerHTML = '<i class="bi bi-lock-fill text-dark"></i>';
             btn.title = "Nota privada activada";
-            btn.classList.add('active');
+            btn.classList.add('active', 'bg-warning', 'border-warning');
+            btn.classList.remove('text-warning');
+            
+            // 2. Creamos y mostramos el aviso flotante dinámicamente dentro del contenedor del textarea
+            if (textarea) {
+                const contenedorPadre = textarea.parentElement;
+                
+                // Nos aseguramos de que el padre sea position-relative para que el absolute funcione bien
+                if (window.getComputedStyle(contenedorPadre).position === 'static') {
+                    contenedorPadre.style.position = 'relative';
+                }
+                
+                if (!avisoPrivado) {
+                    avisoPrivado = document.createElement('div');
+                    avisoPrivado.id = 'aviso-privado-dinamico';
+                    avisoPrivado.className = 'position-absolute top-0 end-0 m-2 px-2 py-1 bg-warning text-dark rounded-pill shadow-sm d-flex align-items-center gap-1';
+                    avisoPrivado.style.fontSize = '0.7rem';
+                    avisoPrivado.style.fontWeight = '600';
+                    avisoPrivado.style.zIndex = '10';
+                    avisoPrivado.innerHTML = '<i class="bi bi-lock-fill"></i> Nota privada';
+                    contenedorPadre.appendChild(avisoPrivado);
+                }
+            }
         } else {
+            // 1. Candado abierto: Volvemos a la normalidad
             btn.innerHTML = '<i class="bi bi-unlock"></i>';
             btn.title = "Hacer nota privada";
-            btn.classList.remove('active');
+            btn.classList.remove('active', 'bg-warning', 'border-warning');
+            btn.classList.add('text-warning');
+            
+            // 2. Eliminamos el aviso flotante si existe
+            if (avisoPrivado) {
+                avisoPrivado.remove();
+            }
         }
     }
 }
 
-function mostrarToast(titulo, mensaje, tipo = "success") {
-    const anterior = document.querySelector('.toast-notegeli');
-    if (anterior) anterior.remove();
 
-    const iconos = { success: "✓", error: "✕", warning: "⚠", info: "ℹ" };
-    const toast = document.createElement('div');
-    toast.className = `toast-notegeli ${tipo}`;
-
-    const icono = document.createElement('div');
-    icono.className = 'toast-icon';
-    icono.textContent = iconos[tipo] || "ℹ";
-
-    const contenido = document.createElement('div');
-    contenido.className = 'toast-content';
-
-    const tituloEl = document.createElement('strong');
-    tituloEl.textContent = titulo;
-
-    const mensajeEl = document.createElement('span');
-    mensajeEl.textContent = mensaje;
-
-    contenido.append(tituloEl, mensajeEl);
-    toast.append(icono, contenido);
-    document.body.appendChild(toast);
-
-    requestAnimationFrame(() => toast.classList.add('visible'));
-    setTimeout(() => {
-        toast.classList.remove('visible');
-        setTimeout(() => toast.remove(), 150);
-    }, 1500);
-}
 
 function intentarAbrirPrivadas() {
     if (accesoPrivadoConcedido) {
@@ -309,7 +332,7 @@ async function verificarPasswordLock() {
         cerrarModalLock();
         const btnLlave = document.getElementById('btn-icono-llave');
         if (btnLlave) btnLlave.classList.add('text-warning');
-        mostrarToast("¡Todo listo!", "Contraseña establecida.", "success");
+        mostrarToast("¡Todo listo! ", "Contraseña establecida.", "success");
         cargarNotas();
         return;
     } 
@@ -320,11 +343,13 @@ async function verificarPasswordLock() {
         cerrarModalLock();
         const btnLlave = document.getElementById('btn-icono-llave');
         if (btnLlave) btnLlave.classList.add('text-warning');
-        mostrarToast("Acceso concedido", "Notas privadas desbloqueadas.", "success");
+        mostrarToast("Acceso concedido ", "Notas privadas desbloqueadas.", "success");
+        
+        cargarNotas(); // <--- ¡Añadido aquí para que se recarguen y aparezcan las notas ocultas!
     } else {
         inputPass.value = ''; 
         inputPass.focus();
-        mostrarToast("Acceso denegado", "La contraseña es incorrecta.", "error");
+        mostrarToast("Acceso denegado ", "La contraseña es incorrecta.", "error");
     }
 }
 
@@ -408,6 +433,37 @@ function obtenerFechaLocal(diasOffset = 0) {
     return `${year}-${month}-${day}`;
 }
 
+function mostrarToast(titulo, mensaje, tipo = "success") {
+    const anterior = document.querySelector('.toast-notegeli');
+    if (anterior) anterior.remove();
+
+    const iconos = { success: "✓", error: "✕", warning: "⚠", info: "ℹ" };
+    const toast = document.createElement('div');
+    toast.className = `toast-notegeli ${tipo}`;
+
+    const icono = document.createElement('div');
+    icono.className = 'toast-icon';
+    icono.textContent = iconos[tipo] || "ℹ";
+
+    const contenido = document.createElement('div');
+    contenido.className = 'toast-content';
+
+    const tituloEl = document.createElement('strong');
+    tituloEl.textContent = titulo;
+
+    const mensajeEl = document.createElement('span');
+    mensajeEl.textContent = mensaje;
+
+    contenido.append(tituloEl, mensajeEl);
+    toast.append(icono, contenido);
+    document.body.appendChild(toast);
+
+    requestAnimationFrame(() => toast.classList.add('visible'));
+    setTimeout(() => {
+        toast.classList.remove('visible');
+        setTimeout(() => toast.remove(), 150);
+    }, 1500);
+}
 // ==========================================
 // CALCULADORA
 // ==========================================

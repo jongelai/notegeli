@@ -167,27 +167,22 @@
                     </form>
 
                     <!-- BUSCADOR DESPLEGABLE -->
-                    <div id="container-buscador-desplegable"
-                        class="search-box mt-2 flex-shrink-0">
-                        <div
-                            class="input-group rounded-pill border bg-white shadow-sm overflow-hidden px-3 py-1">
-                            <span
-                                class="input-group-text bg-transparent border-0 text-warning ps-0">
-                                <i class="bi bi-search"></i>
-                            </span>
-                            <input type="text" id="input-buscar"
-                                class="form-control border-0 shadow-none bg-transparent ps-2"
-                                placeholder="Escribe para buscar..."
-                                oninput="filtrarNotas()">
-                            <button
-                                class="btn btn-link text-muted p-0 text-decoration-none"
-                                type="button" id="clear-search"
-                                onclick="limpiarBusqueda()">
-                                <i class="bi bi-x-circle-fill"></i>
-                            </button>
-                        </div>
-                    </div>
-
+<div id="container-buscador-desplegable" class="search-box mt-2 flex-shrink-0" style="display: none;">
+    <div class="input-group rounded-pill border bg-white shadow-sm overflow-hidden px-3 py-1">
+        <span class="input-group-text bg-transparent border-0 text-warning ps-0">
+            <i class="bi bi-search"></i>
+        </span>
+        <input type="text" id="input-buscar"
+            class="form-control border-0 shadow-none bg-transparent ps-2"
+            placeholder="Escribe para buscar..."
+            oninput="filtrarNotas()">
+        <button class="btn btn-link text-muted p-0 text-decoration-none"
+            type="button" id="clear-search"
+            onclick="limpiarBusqueda()">
+            <i class="bi bi-x-circle-fill"></i>
+        </button>
+    </div>
+</div>
                     <!-- 4. CONTENEDOR DE SCROLL PARA LAS NOTAS -->
                     <div id="notes-scroll-container"></div>
 
@@ -202,7 +197,7 @@
                                 class="d-flex align-items-center gap-1 bg-white px-2 py-0 rounded-pill shadow-sm border"
                                 style="font-size: 0.75rem;">
                                 <i class="bi bi-clock text-warning"></i>
-                                <span id="hora-fecha-footer"
+                                <span id="hora-footer"
                                     class="text-secondary fw-semibold">22:33</span>
                             </div>
                         </div>
@@ -289,28 +284,32 @@
             </div>
 
             <!-- Modal de Acceso Privado -->
-            <div id="view-lock" class="custom-modal-overlay-blur">
-                <div class="card p-4 shadow-lg border-0 custom-lock-card">
-                    <div
-                        class="d-flex justify-content-between align-items-center mb-3">
-                        <h5 class="fw-bold m-0 text-dark">
-                            <i
-                                class="bi bi-shield-lock text-warning me-2"></i>Contraseña
-                            Notas Privadas
-                        </h5>
-                        <button type="button" class="btn-close shadow-none"
-                            onclick="cerrarModalLock()"></button>
-                    </div>
+          <div id="view-lock" class="custom-modal-overlay-blur">
+    <div class="card p-2 shadow-lg border-0 custom-lock-card mx-auto" style="max-width: 210px;">
+        <div class="d-flex justify-content-between align-items-center mb-1 px-1">
+            <span class="fw-bold text-dark" style="font-size: 0.8rem;">
+                <i class="bi bi-shield-lock text-warning me-1"></i>Contraseña:
+            </span>
+            <button type="button" class="btn-close shadow-none"
+                style="transform: scale(0.7); padding: 0.2rem;"
+                onclick="cerrarModalLock()"></button>
+        </div>
 
-                    <input type="password" id="input-lock-pass"
-                        class="form-control form-control-lg text-center mb-3 rounded-pill bg-light border-0 input-lock-letter-spacing"
-                        placeholder="••••" maxlength="10">
-                    <button type="button"
-                        class="btn btn-amber w-100 py-2 rounded-pill fw-bold"
-                        onclick="verificarPasswordLock()">Desbloquear</button>
-                </div>
-            </div>
-
+        <div class="input-group input-group-sm justify-content-center">
+            <input type="password" id="input-lock-pass"
+                class="form-control text-center bg-light border-0 rounded-start-pill px-1"
+                style="max-width: 85px; flex: 0 0 85px; font-size: 0.95rem; height: 32px;"
+                placeholder="••••" maxlength="10">
+            <button type="button"
+                class="btn btn-amber px-2 rounded-end-pill fw-bold d-flex align-items-center justify-content-center"
+                style="height: 32px; min-width: 32px;"
+                onclick="verificarPasswordLock()"
+                title="Desbloquear">
+                <i class="bi bi-arrow-right" style="font-size: 0.9rem;"></i>
+            </button>
+        </div>
+    </div>
+</div>
             <!-- Modal de Editor -->
             <div id="view-edit" class="custom-modal-overlay">
                 <div class="nuevo-form custom-edit-container">
