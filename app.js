@@ -113,8 +113,10 @@ function cargarNotas(filtro = '') {
     notasFiltradas.forEach(nota => {
         const card = document.createElement('div');
         card.className = 'card mb-2 shadow-sm border-0 note-item';
-        if (nota.color) card.style.backgroundColor = nota.color;
-
+        if (nota.color) {
+            card.style.setProperty('--note-color', nota.color);
+            card.classList.add('nota-con-color');
+}
         let badgeFecha = '';
         if (nota.fechaRecordatorio) {
             if (nota.fechaRecordatorio === hoyStr) {
@@ -132,15 +134,14 @@ function cargarNotas(filtro = '') {
         card.innerHTML = `
             <div class="card-body p-3">
                 <div class="d-flex justify-content-between align-items-start gap-2">
-                    <p class="mb-1 text-break" style="white-space: pre-wrap; font-size: inherit;">${iconoPrivada}${escapeHtml(nota.texto)}</p>
-                    <div class="dropdown">
-                        <button class="btn btn-sm btn-link text-muted p-0 text-decoration-none" data-bs-toggle="dropdown">
-                            <i class="bi bi-three-dots-vertical"></i>
+                    <p class="mb-1 text-break flex-grow-1 pe-2" style="white-space: pre-wrap; font-size: inherit;">${iconoPrivada}${escapeHtml(nota.texto)}</p>
+                    <div class="d-flex align-items-center gap-2 flex-shrink-0">
+                        <button class="btn btn-sm btn-outline-secondary border-0 p-1 rounded-circle" onclick="abrirEditor(${nota.id})" title="Editar nota">
+                            <i class="bi bi-pencil fs-6"></i>
                         </button>
-                        <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0" style="font-size: 1rem;">
-                            <li><button class="dropdown-item py-1" onclick="abrirEditor(${nota.id})"><i class="bi bi-pencil me-2"></i>Editar</button></li>
-                            <li><button class="dropdown-item py-1 text-danger" onclick="eliminarNota(${nota.id})"><i class="bi bi-trash me-2"></i>Eliminar</button></li>
-                        </ul>
+                        <button class="btn btn-sm btn-danger p-1 px-2 rounded-2 shadow-sm" onclick="eliminarNota(${nota.id})" title="Eliminar nota" style="background-color: #dc3545; border: none;">
+                            <i class="bi bi-trash-fill fs-6 text-white"></i>
+                        </button>
                     </div>
                 </div>
                 ${badgeFecha}
@@ -612,5 +613,6 @@ function escapeHtml(text) {
 function toggleDarkMode() {
     const isDark = document.body.classList.toggle('dark-mode');
     localStorage.setItem('notegeli_dark', isDark);
+    document.querySelectorAll('.dropdown-menu.show').forEach(menu => menu.classList.remove('show'));
 }
 

@@ -601,3 +601,47 @@ body.dark-mode .dropdown-menu {
     border-top: 1px solid rgba(245, 158, 11, 0.8) !important;
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8), 0 0 20px rgba(217, 119, 6, 0.25) !important;
 }
+/* ==========================================
+   NOTAS CON COLOR PERSONALIZADO (CLARO Y OSCURO)
+   ========================================== */
+
+/* Modo claro: fondo completo con el color elegido */
+.nota-con-color {
+    background-color: var(--note-color) !important;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Modo oscuro: fondo oscuro elegante + borde izquierdo y resplandor difuminado del color */
+body.dark-mode .nota-con-color {
+    background-color: #1a1a1e !important;
+    border-left: 6px solid var(--note-color) !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.05) !important;
+    border-right: 1px solid rgba(255, 255, 255, 0.05) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6), 0 0 15px var(--note-color) !important;
+    opacity: 0.98;
+}
+#notes-scroll-container, .notes-scroll, .nota-fila, .card {
+    overflow: visible !important;
+}
+/* ==========================================
+   CORRECCIÓN DE FECHAS/BADGES EN MODO OSCURO
+   ========================================== */
+body.dark-mode .card .badge.bg-light {
+    background-color: #2c2c35 !important;
+    color: #e4e4e7 !important;
+    border-color: #3f3f46 !important;
+}
+
+body.dark-mode .card .badge.bg-warning {
+    color: #18181b !important; /* Mantiene el texto oscuro sobre amarillo para que contraste bien */
+}
+/* ==========================================
+   CORRECCIÓN POSICIÓN AVISO NOTA PRIVADA
+   ========================================== */
+#aviso-privado-dinamico {
+    top: 8px !important;
+    right: 8px !important;
+    transform: none !important;
+    z-index: 5 !important;
+}
